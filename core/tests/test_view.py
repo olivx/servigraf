@@ -123,6 +123,27 @@ class TestViewUpdate(TestCase):
         resp_dict = json.loads(resp.content.decode('utf-8'))
         self.assertTrue(resp_dict['is_form_valid'])
 
+class TestViewDelete(TestCase):
+    def setUp(self):
+        self.cli = mommy.make(Cliente, tipo=2, documento='32283627877')
+        self.data = model_to_dict(self.cli, fields=[field.name for field in self.cli._meta.fields])
+        self.get_resp = self.client.get(r('servigraf:delete_client', 1))
+        self.post_resp = self.client.post(r('servigraf:delete_client', 1))
+
+    def test_get_delete(self):
+        """Test get for """
+        resp_dict = json.loads(self.get_resp.content.decode('utf-8'))
+        self.assertTrue(resp_dict['html_form'])
+
+    def test_pot_delete(self):
+        """Test is save post """
+        resp_dict = json.loads(self.post_resp.content.decode('utf-8'))
+        self.assertTrue('para reativa-lo você precisa usar a area administrativa.' in resp_dict['message'])
+        self.assertTrue(resp_dict['is_form_valid'])
+        self.assertTrue(resp_dict['html_table'])
+
+
+
 
 class TestViewFormClient(TestCase):
     def setUp(self):
