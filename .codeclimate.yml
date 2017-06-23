@@ -1,11 +1,9 @@
 exclude_paths:
-- core/migrations/
-- core/static/css/
-- core/static/fonts/
-- core/static/js/language/
-- core/static/js/locales/
-- core/static/js/validator/
-- core/static/js/*.js
-- !core/static/js/apps.js
-- contrib/grafica_db.sql
+- "core/migrations/"
+- "core/static/css/"
+- "core/static/fonts/"
+- "core/static/js/language/"
+- "core/static/js/locales/"
+- "core/static/js/validator/"
+- core/static/js/
 
