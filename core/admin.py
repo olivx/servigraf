@@ -16,13 +16,13 @@ class ClienteAdmin(admin.ModelAdmin):
 
 
 class EmailContatoInline(admin.TabularInline):
-     model =  Email
-     extra = 1
+    model =  Email
+    extra = 1
 
 class TelefoneContatoInline(admin.TabularInline):
     model = Telefone
-    extra = 1 
-    
+    extra = 1
+
 @admin.register(Contato)
 class ContatoAdmin(admin.ModelAdmin):
     inlines =  [EmailContatoInline, TelefoneContatoInline]

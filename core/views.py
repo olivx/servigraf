@@ -88,7 +88,7 @@ def delete_client(request, pk):
     client = get_object_or_404(Cliente, pk=pk)
     if request.method == 'POST':
         client.ativo = False
-        client_ = client.save()
+        client.save()
         data['is_form_valid'] = True
         data['message'] = 'Cliente: {0} \nDesativado com sucesso.\n\n' \
                           'para reativa-lo você precisa usar a area administrativa.' \

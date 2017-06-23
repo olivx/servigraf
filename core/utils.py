@@ -19,24 +19,22 @@ def is_cpf_or_cnpj(valor):
 
 
 def valida_cpf_cnpj(valor):
-    # Verifica se é CPF pi CNPJ
+    """Verifica se é CPF pi CNPJ"""
     valida = is_cpf_or_cnpj(valor)
 
     valor = re.findall('\d+', str(valor))
     valor = ''.join(valor)
 
-    # Valida CPF
     if valida == 'CPF':
         #  Retorna true para cpf válido
         return validar_cpf(valor);
 
-    # Valida CNPJ
     elif valida == 'CNPJ':
         # Retorna true para CNPJ válido
         return validar_cnpj(valor)
     # Não retorna nada
     else:
-        return False;
+        return False
 
 
 def formata_cpf_cnpj(valor):

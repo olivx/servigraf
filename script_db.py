@@ -9,8 +9,8 @@ if __name__ == "__main__":
 
     from core.models import Cliente
 
-    '''Conecta com banco de dados e devolve um cursor '''
     def connect(query):
+        """Conecta com banco de dados e devolve um cursor """
         con = pymysql.connect('localhost', 'root', 'root', 'grafica')
         cursor = con.cursor()
         cursor.execute(query)
@@ -18,8 +18,8 @@ if __name__ == "__main__":
         return cursor
 
 
-    '''Faz o cursor.fetchall e o insert parao banco que estamo testando'''
     def init_client():
+        """Faz o cursor.fetchall e o insert parao banco que estamo testando"""
         cursor = connect('select * from cliente')
 
         client_list = []
