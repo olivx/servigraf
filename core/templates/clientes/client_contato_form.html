@@ -1,0 +1,30 @@
+{% load widget_tweaks %}
+
+<div id="div-nome-contato">
+    <label for="{{ form_contato.nome.id_for_label }}">{{ form_contato.nome.label_tag }}</label>
+    {% render_field form_contato.nome class="form-control" %}
+    <span class="help-block "></span>
+    {% for error in form_contato.nome.errors %}
+    <span class="help-block">{{ error }}</span>
+    {% endfor %}
+</div>
+
+
+<div id="div-sobre-nome-contato">
+    <label for="{{ form_contato.sobre_nome.id_for_label }}">{{ form_contato.sobre_nome.label_tag }}</label>
+    {% render_field form_contato.sobre_nome class="form-control" %}
+    <span class="help-block "></span>
+    {% for error in form_contato.sobre_nome.errors %}
+    <span class="help-block">{{ error }}</span>
+    {% endfor %}
+</div>
+
+
+<div id="div-observacao-contato-contato">
+    <label for="{{ form_contato.observacao.id_for_label }}">{{ form_contato.observacao.label_tag }}</label>
+    {% render_field form_contato.observacao class="form-control" rows='3'%}
+    <span class="help-block "></span>
+    {% for error in form_contato.observacao.errors %}
+    <span class="help-block">{{ error }}</span>
+    {% endfor %}
+</div>

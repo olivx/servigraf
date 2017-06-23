@@ -1,0 +1,7 @@
+[run]
+source = core, servigraf
+omit =
+    core/tests/*.py
+    core/migrations/*.py
+    servigraf/wsgi.py
+    core/apps.py

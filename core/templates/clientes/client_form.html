@@ -1,0 +1,76 @@
+{% load widget_tweaks %}
+
+<div id="div-razao-social" class="form-group {% if form_client.razao_social.errors %} has-error {% endif %}">
+    <label id="{{form_client.razao_social.id_for_label }}">
+        {{ form_client.razao_social.label_tag }} 
+    </label>
+    {% render_field form_client.razao_social|add_class:'form-control' %}
+    {% for error in form_client.razao_social.errors %}
+    <span class="help-block">{{ error }}</span>
+    {% endfor %}
+</div>
+
+<div id="div-nome-fantasia" class="form-group {% if form_client.nome_fantasia.errors %} has-error {% endif %}">
+    <label for="form.nome_fantasia.id_for_label">
+        {{ form_client.nome_fantasia.label_tag }} 
+    </label>
+    {% render_field form_client.nome_fantasia class='form-control' %}
+    {% for error in form_client.nome_fantasia.errors %}
+    <span class="help-block">{{ error }}</span>
+    {% endfor %}
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group {% if form_client.tipo.errors %} has-error {% endif %}" >
+            <label for="form.tipo.id_for_label ">{{ form_client.tipo.label_tag }}</label>
+            {% render_field form_client.tipo class='form-control'%}
+            {% for error in form_client.tipo.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div> <!-- col-md-3 -->
+
+    <div class="col-md-8">
+        <div id="div-documento" class="form-group {% if form_client.documento.errors %} has-error {% endif %}" >
+            <label for="{{ form_client.documento.id_for_label }}">{{ form_client.documento.label_tag }}</label>
+            {% render_field form_client.documento class='form-control'%}
+            {% for error in form_client.documento.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div> <!-- col-md-8 -->
+</div><!-- row tipo e documeto -->
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group {% if form_client.ramo.errors %} has-error {% endif %}" >
+            <label for="form.ramo.id_for_label ">{{ form_client.ramo.label_tag }}</label>
+            {% render_field form_client.ramo class='form-control'%}
+            {% for error in form_client.ramo.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div> <!-- col-md-10 -->
+
+
+    <div class="col-md-4" style="margin-top:3em;">
+        <div class="form-chek form-chek-inline {% if form_client.mensalista.errors %} has-error {% endif %}" >
+            <label class="form-check-label" for="form.mensalista.id_for_label ">
+                {% render_field form_client.mensalista class='form-check-input'%} Mensalista
+            </label>
+            {% for error in form_client.mensalista.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div> <!-- col-md-2 -->
+</div><!-- row ramo e mensalista  -->
+
+    <div class="form-group {% if form_client.observacao.errors %} has-error {% endif %}" >
+        <label for="form.observacao.id_for_label ">{{ form_client.observacao.label_tag }}</label>
+        {% render_field form_client.observacao class='form-control' rows='5' %}
+        {% for error in form_client.observacao.errors %}
+        <span class="help-block">{{ error }}</span>
+        {% endfor %}
+    </div>
+

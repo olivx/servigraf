@@ -1,0 +1,22 @@
+<form action="{% url 'servigraf:delete_client' form_client.instance.id  %}" method="post" class="js-delete-client-form">
+{% csrf_token %}
+    <div class="modal-header">
+        <h4 class="modal-title">Tem certeza que deseja Desativar esse Cliente ? </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+
+
+        {% include 'clientes/client_form.html' %}
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Desativar </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+    </div>
+</form>

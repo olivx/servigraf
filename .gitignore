@@ -1,0 +1,13 @@
+.servigraf
+*.sqlite3
+*.db
+staticfiles
+.idea
+__pycache__/
+*.pyc
+*/migrations/*.py
+.vscode/
+htmlcov/*.*
+.coverage
+.env
+

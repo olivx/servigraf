@@ -1,0 +1,34 @@
+
+{% for client  in client_list %}
+<tr>
+    <th>{{ client.id }}</th>
+    <th>{{ client.razao_social }}</th>
+    <th>{{ client.get_tipo_display }}</th>
+    <th>{{ client.documento }}</th>
+    <th>{{ client.modificado_em|date:'d/m/Y' }}</th>
+
+    <th><input class="form-control"
+               type="checkbox" {% if client.mensalista %} checked {% endif %} disabled />
+    </th>
+
+    <th>
+        <button type="button" class="btn btn-warning js-update-modal-cliente"
+                data-url="{% url 'servigraf:update_client' client.id %}">
+            <i class="glyphicon glyphicon-pencil"></i>
+        </button>
+    </th>
+
+    <th>
+        <button type="button" class="btn btn-danger js-delete-modal-cliente"
+                data-url="{% url 'servigraf:delete_client' client.id %}">
+            <i class="glyphicon glyphicon-trash"></i>
+        </button>
+    </th>
+
+    {% empty %}
+    <th colspan="8" class="bg-warning text-center">
+        Nenhum Cliente Foi Encontrado, Por favor tente com outros Parametros
+    </th>
+
+</tr>
+{% endfor %}
