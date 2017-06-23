@@ -5,5 +5,5 @@ exclude_paths:
 - "core/static/js/language/"
 - "core/static/js/locales/"
 - "core/static/js/validator/"
-- core/static/js/
+- "core/static/js/"
 
