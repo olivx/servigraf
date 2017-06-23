@@ -13,7 +13,6 @@ def home(request):
 
 def clientes(request):
     template = 'clientes/client_list.html'
-    from core.models import Cliente
     clients = Cliente.objects.filter(ativo=True)
 
     return render(request, template, {'client_list': clients})
@@ -32,13 +31,12 @@ def save_client(request):
             context = {
                 'client_list': client_list
             }
-            data['message'] = 'cliente: {} foi Adicionado com Sucesso!'.format(
+            data['message'] = 'cliente: {} foi adicionado com sucesso!'.format(
                 form_client.cleaned_data['nome_fantasia'])
             data['html_table'] = render_to_string(template_success, context=context, request=request)
         else:
             data['is_form_valid'] = False
-            data[
-                'message'] = 'Erros foram processado durante a ação,\npor favor verifique o formulario e tente ' \
+            data['message'] = 'Erros foram processado durante a ação,\npor favor verifique o formulario e tente ' \
                              'novamente. '
             data['html_form'] = render_to_string(template,
                                                  {'form_client': form_client}, request=request)

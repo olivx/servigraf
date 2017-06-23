@@ -1,9 +1,6 @@
 from django.utils.crypto import get_random_string
 
-'''
-    create .env file 
-'''
-
+""" create .env file"""
 print("'''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
 print('create a initial .env file ')
 print("'''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
