@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
+from pure_pagination import Paginator, PageNotAnInteger
 
 # Create your views here.
 from core.forms import ClientForm
@@ -13,9 +14,15 @@ def home(request):
 
 def clientes(request):
     template = 'clientes/client_list.html'
-    clients = Cliente.objects.filter(ativo=True)
+    clients_list = Cliente.objects.filter(ativo=True)
+    try:
+        page = request.GET.get('page', 1)
+    except PageNotAnInteger:
+        page = 1
 
-    return render(request, template, {'client_list': clients})
+    pages = Paginator(clients_list, 5, request=request)
+    clients = pages.page(page)
+    return render(request, template, {'clients': clients})
 
 
 def save_client(request):

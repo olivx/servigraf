@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load i18n %}
+
 {% block  title %} Servigraf Clientes {% endblock %}
 
 {% block content %}
@@ -57,6 +59,12 @@
 
     </tfoot>
 </table>
+<div class="row text-center">
+
+<div id="pagination">
+    {{ clients.render }}
+</div>
+</div>
 
 
 <div id="cliente-modal"   class="modal fade">

@@ -19,6 +19,7 @@ cd servigraf
 python -m venv .servigraf
 source .servigraf/bin/activate
 pip install -r requirements.txt
+python django-pure-pagiation/setup.py install
 python contrib/generate_.env.py
 python manage.py makemigrations
 python manage.py migrate
