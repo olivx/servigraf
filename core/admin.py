@@ -8,11 +8,11 @@ from core.forms import ClientForm
 class ClienteAdmin(admin.ModelAdmin):
 
     list_display = ['__str__', 'razao_social', 'documento', 'tipo', 'mensalista']
-    search_fields = ('nome_fantasia', 'razao_social', 'cpf', 'cnpj')
-    list_filter = ('mensalista',)
+    search_fields = ('nome_fantasia', 'razao_social', 'documento')
+    list_filter = ('mensalista','ativo')
     ordering = ('-criado_em',)
 
-    form = ClientForm
+    # form = ClientForm
 
 
 class EmailContatoInline(admin.TabularInline):

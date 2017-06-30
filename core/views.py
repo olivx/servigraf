@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
+from django.db.models import Q
 from pure_pagination import Paginator, PageNotAnInteger
 
 # Create your views here.
@@ -14,7 +15,13 @@ def home(request):
 
 def clientes(request):
     template = 'clientes/client_list.html'
-    clients_list = Cliente.objects.filter(ativo=True)
+    search = request.GET.get('search')
+    if search is not None:
+        clients_list = Cliente.objects.filter(Q(ativo=True) &
+                                              Q(nome_fantasia__contains=search,
+                                                razao_social__icontains=search))
+    else:
+        clients_list = Cliente.objects.filter(ativo=True)
     try:
         page = request.GET.get('page', 1)
     except PageNotAnInteger:
@@ -44,7 +51,7 @@ def save_client(request):
         else:
             data['is_form_valid'] = False
             data['message'] = 'Erros foram processado durante a ação,\npor favor verifique o formulario e tente ' \
-                             'novamente. '
+                              'novamente. '
             data['html_form'] = render_to_string(template,
                                                  {'form_client': form_client}, request=request)
 
@@ -107,3 +114,17 @@ def delete_client(request, pk):
         data['html_form'] = render_to_string(template, {'form_client': form_client},
                                              request=request)
     return JsonResponse(data)
+
+
+def detail_client(request, pk):
+    tempate_name = 'clientes/client_detail.html'
+    client = get_object_or_404(Cliente, pk=pk)
+    form_client =  ClientForm(instance=client)
+    context = {
+        'form_client': form_client
+    }
+    return render(request, tempate_name, context)
+
+
+def contact_list(request):
+    return render(request, 'contact/contact_list.html')

@@ -1,4 +1,6 @@
 from django.db import models
+from django.shortcuts import resolve_url as r
+
 class Timestamp(models.Model):
     class Meta:
         abstract = True
@@ -54,6 +56,11 @@ class Cliente(EntidadeAbstract):
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
 
+    def __str__(self):
+        return self.nome_fantasia
+
+    def get_absolute_url(self):
+        return r('servigraf:detail_client', pk=self.pk)
 
 class Email(Timestamp):
     email = models.EmailField('E-mail', max_length=30)
