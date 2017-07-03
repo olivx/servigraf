@@ -54,7 +54,7 @@ class TesvViewClienteList(TestCase):
             (7, '<button type="button" class="btn btn-'),
             (3, '<button type="button" class="btn btn-warning'),
             (3, '<button type="button" class="btn btn-danger'),
-            (1, 'div class="page-header"'),
+            (1, 'h1 class="page-header"'),
         ]
 
         for count, expeted in html:
