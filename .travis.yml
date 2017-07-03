@@ -4,7 +4,6 @@ python:
 install:
     - pip install -q -r requirements.txt
     - python contrib/generate_.env.py
-    - git clone git@github.com:olivx/django-pure-pagination.git
     - python django-pure-pagiation/setup.py install
 script:
 - python manage.py test --nomigrations
