@@ -5,9 +5,9 @@ staticfiles
 .idea
 __pycache__/
 *.pyc
-*/migrations/*.py
 .vscode/
 htmlcov/*.*
 .coverage
 .env
+.venv/
 
