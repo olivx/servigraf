@@ -1,5 +1,5 @@
 
-{% for client  in clients.object_list %}
+{% for client  in client_list.object_list %}
 <tr>
     <th>{{ client.id }}</th>
     <th><a href="{{ client.get_absolute_url }}">{{ client.razao_social }}</a></th>

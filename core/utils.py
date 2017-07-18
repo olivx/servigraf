@@ -1,5 +1,8 @@
 import re
 
+from django.core.paginator import PageNotAnInteger
+from pure_pagination import Paginator
+
 
 def is_cpf_or_cnpj(valor):
     # Remove caracteres invalidos do valor
@@ -107,3 +110,14 @@ def validar_cnpj(cnpj):
     if novo == inteiros:
         return cnpj
     return False
+
+
+def paginator(request, object_list, por_page=5):
+    try:
+        page = request.GET.get('page', 1)
+    except PageNotAnInteger:
+        page = 1
+
+    pages = Paginator(object_list, por_page, request=request)
+    objects_paginated  = pages.page(page)
+    return objects_paginated

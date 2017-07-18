@@ -7,6 +7,7 @@ from pure_pagination import Paginator, PageNotAnInteger
 # Create your views here.
 from core.forms import ClientForm
 from core.models import Cliente
+from core.utils import paginator
 
 
 def home(request):
@@ -22,14 +23,7 @@ def clientes(request):
                                                 razao_social__icontains=search))
     else:
         clients_list = Cliente.objects.filter(ativo=True)
-    try:
-        page = request.GET.get('page', 1)
-    except PageNotAnInteger:
-        page = 1
-
-    pages = Paginator(clients_list, 5, request=request)
-    clients = pages.page(page)
-    return render(request, template, {'clients': clients})
+    return render(request, template, {'client_list': paginator(request=request,object_list=clients_list)})
 
 
 def save_client(request):
@@ -43,7 +37,7 @@ def save_client(request):
             data['is_form_valid'] = True
             client_list = Cliente.objects.filter(ativo=True)
             context = {
-                'client_list': client_list
+                'client_list': paginator(request,client_list)
             }
             data['message'] = 'cliente: {} foi adicionado com sucesso!'.format(
                 form_client.cleaned_data['nome_fantasia'])
@@ -75,10 +69,12 @@ def update_client(request, pk):
             form_client.save()
             client_list = Cliente.objects.filter(ativo=True)
             context = {
-                'client_list': client_list
+                'client_list': paginator(request, client_list)
             }
             data['is_form_valid'] = True
-            data['message'] = 'cliente: {} foi Alterado com Sucesso!'.format(form_client.cleaned_data['nome_fantasia'])
+            data['message'] = 'cliente: {} foi Alterado com Sucesso!'\
+                .format(form_client.cleaned_data['nome_fantasia'])
+
             data['html_table'] = render_to_string(template_success, context=context, request=request)
         else:
             data['is_form_valid'] = False
@@ -106,7 +102,7 @@ def delete_client(request, pk):
                           'para reativa-lo você precisa usar a area administrativa.' \
             .format(client)
         cliente_list = Cliente.objects.filter(ativo=True)
-        data['html_table'] = render_to_string(template_success, {'client_list': cliente_list},
+        data['html_table'] = render_to_string(template_success, {'client_list': paginator(request, cliente_list) },
                                               request=request)
 
     else:
