@@ -110,7 +110,7 @@ class Telefone(Timestamp):
 
 
 class Contato(ContatoAstract):
-    cliente = models.ForeignKey('core.Cliente', related_name='contatos')
+    cliente = models.ForeignKey('core.Cliente', related_name='contatos' , blank=True, null=True)
 
 
 class Endereco(models.Model):
