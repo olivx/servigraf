@@ -46,8 +46,8 @@ class Cliente(EntidadeAbstract):
     )
 
     user = models.ForeignKey('auth.User', blank=True, null=True, related_name='cli_user')
-    tipo = models.PositiveSmallIntegerField('Fisico/Juridico', choices=TIPO_CLIENTE, default=TIPO_JURIDICO,
-                            blank=False, null=False)
+    tipo = models.PositiveSmallIntegerField('Fisico/Juridico', choices=TIPO_CLIENTE,
+                                            default=TIPO_JURIDICO, blank=False, null=False)
     ramo = models.CharField('Ramo', max_length=20, blank=True, null=False)
     mensalista = models.BooleanField(default=False)
 
