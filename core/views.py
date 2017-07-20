@@ -1,8 +1,7 @@
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
-from django.db.models import Q
-from pure_pagination import Paginator, PageNotAnInteger
 
 # Create your views here.
 from core.forms import ClientForm
@@ -23,7 +22,9 @@ def clientes(request):
                                                 razao_social__icontains=search))
     else:
         clients_list = Cliente.objects.filter(ativo=True)
-    return render(request, template, {'client_list': paginator(request=request,object_list=clients_list)})
+
+    clients = paginator(request, clients_list)
+    return render(request, template, {'client_list': clients})
 
 
 def save_client(request):
@@ -37,7 +38,7 @@ def save_client(request):
             data['is_form_valid'] = True
             client_list = Cliente.objects.filter(ativo=True)
             context = {
-                'client_list': paginator(request,client_list)
+                'client_list': paginator(request, client_list)
             }
             data['message'] = 'cliente: {} foi adicionado com sucesso!'.format(
                 form_client.cleaned_data['nome_fantasia'])
@@ -72,7 +73,7 @@ def update_client(request, pk):
                 'client_list': paginator(request, client_list)
             }
             data['is_form_valid'] = True
-            data['message'] = 'cliente: {} foi Alterado com Sucesso!'\
+            data['message'] = 'cliente: {} foi Alterado com Sucesso!' \
                 .format(form_client.cleaned_data['nome_fantasia'])
 
             data['html_table'] = render_to_string(template_success, context=context, request=request)
@@ -102,7 +103,7 @@ def delete_client(request, pk):
                           'para reativa-lo você precisa usar a area administrativa.' \
             .format(client)
         cliente_list = Cliente.objects.filter(ativo=True)
-        data['html_table'] = render_to_string(template_success, {'client_list': paginator(request, cliente_list) },
+        data['html_table'] = render_to_string(template_success, {'client_list': paginator(request, cliente_list)},
                                               request=request)
 
     else:
@@ -115,9 +116,11 @@ def delete_client(request, pk):
 def detail_client(request, pk):
     tempate_name = 'clientes/client_detail.html'
     client = get_object_or_404(Cliente, pk=pk)
-    form_client =  ClientForm(instance=client)
+    form_client = ClientForm(instance=client)
+    contatos = client.contatos.all()
     context = {
-        'form_client': form_client
+        'form_client': form_client,
+        'contatos': contatos
     }
     return render(request, tempate_name, context)
 

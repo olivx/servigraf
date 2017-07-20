@@ -18,12 +18,14 @@ class Command(BaseCommand):
         columns = tuple([desc[0] for desc in cursor.description])
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-        print('importando dados...')
+        print('importando contato de clientes dados...')
         for row in rows:
+            cli = Cliente.objects.get(id=row['clienteid'])
             Contato.objects.create(
                 nome=row['nome'],
                 sobre_nome=row['sobrenome'],
                 observacao=row['descricao'],
+                cliente=cli
             )
         print('Contatos importado com sucesso!')
 

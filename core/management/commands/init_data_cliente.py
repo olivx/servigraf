@@ -54,12 +54,14 @@ class Command(BaseCommand):
 
         print('Inportando para banco de dados atual....')
         for data in client_list:
-            Cliente.objects.create(razao_social=data['razao_social'],
-                                   nome_fantasia=data['nome_fantasia'],
-                                   documento=data['documento'],
-                                   mensalista=data['mensalista'],
-                                   ramo=data['ramo'],
-                                   tipo=data['tipo'])
+            Cliente.objects.create(
+                                id=data['id'],
+                                razao_social=data['razao_social'],
+                                nome_fantasia=data['nome_fantasia'],
+                                documento=data['documento'],
+                                mensalista=data['mensalista'],
+                                ramo=data['ramo'],
+                                tipo=data['tipo'])
         print('Clientes Importado com Sucesso !')
 
 
