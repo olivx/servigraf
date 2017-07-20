@@ -28,34 +28,34 @@
 
                 <thead class="bg-primary">
                 <tr>
-                    <th>#</th>
-                    <th>Contato</th>
-                    <th>EDIT</th>
-                    <th>DELETE</th>
+                    <th width="90%">Contato</th>
+                    <th >EDIT</th>
+                    <th >DELETE</th>
                 </tr>
                 </thead>
 
                 <tbody>
+                {% for contato in contatos %}
                 <tr>
-                    <th></th>
-                    <th></th>
+                    <th><a class="link" href="#">{{ contato }}</a></th>
 
                     <!--  actions -->
 
                     <!--botao editar -->
-                    <th>
+                    <th >
                         <button class="btn btn-warning">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </button>
                     </th>
                     <!-- botao desativar -->
-                    <th>
+                    <th >
                         <button class="btn btn-danger">
                             <i class="glyphicon glyphicon-trash"></i>
                         </button>
                     </th>
 
                 </tr>
+                {% endfor %}
 
 
                 </tbody>
@@ -83,8 +83,8 @@
                 <thead class="bg-primary">
                 <tr>
                     <th>#</th>
-                    <th>Endereco</th>
-                    <th>TIPO</th>
+                    <th width="70%">Endereco</th>
+                    <th width="20%">TIPO</th>
                     <th>EDIT</th>
                     <th>DELETE</th>
                 </tr>
