@@ -17,11 +17,10 @@
         <div class="row">
             <h3 class="page-header clear_header"> Contato </h3>
             <div style="margin-bottom:4em;">
-                <form action="" method="GET">
-                    <button class=" pull-right btn btn-primary">
+                    <button type="button" class="pull-right btn btn-primary js-open-contact-form"
+                            data-url="{% url 'servigraf:contact_save' %}">
                         ADD CONTATO
                     </button>
-                </form>
             </div> <!-- contato div botao -->
 
             <table id="contact-table" class="table table-striped table-hover table-condensed">
@@ -37,7 +36,7 @@
                 <tbody>
                 {% for contato in contatos %}
                 <tr>
-                    <th><a class="link" href="#">{{ contato }}</a></th>
+                    <th><a class="link" href="#">{{ contato|upper }}</a></th>
 
                     <!--  actions -->
 
@@ -71,7 +70,7 @@
         <div class="row">
             <h3 class="page-header clear_header"> Endereço </h3>
             <div style="margin-bottom:4em;">
-                <form action="" method="GET">
+                <form action="">
 
                     <button class=" pull-right btn btn-primary">
                         ADD CONTATO
@@ -124,10 +123,10 @@
 </div>
 
 <div id="modal"   class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-
+            {% include 'contact/contact_save.html' %}
 
         </div><!-- content -->
     </div>

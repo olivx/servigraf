@@ -1,0 +1,79 @@
+{% load widget_tweaks%}
+
+<div class="form-group {% if form_contact.nome.erros %} has-error {% endif %}" >
+    <label for="{{ form_contact.nome.id_for_label }}"> {{ form_contact.nome.label }}</label>
+    {% render_field form_contact.nome  class="form-control" %}
+    {% for error in form_contact.nome.errors %}
+    <span class="help-block"> {{ error}}</span>
+    {% endfor %}
+</div><!-- form group  nome -->
+
+<div class="form-group {% if form_contact.sobre_nome.erros %} has-error{% endif%}">
+    <label for="{{ contact_form.sobre_nome.id_for_label}}">{{ form_contact.sobre_nome.label }}</label>
+    {% render_field form_contact.sobre_nome class="form-control" %}
+    {% for error in form_contact.sobre_nome.erros %}
+    <span class="help-block ">{{ error }}</span>
+    {% endfor %}
+</div>
+
+<div class="form-group {% if form_contact.observacao.erros %} has-error{% endif%}">
+    <label for="{{ contact_form.observacao.id_for_label}}">{{ form_contact.observacao.label }}</label>
+    {% render_field form_contact.observacao class="form-control" rows='3'%}
+    {% for error in form_contact.observacao.erros %}
+    <span class="help-block ">{{ error }}</span>
+    {% endfor %}
+</div>
+
+{{ formset_email.management_form }}
+{{ formset_telefone.management_form }}
+<div class="row">
+    <div class="col-md-6">
+        <legend class="lead">Email </legend>
+
+        {% for email_form  in formset_email %}
+        <div class="form-group  {% if email_form.email.erros %} has-error {% endif%}">
+            <label for="{{ email_form.id_for_label }}">{{ email_form.email.label  }}</label>
+            {% render_field email_form.email class="form-control "%}
+            {% for error in email_form.email.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" title="Adiconar linha">
+                <i class="glyphicon glyphicon-plus"></i>
+            </button>
+
+            <button type="button" class="btn btn-primary" title="Exluir inha">
+                <i class="glyphicon glyphicon-trash"></i>
+            </button>
+        </div>
+
+    </div><!--  div col 6 email -->
+
+    <div class="col-md-6">
+        <legend class="">Telefone </legend>
+
+        {% for tel_form in formset_telefone %}
+        <div class="form-group {% if tel_form.telefone.errors %} has-error {% endif %}">
+
+            <div class="col-md-8">
+                <label for="{{ tel_form.telefone.id_for_label }}">{{ tel_form.telefone.label }}</label>
+                {% render_field tel_form.telefone class="form-control " %}
+            </div>
+
+            <div class="col-md-4">
+                <label for="{{ tel_form.telefone.id_for_label }}">{{ tel_form.tipo.label }}</label>
+                {% render_field tel_form.tipo class="form-control " %}
+            </div>
+            {% for error in tel_form.telefone.erros%}
+            <span class="help-block"></span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+
+</div><!--  row base -->
+

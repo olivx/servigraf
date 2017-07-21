@@ -1,7 +1,7 @@
 from django import forms
 from core import utils
 from django.core.exceptions import ValidationError
-from core.models import Cliente
+from core.models import Cliente, Contato, Email, Telefone
 
 
 class ClientForm(forms.ModelForm):
@@ -44,11 +44,24 @@ class ClientForm(forms.ModelForm):
             if not utils.validar_cpf(documento):
                 raise ValidationError('CPF informado invalido, verifique e tente novamente.', code='CPF_INVALIDO')
 
-
-
         return self.cleaned_data
 
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contato
+        fields = ('nome', 'sobre_nome', 'observacao',)
 
+
+class EmailForm(forms.ModelForm):
+    class Meta:
+        model = Email
+        fields = ('email',)
+
+
+class TelefoneFrom(forms.ModelForm):
+    class Meta:
+        model = Telefone
+        fields = ('tipo', 'telefone',)
 
 

@@ -85,18 +85,17 @@ class Telefone(Timestamp):
     CELULAR_VIVO = 8
     CELULAR_OI = 9
     TIPO_TELEFONE = (
-        ('TELEFONE FIXO', FIXO),
-        ('TELEFONE FAX', FAX),
-        ('TELEFONE CASA', CASA),
-        ('TELEFONE TRBALHO', TRABALHO),
-        ('TELEFONE CELULAR', CELULAR),
-        ('TELEFONE CELULAR TIM', CELULAR_TIM),
-        ('TELEFONE CELULAR CLARO', CELULAR_CLARO),
-        ('TELEFONE CELULAR VIVO', CELULAR_VIVO),
-        ('TELEFONE CELULAR VIVO', CELULAR_OI),
+        (CELULAR_OI,    'OI'),
+        (CELULAR_TIM,   'TIM'),
+        (FAX,           'FAX'),
+        (FIXO,          'FIXO'),
+        (CELULAR_VIVO,  'VIVO'),
+        (CASA,          'CASA'),
+        (CELULAR_CLARO, 'CLARO'),
+        (CELULAR,       'CELULAR'),
+        (TRABALHO,      'TRABALHO'),
     )
 
-    ddd = models.CharField('DDD', max_length=3)
     telefone = models.CharField('Telefone', max_length=15)
     tipo = models.PositiveIntegerField('Tipo', choices=TIPO_TELEFONE, default=FIXO)
     contato = models.ForeignKey('core.Contato', related_name='telefones', null=True, blank=True)

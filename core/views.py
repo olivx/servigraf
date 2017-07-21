@@ -4,8 +4,9 @@ from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
 # Create your views here.
-from core.forms import ClientForm
-from core.models import Cliente
+from core.forms import ClientForm, ContactForm, EmailForm ,TelefoneFrom
+from django.forms.models import inlineformset_factory
+from core.models import Cliente, Contato, Email, Telefone
 from core.utils import paginator
 
 
@@ -127,3 +128,29 @@ def detail_client(request, pk):
 
 def contact_list(request):
     return render(request, 'contact/contact_list.html')
+
+
+def contact_save(request):
+    data = {}
+    contact = Contato()
+    telefone = Telefone()
+    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm, can_delete=False,
+                                                  extra=1, min_num=0, validate_min=True)
+    telefone_contact_formset =  inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=False,
+                                                      extra=1, min_num=0, validate_min=True)
+
+    if request.method == 'POST':
+        pass
+    else:
+        contact_form = ContactForm(instance=contact, prefix='contact')
+        email_formset = email_contact_formset(instance=contact, prefix='email')
+        telefone_formset = telefone_contact_formset(instance=contact, prefix='telefone')
+        context = {
+            'form_contact': contact_form,
+            'formset_email': email_formset,
+            'formset_telefone': telefone_formset
+
+        }
+        data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
+
+    return JsonResponse(data)

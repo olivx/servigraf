@@ -78,4 +78,26 @@ $(function(){
     $('#cliente-modal').on('submit', '.js-delete-client-form', saveClientForm);
 
 
+    // contact methods
+
+    function loadContactForm(){
+        var btn =  $(this);
+        $.ajax({
+            url:        btn.attr('data-url'),
+            type:       'GET',
+            dataType:   'json',
+
+            beforeSend: function(){
+                $('#modal').modal('show');
+            },
+            success: function(data){
+                $('#modal .modal-content').html(data.html_form);
+            }
+        });
+    };
+
+    // contact save
+    $('.js-open-contact-form').click(loadContactForm);
+
+
 });
