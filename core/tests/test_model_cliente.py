@@ -57,22 +57,22 @@ class TestModelCliente(TestCase):
 
     def test_contato_cliente_more_than_one_telefone(self):
         '''O contato pode possuir mais de um telefone'''
-        Telefone.objects.create(ddd='111',telefone='4232-4522', tipo=Telefone.FIXO,
+        Telefone.objects.create(telefone='4232-4522', tipo=Telefone.FIXO,
                                        contato=self.cliente.contatos.first())
-        Telefone.objects.create(ddd='111',telefone='4232-4521', tipo=Telefone.FIXO,
+        Telefone.objects.create(telefone='4232-4521', tipo=Telefone.FIXO,
                                        contato=self.cliente.contatos.first())
         self.assertEqual(2, Contato.objects.first().telefones.count())
 
     def test_telefone_tipo_default_is_fixo(self):
         '''O tipo de telefone fixo deve ser default'''
-        contato_telefone = Telefone.objects.create(ddd='021', telefone='4352-2010')
+        contato_telefone = Telefone.objects.create(telefone='4352-2010')
         self.assertEqual(Telefone.FIXO, contato_telefone.tipo)
 
     def test_string_telefone(self):
         '''Test se o __str__ é o mesmo do telefone '''
-        self.telefone = mommy.make(Telefone, ddd='011', telefone='42314522')
-        self.celular = mommy.make(Telefone, ddd='011', telefone='970513508')
-        self.assertEqual('(011) 4231-4522', self.telefone.__str__())
+        self.telefone = mommy.make(Telefone, telefone='42314522')
+        self.celular = mommy.make(Telefone, telefone='970513508')
+        self.assertEqual('4231-4522', self.telefone.__str__())
 
     def test_email_string(self):
         '''Test se __str__ é o email '''
