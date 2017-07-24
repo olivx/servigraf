@@ -100,4 +100,72 @@ $(function(){
     $('.js-open-contact-form').click(loadContactForm);
 
 
+    // email formset
+
+    //remove item email formset
+    $('#modal').on('click' , '#remove-email', function(){
+        count =  $('#email-formset').children().length;
+        if (count > 1){
+            $('#email-formset div').last().remove();
+
+            // update valid total forms
+            $('#id_email-TOTAL_FORMS').attr('value' , count);
+        }else{
+
+            alert('Opa! 1 é minimo de email field para o formulario.')
+        }
+    });
+
+    // add item email formset
+    $('#modal').on('click' , '#add-email', function(){
+
+        var count = $('#email-formset').children().length;
+        var tmp = $("#contact-email").html();
+        var new_email_form = tmp.replace(/__prefix__/g, count);
+        $("div#email-formset").append(new_email_form);
+
+         // update form email valid total forms
+         $('#id_email-TOTAL_FORMS').attr('value', count + 1);
+
+         // animate to scroll
+        $('#modal, .modal-body').animate({
+            scrollTop: $("#add-email").position().top-200
+          }, 1500);
+
+    });
+
+    // add item telefone formset
+    $('#modal').on('click', '#add-telefone', function(){
+
+        var count =  $('#telefone-formset').children().length;
+        var tmp = $('#contact-telefone').html();
+        var new_telefone_form =  tmp.replace(/__prefix__/g, count);
+        $('div#telefone-formset').append(new_telefone_form);
+
+        // upate validate formset
+        $('#id_telefone-TOTAL_FORMS').attr('value', count + 1)
+
+        // animate to scroll
+        $('#modal, .modal-body').animate({
+            scrollTop: $('#add-telefone').position().top-200
+        }, 1500);
+
+    });
+
+    // remove formset element
+    $('#modal').on('click', '#remove-telefone', function(){
+
+        count =  $('#telefone-formset').children().length;
+        if( count > 1){
+
+            $('#telefone-formset .form-group').last().remove();
+            $('#id_telefone-TOTAL_FORMS').attr('value', count);
+
+        }else{
+
+            alert('Opa! 1 é minimo de telefone field para o formulario.')
+        }
+    });
+
+
 });

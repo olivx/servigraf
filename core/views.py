@@ -1,13 +1,14 @@
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
 # Create your views here.
-from core.forms import ClientForm, ContactForm, EmailForm ,TelefoneFrom
-from django.forms.models import inlineformset_factory
+from core.forms import ClientForm, ContactForm, EmailForm, TelefoneFrom
+from django.forms import inlineformset_factory
 from core.models import Cliente, Contato, Email, Telefone
 from core.utils import paginator
+from django.shortcuts import resolve_url as r
 
 
 def home(request):
@@ -130,22 +131,34 @@ def contact_list(request):
     return render(request, 'contact/contact_list.html')
 
 
-def contact_save(request):
+def contact_save(request, client_id):
     data = {}
     contact = Contato()
-    telefone = Telefone()
-    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm, can_delete=False,
+    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm,
+                                                  can_delete=False,
                                                   extra=1, min_num=0, validate_min=True)
-    telefone_contact_formset =  inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=False,
-                                                      extra=1, min_num=0, validate_min=True)
+    telefone_contact_formset = inlineformset_factory(Contato, Telefone, form=TelefoneFrom,
+                                                     can_delete=False,
+                                                     extra=1, min_num=0, validate_min=True)
 
+    contact_form = ContactForm(request.POST or None, instance=contact, prefix='contact')
+    email_formset = email_contact_formset(request.POST or None, instance=contact, prefix='email')
+    telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
+    cliente = get_object_or_404(Cliente, pk=client_id)
+    form_client = ClientForm(instance=cliente)
     if request.method == 'POST':
-        pass
+        if contact_form.is_valid() and email_formset.is_valid() and telefone_formset.is_valid():
+            forms = contact_form.save(commit=False)
+            forms.cliente = cliente
+            forms.save()
+            email_formset.save()
+            telefone_formset.save()
+
+            return HttpResponseRedirect(r('servigraf:detail_client', cliente.id ))
+
     else:
-        contact_form = ContactForm(instance=contact, prefix='contact')
-        email_formset = email_contact_formset(instance=contact, prefix='email')
-        telefone_formset = telefone_contact_formset(instance=contact, prefix='telefone')
         context = {
+            'form_client': form_client,
             'form_contact': contact_form,
             'formset_email': email_formset,
             'formset_telefone': telefone_formset
@@ -154,3 +167,5 @@ def contact_save(request):
         data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
 
     return JsonResponse(data)
+
+
