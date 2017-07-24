@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'test_without_migrations',
     'pure_pagination',
     'widget_tweaks',
+    'debug_toolbar',
 
     'core',
 ]
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +58,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'servigraf.urls'
@@ -136,3 +140,6 @@ PAGINATION_SETTINGS = {
 
     'SHOW_FIRST_PAGE_WHEN_INVALID': True,
 }
+
+#
+INTERNAL_IPS = (config('INTERNAL_IPS'),)

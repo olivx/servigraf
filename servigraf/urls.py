@@ -17,9 +17,19 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from core import views
+from servigraf import settings
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+
+
     url(r'^$', views.home, name='home'),
 
     url(r'^servigraf/', include('core.urls', namespace='servigraf'))
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^debug/', include(debug_toolbar.urls)),
+    ] + urlpatterns
