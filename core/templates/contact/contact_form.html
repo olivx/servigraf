@@ -30,22 +30,18 @@
     <div class="col-md-6">
         <legend class="lead">Email </legend>
 
-        {% for email_form  in formset_email %}
         <div id="email-formset">
+        {% for email_form  in formset_email %}
             <div id="item-email-{{ forloop.counter0 }}"
                  class="form-group {% if email_form.email.errors %} has-error {% endif %}">
-                <!--{% render_field email_form.email class="form-control" %}-->
-                <label for="{{ email_form.id_for_label }}">{{ email_form.email.label  }}</label>
+                <label for="{{ email_form.email.id_for_label }}">{{ email_form.email.label  }}</label>
                 {% render_field email_form.email class="form-control "%}
                 {% for error in email_form.email.errors %}
                 <span class="help-block">{{ error }}</span>
                 {% endfor %}
             </div>
+        {% endfor %}
         </div>
-
-        <!--<div class="form-group  {% if email_form.email.erros %} has-error {% endif%}">-->
-        <!--</div>-->
-        <!--{% endfor %}-->
 
         <div class="text-center">
             <button id="add-email" type="button" class="btn btn-primary" title="Adiconar linha">
@@ -62,8 +58,8 @@
     <div class="col-md-6">
         <legend class="">Telefone </legend>
 
-        {% for tel_form in formset_telefone %}
         <div id="telefone-formset">
+        {% for tel_form in formset_telefone %}
             <div id="item-telefone-{{ forloop.counter0}}"
                  class="form-group {% if tel_form.telefone.errors %} has-error {% endif %}">
 
@@ -82,8 +78,8 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
         {% endfor %}
+        </div>
 
 
         <div class="text-center">
@@ -102,13 +98,12 @@
 
     <script type="text/html" id="contact-email">
         <div id="item-email-__prefix__"
-             class="form-group {% if tel_form.empaty_form.email.errors %} has-error {% endif %}">
-
-            <label for="{{formset_email.empty_form.email.id_for_label}}">
+             class="form-group {% if formset_email.empty_form.email.email.errors %} has-error {% endif %}">
+            <label for="{{ formset_email.empty_form.email.id_for_label }}">
                 {{ formset_email.empty_form.email.label }}
             </label>
             {% render_field formset_email.empty_form.email class="form-control"  %}
-            {% for error in email_form.empty_form.email.errors %}
+            {% for error in formset_email.empty_form.email.errors %}
             <span class="help-block">{{ error }}</span>
             {% endfor %}
         </div>

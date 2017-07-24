@@ -134,6 +134,8 @@ def contact_list(request):
 def contact_save(request, client_id):
     data = {}
     contact = Contato()
+    client = get_object_or_404(Cliente, pk=client_id)
+
     email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm,
                                                   can_delete=False,
                                                   extra=1, min_num=0, validate_min=True)
@@ -144,17 +146,16 @@ def contact_save(request, client_id):
     contact_form = ContactForm(request.POST or None, instance=contact, prefix='contact')
     email_formset = email_contact_formset(request.POST or None, instance=contact, prefix='email')
     telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
-    cliente = get_object_or_404(Cliente, pk=client_id)
-    form_client = ClientForm(instance=cliente)
+    form_client = ClientForm(instance=client)
     if request.method == 'POST':
         if contact_form.is_valid() and email_formset.is_valid() and telefone_formset.is_valid():
             forms = contact_form.save(commit=False)
-            forms.cliente = cliente
+            forms.cliente = client
             forms.save()
             email_formset.save()
             telefone_formset.save()
 
-            return HttpResponseRedirect(r('servigraf:detail_client', cliente.id ))
+            return HttpResponseRedirect(r('servigraf:detail_client', client.id))
 
     else:
         context = {
@@ -165,7 +166,44 @@ def contact_save(request, client_id):
 
         }
         data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
-
     return JsonResponse(data)
 
 
+def contact_update(request, client_id, contact_id):
+    data = {}
+    # get client end contact instances
+    client = get_object_or_404(Cliente, pk=client_id)
+    contact = get_object_or_404(Contato, pk=contact_id)
+
+    # formset
+    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm, can_delete=False,
+                                                  min_num=0, extra=1, validate_min=True)
+
+    telefone_contact_formset = inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=False,
+                                                     min_num=0, extra=1, validate_min=True)
+
+    # forms initialization
+    contact_form = ContactForm(request.POST or None, instance=contact, prefix='contact')
+    email_formset = email_contact_formset(request.POST or None, instance=contact, prefix='email')
+    telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
+    client_form = ClientForm(instance=client)
+    if request.method == 'POST':
+
+        if contact_form.is_valid() and email_formset.is_valid() and telefone_formset.is_valid():
+            forms = contact_form.save(commit=False)
+            forms.cliente = client
+            forms.save()
+            email_formset.save()
+            telefone_formset.save()
+
+            HttpResponseRedirect(r('servigraf:detail_client', pk=client_id))
+    else:
+        context = {
+            'form_client': client_form,
+            'form_contact': contact_form,
+            'formset_email': email_formset,
+            'formset_telefone': telefone_formset
+        }
+        data['html_form'] = render_to_string('contact/contact_update.html', context, request=request)
+
+    return JsonResponse(data)

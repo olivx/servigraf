@@ -9,7 +9,8 @@ urlpatterns = [
     url(r'clientes/delete/(?P<pk>\d+)/$', views.delete_client, name='delete_client'),
     url(r'clientes/detalhes/(?P<pk>\d+)/$', views.detail_client, name='detail_client'),
 
-    url('contatos/$', views.contact_list, name='contact_list'),
-    url('contatos/save/(?P<client_id>\d+)/$', views.contact_save, name='contact_save')
+    url(r'contatos/$', views.contact_list, name='contact_list'),
+    url(r'contatos/save/(?P<client_id>\d+)/$', views.contact_save, name='contact_save'),
+    url(r'contatos/update/(?P<client_id>\d+)/(?P<contact_id>\d+)/$', views.contact_update, name='contact_update')
 
 ]
