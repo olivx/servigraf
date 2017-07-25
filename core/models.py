@@ -29,7 +29,7 @@ class ContatoAstract(models.Model):
     observacao = models.TextField('observação', null=True, blank=True)
 
     def __str__(self):
-        return self.nome
+        return '%s %s'%(self.nome, self.sobre_nome)
 
     class Meta:
         abstract = True
