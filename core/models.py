@@ -26,7 +26,7 @@ class EntidadeAbstract(Timestamp):
 class ContatoAstract(models.Model):
     nome = models.CharField(max_length=30)
     sobre_nome = models.CharField(max_length=30)
-    observacao = models.TextField('observação')
+    observacao = models.TextField('observação', null=True, blank=True)
 
     def __str__(self):
         return self.nome
