@@ -27,6 +27,8 @@ ALLOWED_HOSTS=127.0.0.1, .localhost
 #EMAIL_USE_TLS=
 #EMAIL_HOST_USER=
 
+INTERNAL_IPS=127.0.0.1
+
 '''.format(get_random_string(50, _keys))
 
 with open('.env', 'w') as conf:
