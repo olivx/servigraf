@@ -16,11 +16,8 @@ $(function(){
     };
 
     function saveClientForm(){  
-
-
-        form =  $(this);
+        var form =  $(this);
             $.ajax({
-
                 url:  form.attr('action'),
                 type: form.attr('method'),
                 data: form.serialize(),
@@ -37,12 +34,10 @@ $(function(){
                         alert(data.message)
                         $('#cliente-modal .modal-content').html(data.html_form);
                     }
-
                 }
-    });
-
+        });
     return false;
-};
+    };
 
     $("#cliente-modal").on("shown.bs.modal", function (e) {
 
@@ -96,8 +91,30 @@ $(function(){
         });
     };
 
+    function saveContactForm(){
+        var form = $(this);
+        $.ajax({
+            dataType: 'json',
+            url:  form.attr('action'),
+            type: form.attr('method'),
+            data: form.serialize(),
+
+            success: function(data){
+                if(data.is_form_valid){
+                    $('#modal').modal('hide');
+                    $('.row').html(data.html_form);
+                }else{
+
+                    $('#modal .modal-content').html(data.html_form);
+                }
+            }
+        });
+    return false;
+    };
+
     // contact save
     $('.js-open-contact-form').click(loadContactForm);
+    $('#modal').on('submit', '.js-client-contact-form', saveContactForm);
 
 
     // email formset

@@ -155,8 +155,23 @@ def contact_save(request, client_id):
             email_formset.save()
             telefone_formset.save()
 
-            return HttpResponseRedirect(r('servigraf:detail_client', client.id))
+            context = {
+                'form_client': form_client,
+                'contatos': client.contatos.all()
+            }
+            data['is_form_valid'] = True
+            data['html_form'] = render_to_string('clientes/client_detail.html',
+                                                 context, request=request)
+        else:
+            context = {
+                'form_client': form_client,
+                'form_contact': contact_form,
+                'formset_email': email_formset,
+                'formset_telefone': telefone_formset
+            }
 
+            data['is_form_valid'] = False
+            data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
     else:
         context = {
             'form_client': form_client,
@@ -165,7 +180,9 @@ def contact_save(request, client_id):
             'formset_telefone': telefone_formset
 
         }
+        data['is_form_valid'] = True
         data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
+
     return JsonResponse(data)
 
 
