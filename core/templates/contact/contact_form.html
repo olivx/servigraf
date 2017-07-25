@@ -2,7 +2,7 @@
 
 <div class="form-group {% if form_contact.nome.errors %} has-error {% endif %}" >
     <label for="{{ form_contact.nome.id_for_label }}"> {{ form_contact.nome.label }}</label>
-    {% render_field form_contact.nome  class="form-control" %}
+    {% render_field form_contact.nome  class="form-control upper" %}
     {% for error in form_contact.nome.errors %}
     <span class="help-block"> {{ error}}</span>
     {% endfor %}
@@ -10,7 +10,7 @@
 
 <div class="form-group {% if form_contact.sobre_nome.errors %} has-error{% endif%}">
     <label for="{{ contact_form.sobre_nome.id_for_label}}">{{ form_contact.sobre_nome.label }}</label>
-    {% render_field form_contact.sobre_nome class="form-control" %}
+    {% render_field form_contact.sobre_nome class="form-control upper" %}
     {% for error in form_contact.sobre_nome.errors %}
     <span class="help-block ">{{ error }}</span>
     {% endfor %}
@@ -18,7 +18,7 @@
 
 <div class="form-group {% if form_contact.observacao.errors %} has-error{% endif%}">
     <label for="{{ contact_form.observacao.id_for_label}}">{{ form_contact.observacao.label }}</label>
-    {% render_field form_contact.observacao class="form-control" rows='3'%}
+    {% render_field form_contact.observacao class="form-control upper" rows='3'%}
     {% for error in form_contact.observacao.errors %}
     <span class="help-block ">{{ error }}</span>
     {% endfor %}
@@ -34,8 +34,9 @@
         {% for email_form  in formset_email %}
             <div id="item-email-{{ forloop.counter0 }}"
                  class="form-group {% if email_form.email.errors %} has-error {% endif %}">
+                 {{ email_form.id }}
                 <label for="{{ email_form.email.id_for_label }}">{{ email_form.email.label  }}</label>
-                {% render_field email_form.email class="form-control "%}
+                {% render_field email_form.email class="form-control upper"%}
                 {% for error in email_form.email.errors %}
                 <span class="help-block">{{ error }}</span>
                 {% endfor %}
@@ -62,16 +63,16 @@
         {% for tel_form in formset_telefone %}
             <div id="item-telefone-{{ forloop.counter0}}"
                  class="form-group {% if tel_form.telefone.errors %} has-error {% endif %}">
-
+                {{ tel_form.id }}
                 <div class="row">
                     <div class="col-md-8">
                         <label for="{{ tel_form.telefone.id_for_label }}">{{ tel_form.telefone.label }}</label>
-                        {% render_field tel_form.telefone class="form-control " %}
+                        {% render_field tel_form.telefone class="form-control upper" %}
                     </div>
 
                     <div class="col-md-4">
                         <label for="{{ tel_form.telefone.id_for_label }}">{{ tel_form.tipo.label }}</label>
-                        {% render_field tel_form.tipo class="form-control " %}
+                        {% render_field tel_form.tipo class="form-control upper" %}
                     </div>
                     {% for error in tel_form.telefone.errors%}
                     <span class="help-block"></span>
@@ -99,10 +100,11 @@
     <script type="text/html" id="contact-email">
         <div id="item-email-__prefix__"
              class="form-group {% if formset_email.empty_form.email.email.errors %} has-error {% endif %}">
+            {{ formset_email.empty_form.email.id }}
             <label for="{{ formset_email.empty_form.email.id_for_label }}">
                 {{ formset_email.empty_form.email.label }}
             </label>
-            {% render_field formset_email.empty_form.email class="form-control"  %}
+            {% render_field formset_email.empty_form.email class="form-control upper"  %}
             {% for error in formset_email.empty_form.email.errors %}
             <span class="help-block">{{ error }}</span>
             {% endfor %}
@@ -112,18 +114,18 @@
     <script type="text/html" id="contact-telefone">
         <div id="item-telefone-__prefix__"
              class="form-group {% if formset_telefone.empty_form.telefone.errors %} has-error {% endif %}">
-
+            {{ formset_telefone.empty_form.id }}
             <div class="row">
                 <div class="col-md-8">
                     <label for="{{ formset_telefone.empty_form.telefone.id_for_label }}">
                         {{ formset_telefone.empty_form.telefone.label }}
                     </label>
-                    {% render_field formset_telefone.empty_form.telefone class="form-control " %}
+                    {% render_field formset_telefone.empty_form.telefone class="form-control upper" %}
                 </div>
 
                 <div class="col-md-4">
                     <label for="{{ formset_telefone.empty_form.telefone.id_for_label }}">{{ tel_form.tipo.label }}</label>
-                    {% render_field formset_telefone.empty_form.tipo class="form-control " %}
+                    {% render_field formset_telefone.empty_form.tipo class="form-control upper" %}
                 </div>
                 {% for error in formset_telefone.empty_form.telefone.errors%}
                 <span class="help-block"></span>

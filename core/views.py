@@ -119,7 +119,7 @@ def detail_client(request, pk):
     tempate_name = 'clientes/client_detail.html'
     client = get_object_or_404(Cliente, pk=pk)
     form_client = ClientForm(instance=client)
-    contatos = client.contatos.all()
+    contatos = paginator(request, client.contatos.all(), 2)
     context = {
         'form_client': form_client,
         'contatos': contatos
@@ -147,22 +147,31 @@ def contact_save(request, client_id):
     email_formset = email_contact_formset(request.POST or None, instance=contact, prefix='email')
     telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
     form_client = ClientForm(instance=client)
+
     if request.method == 'POST':
         if contact_form.is_valid() and email_formset.is_valid() and telefone_formset.is_valid():
-            forms = contact_form.save(commit=False)
-            forms.cliente = client
-            forms.save()
+            contato = contact_form.save(commit=False)
+            contato.cliente = client
+            contato.save()
             email_formset.save()
             telefone_formset.save()
-
-            context = {
-                'form_client': form_client,
-                'contatos': client.contatos.all()
-            }
+            _contact_list =  paginator(request, client.contatos.all(), 2)
             data['is_form_valid'] = True
-            data['html_form'] = render_to_string('clientes/client_detail.html',
-                                                 context, request=request)
-        else:
+
+            data['message'] = 'Contado: {} do cliente {},\nadicionado com sucesso.'. \
+                format(contato.nome.upper(), client.nome_fantasia.upper())
+
+            data['html_table'] = render_to_string('contact/contact_table.html',
+                                                  {
+                                                      'form_client': form_client,
+                                                      'contatos': _contact_list
+                                                  },
+                                                  request=request)
+
+            data['html_form'] = render_to_string('clientes/client_form.html',
+                                                 {'form_client': form_client},
+                                                 request=request)
+        else:  # post not valid
             context = {
                 'form_client': form_client,
                 'form_contact': contact_form,
@@ -172,7 +181,7 @@ def contact_save(request, client_id):
 
             data['is_form_valid'] = False
             data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
-    else:
+    else:  # if is a get
         context = {
             'form_client': form_client,
             'form_contact': contact_form,
@@ -183,6 +192,7 @@ def contact_save(request, client_id):
         data['is_form_valid'] = True
         data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
 
+    # return json
     return JsonResponse(data)
 
 
@@ -200,24 +210,49 @@ def contact_update(request, client_id, contact_id):
                                                      min_num=0, extra=1, validate_min=True)
 
     # forms initialization
-    contact_form = ContactForm(request.POST or None, instance=contact, prefix='contact')
+    form_contact = ContactForm(request.POST or None, instance=contact, prefix='contact')
     email_formset = email_contact_formset(request.POST or None, instance=contact, prefix='email')
     telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
-    client_form = ClientForm(instance=client)
+    form_client  = ClientForm(instance=client)
     if request.method == 'POST':
 
-        if contact_form.is_valid() and email_formset.is_valid() and telefone_formset.is_valid():
-            forms = contact_form.save(commit=False)
+        if form_contact.is_valid() and email_formset.is_valid() and telefone_formset.is_valid():
+            forms = form_contact.save(commit=False)
             forms.cliente = client
             forms.save()
             email_formset.save()
             telefone_formset.save()
 
-            HttpResponseRedirect(r('servigraf:detail_client', pk=client_id))
-    else:
+            _contact_list =  paginator(request, client.contatos.all(), 2)
+            context = {
+                'contatos' : _contact_list,
+                'form_client': form_client
+            }
+            data['is_form_valid'] =  True
+            data['message'] =  'Contato: {} do Cliente: {} ,\n alterado com sucesso.'\
+                .format(contact.nome.upper() + contact.sobre_nome.upper() , client.nome_fantasia.upper())
+
+            data['html_table'] = render_to_string('contact/contact_table.html', context, request=request )
+            data['html_form'] = render_to_string('clientes/client_form.html', {'form_client': form_client},
+                                                 request=request)
+
+
+        else: # post not valid
+            context = {
+                'form_client': form_client,
+                'form_contact': form_contact,
+                'formset_email': email_formset,
+                'formset_telefone': telefone_formset
+            }
+
+            data['is_form_valid'] = False
+            data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
+
+
+    else: # if is get
         context = {
-            'form_client': client_form,
-            'form_contact': contact_form,
+            'form_client': form_client,
+            'form_contact': form_contact,
             'formset_email': email_formset,
             'formset_telefone': telefone_formset
         }

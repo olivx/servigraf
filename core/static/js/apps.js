@@ -101,8 +101,12 @@ $(function(){
 
             success: function(data){
                 if(data.is_form_valid){
+                    $('#contact-table tbody').html(data.html_table);
+                    $('#client-form').html(data.html_form);
                     $('#modal').modal('hide');
-                    $('.row').html(data.html_form);
+
+                    alert(data.message);
+
                 }else{
 
                     $('#modal .modal-content').html(data.html_form);
@@ -113,8 +117,11 @@ $(function(){
     };
 
     // contact save
-    $('.js-open-contact-form').click(loadContactForm);
+    $('.js-open-contact-form',).click(loadContactForm);
+    $('#contact-table').on('click', '.js-open-contact-form', loadContactForm);
     $('#modal').on('submit', '.js-client-contact-form', saveContactForm);
+
+    // update
 
 
     // email formset
