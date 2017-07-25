@@ -85,7 +85,7 @@ class TestModelCliente(TestCase):
 
     def test_contato_string(self):
         self.contato = mommy.make(Contato, nome='um qualquer cliente')
-        self.assertEqual(self.contato.__str__(), self.contato.nome)
+        self.assertEqual(self.contato.__str__(), '%s %s'%(self.contato.nome, self.contato.sobre_nome))
 
 
 
