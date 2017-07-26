@@ -116,12 +116,13 @@ $(function(){
     return false;
     };
 
-    // contact save
+    // contact save update
     $('.js-open-contact-form',).click(loadContactForm);
     $('#contact-table').on('click', '.js-open-contact-form', loadContactForm);
     $('#modal').on('submit', '.js-client-contact-form', saveContactForm);
 
-    // update
+    // deactivation contact
+    $('#contact-table').on('click' , 'js-open-contact-form-delete', loadClientForm);
 
 
     // email formset

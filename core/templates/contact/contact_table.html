@@ -18,7 +18,8 @@
     </th>
     <!-- botao desativar -->
     <th >
-        <button class="btn btn-danger">
+        <button class="btn btn-danger js-open-contact-form" type="button"
+        data-url="{% url 'servigraf:contact_delete' form_client.instance.id contato.id %}">
             <i class="glyphicon glyphicon-trash"></i>
         </button>
     </th>
