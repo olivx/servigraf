@@ -27,6 +27,7 @@ class ContatoAstract(models.Model):
     nome = models.CharField(max_length=30)
     sobre_nome = models.CharField(max_length=30)
     observacao = models.TextField('observação', null=True, blank=True)
+    ativo = models.BooleanField(default=True)
 
     def __str__(self):
         return '%s %s'%(self.nome, self.sobre_nome)
