@@ -1,6 +1,9 @@
 from django.db import models
 from django.shortcuts import resolve_url as r
 
+from core.manager import ContatoManager
+
+
 class Timestamp(models.Model):
     class Meta:
         abstract = True
@@ -28,6 +31,9 @@ class ContatoAstract(models.Model):
     sobre_nome = models.CharField(max_length=30)
     observacao = models.TextField('observação', null=True, blank=True)
     ativo = models.BooleanField(default=True)
+
+
+    objects = ContatoManager()
 
     def __str__(self):
         return '%s %s'%(self.nome, self.sobre_nome)

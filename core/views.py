@@ -119,16 +119,12 @@ def detail_client(request, pk):
     tempate_name = 'clientes/client_detail.html'
     client = get_object_or_404(Cliente, pk=pk)
     form_client = ClientForm(instance=client)
-    contatos = paginator(request, client.contatos.all(), 2)
+    _contact_list = paginator(request, client.contatos.ativos(), 2)
     context = {
         'form_client': form_client,
-        'contatos': contatos
+        'contact_list': _contact_list
     }
     return render(request, tempate_name, context)
-
-
-def contact_list(request):
-    return render(request, 'contact/contact_list.html')
 
 
 def contact_save(request, client_id):
@@ -155,7 +151,7 @@ def contact_save(request, client_id):
             contato.save()
             email_formset.save()
             telefone_formset.save()
-            _contact_list = paginator(request, client.contatos.all(), 2)
+            _contact_list = paginator(request, client.contatos.ativos(), 2)
             data['is_form_valid'] = True
 
             data['message'] = 'Contado: {} do cliente {},\nadicionado com sucesso.'. \
@@ -164,7 +160,7 @@ def contact_save(request, client_id):
             data['html_table'] = render_to_string('contact/contact_table.html',
                                                   {
                                                       'form_client': form_client,
-                                                      'contatos': _contact_list
+                                                      'contact_list': _contact_list
                                                   },
                                                   request=request)
 
@@ -203,10 +199,10 @@ def contact_update(request, client_id, contact_id):
     contact = get_object_or_404(Contato, pk=contact_id)
 
     # formset
-    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm, can_delete=False,
+    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm, can_delete=True,
                                                   min_num=0, extra=1, validate_min=True)
 
-    telefone_contact_formset = inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=False,
+    telefone_contact_formset = inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=True,
                                                      min_num=0, extra=1, validate_min=True)
 
     # forms initialization
@@ -223,9 +219,9 @@ def contact_update(request, client_id, contact_id):
             email_formset.save()
             telefone_formset.save()
 
-            _contact_list = paginator(request, client.contatos.all(), 2)
+            _contact_list = paginator(request, client.contatos.ativos(), 2)
             context = {
-                'contatos': _contact_list,
+                'contact_list': _contact_list,
                 'form_client': form_client
             }
             data['is_form_valid'] = True
@@ -246,7 +242,7 @@ def contact_update(request, client_id, contact_id):
             }
 
             data['is_form_valid'] = False
-            data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
+            data['html_form'] = render_to_string('contact/contact_update.html', context, request=request)
 
 
     else:  # if is get
@@ -267,10 +263,21 @@ def contact_delete(request, client_id, contact_id):
     contact = get_object_or_404(Contato, pk=contact_id)
 
     if request.method == 'POST':
-        pass
+        contact.ativo = False
+        contact.save()
+        _contact_list = paginator(request, client.contatos.ativos(), 2)
+        form_client = ClientForm(instance=client)
+        context = {
+            'form_client': form_client,
+            'contact_list': _contact_list,
+        }
+        data['message'] = 'Contato {} , desativado com sucesso.\n' \
+                          'para ativalo é Necessario usar a area admistrativa'.format(contact)
+        data['html_table'] = render_to_string('contact/contact_table.html', context, request=request)
+
     else:
         context = {
-            'contact' : contact,
+            'contact': contact,
             'client': client
         }
         data['html_form'] = render_to_string('contact/contact_delete.html', context, request=request)

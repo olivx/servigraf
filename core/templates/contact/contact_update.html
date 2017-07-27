@@ -1,5 +1,5 @@
 <form action="{% url 'servigraf:contact_update' form_client.instance.id form_contact.instance.id %}"
-      method="post" class="js-client-contact-form">
+      method="post" class="js-client-contact-form-update">
     {% csrf_token %}
     <div class="modal-header">
         <h4 class="modal-title">Alterar Contato</h4>

@@ -26,5 +26,10 @@ class TelefoneContatoInline(admin.TabularInline):
 @admin.register(Contato)
 class ContatoAdmin(admin.ModelAdmin):
     inlines =  [EmailContatoInline, TelefoneContatoInline]
+    list_filter = ('ativo', )
+    search_fields = ('nome', 'sobre_nome', '=cliente__nome_fantasia')
+    list_display = ('nome', 'sobre_nome' , 'cliente', )
+
+
 
 

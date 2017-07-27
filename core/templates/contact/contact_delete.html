@@ -1,5 +1,5 @@
 <form action="{% url 'servigraf:contact_delete' client.id contact.id   %}"
-      method="post" class="js-client-contact-form">
+      method="post" class="js-contact-form-delete">
     {% csrf_token %}
     <div class="modal-header">
         <h4 class="modal-title">Desativação de Contato de Cliente </h4>
@@ -9,18 +9,18 @@
     </div> <!-- div header -->
     <div class="modal-body">
 
+        <div class="message">
+            <p class="lead">
+                Você realmente gostaria de desativar o Contato: <br />
+                <strong> {{ contact }} </strong> <br />
+            </p>
 
-        <p class="lead">
-            você realmente gostaria de desativar o Contato: <br />
-            <strong> {{ contact }} </strong> <br />
-            referente ao cliente: <br />
-
-            <strong>
-                ID: {{client.id }} <br />
-                None Fantasia: {{ client }}
-            </strong>
-        </p>
-
+            <p class="lead">
+                Referente ao Cliente: <br />
+                ID: <strong> {{client.id }}</strong> <br />
+                None Fantasia: <strong>{{ client }}</strong>
+            </p>
+        </div>
 
     </div> <!-- div body -->
     <div class="modal-footer">

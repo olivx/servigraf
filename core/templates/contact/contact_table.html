@@ -1,25 +1,22 @@
-{% for contato in contatos.object_list  %}
+{% for contact in contact_list.object_list  %}
 <tr>
     <th>
-        <a class="link js-open-contact-form" href="#"
-           data-url="{% url 'servigraf:contact_update' form_client.instance.id contato.id %}">
-            {{ contato|upper }}
-        </a>
+        {{ contact|upper }}
     </th>
 
     <!--  actions -->
 
     <!--botao editar -->
     <th >
-        <button class="btn btn-warning js-open-contact-form" type="button"
-                data-url="{% url 'servigraf:contact_update' form_client.instance.id contato.id %}">
+        <button class="btn btn-warning js-open-contact-form-update" type="button"
+                data-url="{% url 'servigraf:contact_update' form_client.instance.id contact.id %}">
             <i class="glyphicon glyphicon-pencil"></i>
         </button>
     </th>
     <!-- botao desativar -->
     <th >
-        <button class="btn btn-danger js-open-contact-form" type="button"
-        data-url="{% url 'servigraf:contact_delete' form_client.instance.id contato.id %}">
+        <button class="btn btn-danger js-open-contact-form-delete" type="button"
+                data-url="{% url 'servigraf:contact_delete' form_client.instance.id contact.id %}">
             <i class="glyphicon glyphicon-trash"></i>
         </button>
     </th>

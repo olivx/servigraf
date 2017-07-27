@@ -116,31 +116,42 @@ $(function(){
     return false;
     };
 
-    // contact save update
+
+    function deleteContactForm(){
+        var form = $(this);
+        $.ajax({
+
+            dataType:'json',
+            data: form.serialize(),
+            url: form.attr('action'),
+            type: 'post',
+
+            success: function(data){
+
+                $('#contact-table tbody').html(data.html_table);
+                $('#modal').modal('hide');
+                alert(data.message);
+
+            }
+
+        });
+     return false;
+    };
+
+    // contact save
     $('.js-open-contact-form',).click(loadContactForm);
-    $('#contact-table').on('click', '.js-open-contact-form', loadContactForm);
-    $('#modal').on('submit', '.js-client-contact-form', saveContactForm);
+        $('#modal').on('submit', '.js-open-contact-form', saveContactForm);
+
+    // contact update
+    $('#contact-table').on('click', '.js-open-contact-form-update', loadContactForm);
+    $('#modal').on('submit', '.js-client-contact-form-update', saveContactForm);
 
     // deactivation contact
-    $('#contact-table').on('click' , 'js-open-contact-form-delete', loadClientForm);
+    $('#contact-table').on('click' , '.js-open-contact-form-delete', loadContactForm);
+    $('#modal').on('submit', '.js-contact-form-delete', deleteContactForm);
 
 
     // email formset
-
-    //remove item email formset
-    $('#modal').on('click' , '#remove-email', function(){
-        count =  $('#email-formset').children().length;
-        if (count > 1){
-            $('#email-formset div').last().remove();
-
-            // update valid total forms
-            $('#id_email-TOTAL_FORMS').attr('value' , count);
-        }else{
-
-            alert('Opa! 1 é minimo de email field para o formulario.')
-        }
-    });
-
     // add item email formset
     $('#modal').on('click' , '#add-email', function(){
 
@@ -150,13 +161,25 @@ $(function(){
         $("div#email-formset").append(new_email_form);
 
          // update form email valid total forms
-         $('#id_email-TOTAL_FORMS').attr('value', count + 1);
+         $('#id_email-TOTAL_FORMS').attr('value', parseInt(count) );
 
          // animate to scroll
         $('#modal, .modal-body').animate({
             scrollTop: $("#add-email").position().top-200
           }, 1500);
 
+    });
+
+     //remove item email formset
+    $('#modal').on('click' , '#remove-email', function(){
+        count =  $('#email-formset').children().length;
+        if (count > 1){
+            $('#email-formset div').last().remove();
+            $('#id_email-TOTAL_FORMS').attr('value' , parseInt(count -1 ));
+        }else{
+
+            alert('Opa! 1 é minimo de email field para o formulario.')
+        }
     });
 
     // add item telefone formset
@@ -184,7 +207,7 @@ $(function(){
         if( count > 1){
 
             $('#telefone-formset .form-group').last().remove();
-            $('#id_telefone-TOTAL_FORMS').attr('value', count);
+            $('#id_telefone-TOTAL_FORMS').attr('value', count - 1);
 
         }else{
 
