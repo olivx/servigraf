@@ -68,7 +68,7 @@
 
     <div class="form-group {% if form_client.observacao.errors %} has-error {% endif %}" >
         <label for="form.observacao.id_for_label ">{{ form_client.observacao.label_tag }}</label>
-        {% render_field form_client.observacao class='form-control' rows='5' %}
+        {% render_field form_client.observacao class='form-control' get_rows='5' %}
         {% for error in form_client.observacao.errors %}
         <span class="help-block">{{ error }}</span>
         {% endfor %}

@@ -1,7 +1,7 @@
 from django.db import models
 from django.shortcuts import resolve_url as r
 
-from core.manager import ContatoManager
+from core.manager import ContatoManager, EnderecoManager
 
 
 class Timestamp(models.Model):
@@ -10,7 +10,6 @@ class Timestamp(models.Model):
 
     criado_em = models.DateField(auto_now_add=True, auto_now=False, null=True)
     modificado_em = models.DateTimeField(auto_now_add=False, auto_now=True, null=True)
-
 
 class EntidadeAbstract(Timestamp):
     nome_fantasia = models.CharField('Nome Fantasia', max_length=255, blank=False, null=False)
@@ -24,7 +23,6 @@ class EntidadeAbstract(Timestamp):
 
     class Meta:
         abstract = True
-
 
 class ContatoAstract(models.Model):
     nome = models.CharField(max_length=30)
@@ -42,7 +40,6 @@ class ContatoAstract(models.Model):
         abstract = True
         verbose_name = 'Contato'
         verbose_name_plural = 'Contatos'
-
 
 class Cliente(EntidadeAbstract):
     TIPO_JURIDICO = 1
@@ -80,7 +77,6 @@ class Email(Timestamp):
         verbose_name = 'E-mail'
         verbose_name_plural = 'E-mails'
 
-
 class Telefone(Timestamp):
     FIXO = 1
     FAX = 2
@@ -114,19 +110,17 @@ class Telefone(Timestamp):
         verbose_name = 'Telefone'
         verbose_name_plural = 'Telefones'
 
-
 class Contato(ContatoAstract):
     cliente = models.ForeignKey('core.Cliente', related_name='contatos' , blank=True, null=True)
 
-
 class Endereco(models.Model):
-    RESIDENCIA = 1
+    RESIDENCIAL = 1
     COMERCIAL = 2
     ENTERGA = 3
     FATURAMENTO = 4
 
     TIPO_ENDERECO = (
-        (RESIDENCIA, 'Resindencial'),
+        (RESIDENCIAL, 'Resindencial'),
         (COMERCIAL, 'Comercial'),
         (ENTERGA, 'Entrega'),
         (FATURAMENTO, 'Faturamento'),
@@ -144,3 +138,15 @@ class Endereco(models.Model):
     uf = models.CharField('UF', max_length=20)
     tipo_end = models.PositiveIntegerField('Tipo Endereço', choices=TIPO_ENDERECO, default=COMERCIAL)
     observacao = models.TextField()
+    ativo = models.BooleanField(default=True)
+
+    objects = EnderecoManager()
+
+    def __str__(self):
+        return '{0} {1}, {2} {3}'.format(
+            self.logradouro, self.endereco, self.numero , self.complemento
+        ).upper()
+
+    class Meta:
+        verbose_name = 'Endereço'
+        verbose_name_plural = 'Endereços'

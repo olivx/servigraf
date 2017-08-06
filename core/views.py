@@ -4,9 +4,9 @@ from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
 # Create your views here.
-from core.forms import ClientForm, ContactForm, EmailForm, TelefoneFrom
+from core.forms import ClientForm, ContactForm, EmailForm, TelefoneFrom, EnderecoForm
 from django.forms import inlineformset_factory
-from core.models import Cliente, Contato, Email, Telefone
+from core.models import Cliente, Contato, Email, Telefone, Endereco
 from core.utils import paginator
 from django.shortcuts import resolve_url as r
 
@@ -120,9 +120,11 @@ def detail_client(request, pk):
     client = get_object_or_404(Cliente, pk=pk)
     form_client = ClientForm(instance=client)
     _contact_list = paginator(request, client.contatos.ativos(), 2)
+    _end_list = paginator(request, client.enderecos.ativos(), 2)
     context = {
         'form_client': form_client,
-        'contact_list': _contact_list
+        'contact_list': _contact_list,
+        'end_list': _end_list
     }
     return render(request, tempate_name, context)
 
@@ -283,3 +285,4 @@ def contact_delete(request, client_id, contact_id):
         data['html_form'] = render_to_string('contact/contact_delete.html', context, request=request)
 
     return JsonResponse(data)
+

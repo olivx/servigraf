@@ -1,7 +1,7 @@
 from django import forms
 from core import utils
 from django.core.exceptions import ValidationError
-from core.models import Cliente, Contato, Email, Telefone
+from core.models import Cliente, Contato, Email, Telefone, Endereco
 
 
 class ClientForm(forms.ModelForm):
@@ -63,5 +63,12 @@ class TelefoneFrom(forms.ModelForm):
     class Meta:
         model = Telefone
         fields = ('tipo', 'telefone',)
+
+
+class EnderecoForm(forms.ModelForm):
+    class Meta:
+        model = Endereco
+        fields =  ('logradouro', 'end' , 'complemento','bairro' , 'cidade' ,
+                   'cep' , 'tipo_end')
 
 

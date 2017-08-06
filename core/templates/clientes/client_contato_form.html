@@ -22,7 +22,7 @@
 
 <div id="div-observacao-contato-contato">
     <label for="{{ form_contato.observacao.id_for_label }}">{{ form_contato.observacao.label_tag }}</label>
-    {% render_field form_contato.observacao class="form-control" rows='3'%}
+    {% render_field form_contato.observacao class="form-control" get_rows='3'%}
     <span class="help-block "></span>
     {% for error in form_contato.observacao.errors %}
     <span class="help-block">{{ error }}</span>

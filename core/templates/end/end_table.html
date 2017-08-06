@@ -1,0 +1,18 @@
+{% for end in end_list.object_list %}
+<tr>
+    <th> {{ end }}</th>
+
+    <th> {{ end.get_tipo_end_display }} </th>
+    <!--  actions -->
+    <th>
+        <button class="btn btn-warning">
+            <i class="glyphicon glyphicon-pencil"></i>
+        </button>
+    </th>
+    <th>
+        <button class="btn btn-danger">
+            <i class="glyphicon glyphicon-trash"></i>
+        </button>
+    </th>
+</tr>
+{% endfor %}
