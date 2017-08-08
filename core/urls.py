@@ -11,6 +11,8 @@ urlpatterns = [
 
     url(r'contatos/save/(?P<client_id>\d+)/$', views.contact_save, name='contact_save'),
     url(r'contatos/update/(?P<client_id>\d+)/(?P<contact_id>\d+)/$', views.contact_update, name='contact_update'),
-    url(r'contatos/delete/(?P<client_id>\d+)/(?P<contact_id>\d+)/$', views.contact_delete, name='contact_delete')
+    url(r'contatos/delete/(?P<client_id>\d+)/(?P<contact_id>\d+)/$', views.contact_delete, name='contact_delete'),
+
+    url(r'endereco/save/(?P<client_id>\d+)/$', views.end_save, name='end_save')
 
 ]

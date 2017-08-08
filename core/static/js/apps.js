@@ -137,7 +137,6 @@ $(function(){
      return false;
     };
 
-    // contact save
     $('.js-open-contact-form',).click(loadContactForm);
         $('#modal').on('submit', '.js-open-contact-form', saveContactForm);
 
@@ -214,29 +213,29 @@ $(function(){
         }
     });
 
+
+    // method end
     function loadEnderecoForm(){
         btn = $(this);
 
         $.ajax({
 
-            url: btn.attr('data-utl'),
+            url: btn.attr('data-url'),
             type: 'get',
             dataType: 'json',
 
             beforeSend: function(){
-
                 $('#modal').modal('show');
-
             },
             success: function(data){
-
-                $('#modal modal-content').hmtl(data.html_form);
-
+                $('#modal .modal-content').html(data.html_form);
             }
 
         });
 
     };
+
+    $('.js-open-end-form').click(loadEnderecoForm );
 
 
 });

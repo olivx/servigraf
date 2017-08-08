@@ -286,3 +286,17 @@ def contact_delete(request, client_id, contact_id):
 
     return JsonResponse(data)
 
+
+def end_save(request, client_id):
+    data = {}
+    client =  get_object_or_404(Cliente, pk=client_id)
+    end =  Endereco()
+    end.cliente =  client
+    if request.method == 'POST':
+        pass
+    else:
+        end_form = EnderecoForm(instance=end)
+        data['html_form'] = render_to_string('end/end_save.html',
+                                             context={ 'end_form' : end_form }, request=request)
+
+    return JsonResponse(data)

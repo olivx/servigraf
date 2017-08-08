@@ -53,8 +53,8 @@
         <div class="row">
             <h3 class="page-header clear_header"> Endereço </h3>
             <div style="margin-bottom:4em;">
-                <button type="button"class=" pull-right btn btn-primary"
-                        data-url="" >
+                <button type="button"class=" pull-right btn btn-primary js-open-end-form"
+                        data-url="{% url 'servigraf:end_save' form_client.instance.id %}" >
                     ADD ENDEREÇO
                 </button>
             </div><!-- endereço div botao -->

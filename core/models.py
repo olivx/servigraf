@@ -128,16 +128,16 @@ class Endereco(models.Model):
 
     cliente = models.ForeignKey('core.Cliente', related_name='enderecos')
 
-    logradouro = models.CharField('Lagradouro', max_length=20)
-    endereco = models.CharField('Endereçoo', max_length=60)
+    logradouro = models.CharField('Logradouro', max_length=20)
+    endereco = models.CharField('Endereço', max_length=60)
     numero = models.PositiveIntegerField("Numero")
-    complemento = models.CharField('Complemento', max_length=40)
+    complemento = models.CharField('Complemento', max_length=40, null=True, blank=True)
     cep = models.CharField('Cep', max_length=11)
     bairro = models.CharField('Bairro', max_length=100)
     cidade = models.CharField('Cidade', max_length=100)
     uf = models.CharField('UF', max_length=20)
     tipo_end = models.PositiveIntegerField('Tipo Endereço', choices=TIPO_ENDERECO, default=COMERCIAL)
-    observacao = models.TextField()
+    observacao = models.TextField(null=True, blank=True)
     ativo = models.BooleanField(default=True)
 
     objects = EnderecoManager()
