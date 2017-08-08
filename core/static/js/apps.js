@@ -1,5 +1,16 @@
 $(function(){
 
+    function cleanForm(){
+            $.each($('input'),function(){
+                $(this).val('');
+            });
+
+            $('textarea').val('');
+        };
+
+    $('#modal').on('click', '.form_cleaned' , cleanForm);
+
+
     function loadClientForm(){
          var btn = $(this);
         $.ajax({
@@ -138,7 +149,8 @@ $(function(){
     };
 
     $('.js-open-contact-form',).click(loadContactForm);
-        $('#modal').on('submit', '.js-open-contact-form', saveContactForm);
+
+    $('#modal').on('submit', '.js-open-contact-form', saveContactForm);
 
     // contact update
     $('#contact-table').on('click', '.js-open-contact-form-update', loadContactForm);
@@ -235,7 +247,44 @@ $(function(){
 
     };
 
+
     $('.js-open-end-form').click(loadEnderecoForm );
+
+
+    $('#modal').on('click', '.search_cep' , function(){
+
+        var cep =  $('.input_cep').val();
+        var validacep = /^[0-9]{8}$/;
+
+
+       // para ceps validos
+        if(validacep.test(cep)){
+
+            $.getJSON("http://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+                if (!("erro" in dados)) {
+
+                    $('#id_cep').mask('00000-000');
+
+                    // update endereco
+                    $('#id_endereco').val(dados.logradouro);
+                    $('#id_bairro').val(dados.bairro);
+                    $('#id_cidade').val(dados.localidade);
+                    $('#id_uf').val(dados.uf);
+                }
+                else {
+                    //CEP pesquisado não foi encontrado.
+                    limpa_formulário_cep();
+                    alert("CEP não encontrado.");
+                }
+            }); // get json
+
+        }// valida cep
+        else{
+
+            alert('verifique o campo CEP. \n CEP invalido.')
+        }
+
+    });// func search cep
 
 
 });

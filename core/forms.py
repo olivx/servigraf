@@ -68,5 +68,5 @@ class TelefoneFrom(forms.ModelForm):
 class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
-        fields = ('cliente', 'cep', 'logradouro', 'endereco' , 'numero' , 'complemento' ,
+        fields = ('cliente', 'cep', 'endereco' , 'numero' , 'complemento' ,
                   'bairro' , 'cidade' , 'uf' , 'observacao' , 'tipo_end')

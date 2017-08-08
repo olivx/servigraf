@@ -18,10 +18,10 @@
     <div class="col-md-4">
         <label for="end_form.cep.id_for_label ">{{ end_form.cep.label  }}</label>
         <div class="input-group {% if end_form.cep.errors %} has-error {% endif %}" >
-            {% render_field end_form.cep class="form-control" %}
+            {% render_field end_form.cep class="form-control input_cep" %}
 
             <span class="input-group-btn">
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary search_cep">
                     <i class="glyphicon glyphicon-search"></i>
                 </button>
             </span>
@@ -36,20 +36,8 @@
 <!-- logradouro-->
 <div class="row">
 
-    <div class="col-md-2">
-
-        <div class="form-group {% if end_form.logradouro.errors %} has-error {% endif %}" >
-            <label for="end_form.logradouro.id_for_label ">{{ end_form.logradouro.label  }}</label>
-            {% render_field end_form.logradouro  class='form-control' %}
-            {% for error in end_form.logradouro.errors %}
-            <span class="help-block">{{ error }}</span>
-            {% endfor %}
-        </div>
-
-    </div>
-
     <!-- rua -->
-    <div class="col-md-8">
+    <div class="col-md-10">
 
         <div class="form-group {% if end_form.endereco.errors %} has-error {% endif %}" >
             <label for="end_form.endereco.id_for_label ">{{ end_form.endereco.label  }}</label>
