@@ -2,7 +2,7 @@
 
 <div id="div-razao-social" class="form-group {% if form_client.razao_social.errors %} has-error {% endif %}">
     <label id="{{form_client.razao_social.id_for_label }}">
-        {{ form_client.razao_social.label_tag }} 
+        {{ form_client.razao_social.label_tag }}
     </label>
     {% render_field form_client.razao_social|add_class:'form-control' %}
     {% for error in form_client.razao_social.errors %}
@@ -12,7 +12,7 @@
 
 <div id="div-nome-fantasia" class="form-group {% if form_client.nome_fantasia.errors %} has-error {% endif %}">
     <label for="form.nome_fantasia.id_for_label">
-        {{ form_client.nome_fantasia.label_tag }} 
+        {{ form_client.nome_fantasia.label_tag }}
     </label>
     {% render_field form_client.nome_fantasia class='form-control' %}
     {% for error in form_client.nome_fantasia.errors %}
@@ -66,11 +66,11 @@
     </div> <!-- col-md-2 -->
 </div><!-- row ramo e mensalista  -->
 
-    <div class="form-group {% if form_client.observacao.errors %} has-error {% endif %}" >
-        <label for="form.observacao.id_for_label ">{{ form_client.observacao.label_tag }}</label>
-        {% render_field form_client.observacao class='form-control' get_rows='5' %}
-        {% for error in form_client.observacao.errors %}
-        <span class="help-block">{{ error }}</span>
-        {% endfor %}
-    </div>
+<div class="form-group {% if form_client.observacao.errors %} has-error {% endif %}" >
+    <label for="form.observacao.id_for_label ">{{ form_client.observacao.label_tag }}</label>
+    {% render_field form_client.observacao class='form-control' get_rows='5' %}
+    {% for error in form_client.observacao.errors %}
+    <span class="help-block">{{ error }}</span>
+    {% endfor %}
+</div>
 
