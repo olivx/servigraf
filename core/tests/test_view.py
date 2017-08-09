@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.forms import model_to_dict
 from django.test import TestCase
 from django.shortcuts import resolve_url as r
@@ -12,6 +13,10 @@ from core.models import Cliente
 
 class TestViewHome(TestCase):
     def setUp(self):
+        user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
+        user.set_password('logan277')
+        user.save()
+        self.client.login(username='olvx', password='logan277')
         self.resp = self.client.get(r('home'))
 
     def test_get(self):
@@ -25,6 +30,10 @@ class TestViewHome(TestCase):
 
 class TesvViewClienteList(TestCase):
     def setUp(self):
+        user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
+        user.set_password('logan277')
+        user.save()
+        self.client.login(username='olvx', password='logan277')
         self.clients = mommy.make(Cliente, _quantity=3)
         self.resp = self.client.get(r('servigraf:clientes'))
 
@@ -64,6 +73,10 @@ class TesvViewClienteList(TestCase):
 
 class TestViewSave(TestCase):
     def setUp(self):
+        user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
+        user.set_password('logan277')
+        user.save()
+        self.client.login(username='olvx', password='logan277')
         self.cli = mommy.make(Cliente, tipo=2, documento='32283627877')
         self.data = model_to_dict(self.cli, fields=[field.name for field in self.cli._meta.fields])
         self.get_resp = self.client.get(r('servigraf:save_client'))
@@ -92,6 +105,10 @@ class TestViewSave(TestCase):
 
 class TestViewUpdate(TestCase):
     def setUp(self):
+        user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
+        user.set_password('logan277')
+        user.save()
+        self.client.login(username='olvx', password='logan277')
         self.cli = Cliente(razao_social='Thiago', nome_fantasia='Oliveira', tipo=2, documento='32283627877')
         self.data = model_to_dict(self.cli, fields=[field.name for field in self.cli._meta.fields])
         self.client.post(r('servigraf:save_client'), self.data)
@@ -125,6 +142,10 @@ class TestViewUpdate(TestCase):
 
 class TestViewDelete(TestCase):
     def setUp(self):
+        user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
+        user.set_password('logan277')
+        user.save()
+        self.client.login(username='olvx', password='logan277')
         self.cli = mommy.make(Cliente, tipo=2, documento='32283627877')
         self.data = model_to_dict(self.cli, fields=[field.name for field in self.cli._meta.fields])
         self.get_resp = self.client.get(r('servigraf:delete_client', 1))
@@ -147,6 +168,10 @@ class TestViewDelete(TestCase):
 
 class TestViewFormClient(TestCase):
     def setUp(self):
+        user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
+        user.set_password('logan277')
+        user.save()
+        self.client.login(username='olvx', password='logan277')
         self.resp = self.client.get(r('servigraf:save_client'))
 
     def test_get(self):
