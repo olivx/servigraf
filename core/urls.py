@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'contatos/update/(?P<client_id>\d+)/(?P<contact_id>\d+)/$', views.contact_update, name='contact_update'),
     url(r'contatos/delete/(?P<client_id>\d+)/(?P<contact_id>\d+)/$', views.contact_delete, name='contact_delete'),
 
-    url(r'endereco/save/(?P<client_id>\d+)/$', views.end_save, name='end_save')
+    url(r'endereco/save/(?P<client_id>\d+)/$', views.end_save, name='end_save'),
+    url(r'endereco/update/(?P<client_id>\d+)/(?P<end_id>\d+)/$', views.end_update, name='end_update'),
+    url(r'endereco/delete/(?P<client_id>\d+)/(?P<end_id>\d+)/$', views.end_delete, name='end_delete')
 
 ]

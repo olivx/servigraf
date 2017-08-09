@@ -18,7 +18,7 @@
 
 <div class="form-group {% if form_contact.observacao.errors %} has-error{% endif%}">
     <label for="{{ contact_form.observacao.id_for_label}}">{{ form_contact.observacao.label }}</label>
-    {% render_field form_contact.observacao class="form-control upper" get_rows='3'%}
+    {% render_field form_contact.observacao class="form-control upper" rows='3'%}
     {% for error in form_contact.observacao.errors %}
     <span class="help-block ">{{ error }}</span>
     {% endfor %}

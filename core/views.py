@@ -287,16 +287,48 @@ def contact_delete(request, client_id, contact_id):
     return JsonResponse(data)
 
 
-def end_save(request, client_id):
+def end_service(request, client_id , end , template_success):
     data = {}
-    client =  get_object_or_404(Cliente, pk=client_id)
-    end =  Endereco()
-    end.cliente =  client
+    client = get_object_or_404(Cliente, pk=client_id)
+    end.cliente = client
     if request.method == 'POST':
         pass
     else:
+        data['disable_all'] = False
         end_form = EnderecoForm(instance=end)
-        data['html_form'] = render_to_string('end/end_save.html',
-                                             context={ 'end_form' : end_form }, request=request)
+        data['html_form'] = render_to_string(template_success,
+                                             context={'end_form': end_form}, request=request)
 
     return JsonResponse(data)
+
+
+def end_save(request, client_id):
+    end = Endereco()
+    return end_service(request, client_id, end, 'end/end_save.html')
+
+
+def end_update(request, client_id, end_id):
+    end = get_object_or_404(Endereco, pk=end_id)
+    return end_service(request, client_id, end, 'end/end_update.html')
+
+
+def end_delete(request, client_id, end_id):
+    data = {}
+    client = get_object_or_404(Cliente, pk=client_id)
+    end = get_object_or_404(Endereco, pk=end_id)
+    end.cliente = client
+
+    if request.method == 'POST':
+        pass
+
+    else:
+        end_form = EnderecoForm(instance=end)
+        data['disable_all'] = True
+        data['html_form'] = render_to_string('end/end_delete.html',
+                                             context={'end_form': end_form}, request=request)
+
+
+    return JsonResponse(data)
+
+
+

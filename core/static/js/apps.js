@@ -1,14 +1,7 @@
 $(function(){
 
-    function cleanForm(){
-            $.each($('input'),function(){
-                $(this).val('');
-            });
 
-            $('textarea').val('');
-        };
 
-    $('#modal').on('click', '.form_cleaned' , cleanForm);
 
 
     function loadClientForm(){
@@ -241,19 +234,41 @@ $(function(){
             },
             success: function(data){
                 $('#modal .modal-content').html(data.html_form);
+
+                if(data.disable_all){
+
+                    $.each($('#modal input') , function(){
+                        $("#modal input").attr('disabled','disabled');
+                        $("#modal textarea").attr('disabled','disabled');
+                        $("#modal select").attr('disabled','disabled');
+                    });
+
+                }else{
+                    $.each($('#modal input') , function(){
+                        $("#modal input").removeAttr('disabled');
+                    });
+
+
+                }
+
             }
 
         });
 
     };
 
-
+    //  abre o formulario de cadastro do endereço de cliente
     $('.js-open-end-form').click(loadEnderecoForm );
+    $('#address-table').on('click', '.js-open-end-form-update' , loadEnderecoForm );
+    $('#address-table').on('click', '.js-open-end-form-delete' , loadEnderecoForm );
 
 
+
+    //  busca o cep pelo viaCep
     $('#modal').on('click', '.search_cep' , function(){
 
         var cep =  $('.input_cep').val();
+        cep  = cep.replace('-', '')
         var validacep = /^[0-9]{8}$/;
 
 
@@ -273,7 +288,6 @@ $(function(){
                 }
                 else {
                     //CEP pesquisado não foi encontrado.
-                    limpa_formulário_cep();
                     alert("CEP não encontrado.");
                 }
             }); // get json
@@ -281,10 +295,22 @@ $(function(){
         }// valida cep
         else{
 
-            alert('verifique o campo CEP. \n CEP invalido.')
+            alert('CEP invalido. \nverifique o campo CEP.')
         }
 
-    });// func search cep
+    });
+
+    // limpa o modal de endereço
+    $('#modal').on('click', '.form_cleaned' , function(){
+             $.each($('#modal input'),function(){
+                $(this).val('');
+            });
+
+            $('textarea').val('');
+
+    });
+
+
 
 
 });
