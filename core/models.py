@@ -37,6 +37,7 @@ class ContatoAstract(models.Model):
         return '%s %s'%(self.nome, self.sobre_nome)
 
     class Meta:
+        ordering = ['-id']
         abstract = True
         verbose_name = 'Contato'
         verbose_name_plural = 'Contatos'
@@ -148,5 +149,6 @@ class Endereco(models.Model):
         ).upper()
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Endereço'
         verbose_name_plural = 'Endereços'

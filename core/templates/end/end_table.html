@@ -6,13 +6,13 @@
     <!--  actions -->
     <th>
         <button class="btn btn-warning js-open-end-form-update"
-                data-url="{% url  'servigraf:end_update' form_client.instance.id end.id %}">
+                data-url="{% url  'servigraf:end_update' end.cliente.id end.id %}">
             <i class="glyphicon glyphicon-pencil"></i>
         </button>
     </th>
     <th>
         <button class="btn btn-danger js-open-end-form-delete"
-        data-url="{% url  'servigraf:end_delete' form_client.instance.id end.id %}" >
+        data-url="{% url  'servigraf:end_delete' end.cliente.id end.id %}" >
             <i class="glyphicon glyphicon-trash"></i>
         </button>
     </th>

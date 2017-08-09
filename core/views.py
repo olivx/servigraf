@@ -154,10 +154,14 @@ def contact_save(request, client_id):
             email_formset.save()
             telefone_formset.save()
             _contact_list = paginator(request, client.contatos.ativos(), 2)
+
             data['is_form_valid'] = True
 
             data['message'] = 'Contado: {} do cliente {},\nadicionado com sucesso.'. \
                 format(contato.nome.upper(), client.nome_fantasia.upper())
+
+            data['html_pagination'] = render_to_string('pagination.html',
+                                                       {'object_list': _contact_list}, request=request)
 
             data['html_table'] = render_to_string('contact/contact_table.html',
                                                   {
@@ -165,7 +169,6 @@ def contact_save(request, client_id):
                                                       'contact_list': _contact_list
                                                   },
                                                   request=request)
-
             data['html_form'] = render_to_string('clientes/client_form.html',
                                                  {'form_client': form_client},
                                                  request=request)
@@ -229,7 +232,8 @@ def contact_update(request, client_id, contact_id):
             data['is_form_valid'] = True
             data['message'] = 'Contato: {} do Cliente: {} ,\n alterado com sucesso.' \
                 .format(contact.nome.upper() + contact.sobre_nome.upper(), client.nome_fantasia.upper())
-
+            data['html_pagination'] = render_to_string('pagination.html', {'object_list': _contact_list},
+                                                       request=request)
             data['html_table'] = render_to_string('contact/contact_table.html', context, request=request)
             data['html_form'] = render_to_string('clientes/client_form.html', {'form_client': form_client},
                                                  request=request)
@@ -273,6 +277,8 @@ def contact_delete(request, client_id, contact_id):
             'form_client': form_client,
             'contact_list': _contact_list,
         }
+
+        data['html_pagination'] = render_to_string('pagination.html', {'object_list': _contact_list}, request=request)
         data['message'] = 'Contato {} , desativado com sucesso.\n' \
                           'para ativalo é Necessario usar a area admistrativa'.format(contact)
         data['html_table'] = render_to_string('contact/contact_table.html', context, request=request)
@@ -287,15 +293,37 @@ def contact_delete(request, client_id, contact_id):
     return JsonResponse(data)
 
 
-def end_service(request, client_id , end , template_success):
+def end_service(request, client_id, end, template_success):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
     end.cliente = client
+    end_form = EnderecoForm(request.POST or None, instance=end)
+
+    print(request.POST)
     if request.method == 'POST':
-        pass
+        if end_form.is_valid():
+            data['is_form_valid'] = True
+            form = end_form.save()
+            ends = client.enderecos.ativos()
+            end_list = paginator(request, ends, 2)
+
+            context = {
+                'end_list': end_list,
+                'form_client': ClientForm(instance=client)
+            }
+            data['html_table'] = render_to_string('end/end_table.html', context, request=request)
+            data['html_pagination'] = render_to_string('pagination.html', {'object_list': end_list}, request=request)
+
+
+
+        else:
+            data['is_form_valid'] = False
+            data['disable_all'] = False
+            data['html_form'] = render_to_string(template_success,
+                                                 context={'end_form': end_form}, request=request)
+
     else:
         data['disable_all'] = False
-        end_form = EnderecoForm(instance=end)
         data['html_form'] = render_to_string(template_success,
                                              context={'end_form': end_form}, request=request)
 
@@ -317,9 +345,14 @@ def end_delete(request, client_id, end_id):
     client = get_object_or_404(Cliente, pk=client_id)
     end = get_object_or_404(Endereco, pk=end_id)
     end.cliente = client
-
     if request.method == 'POST':
-        pass
+        end.ativo = False
+        end.save()
+        data['is_form_valid'] = False
+        end_list = client.enderecos.ativos()
+        end_list_pagination = paginator(request, end_list, 2)
+        data['html_pagination'] = render_to_string('pagination.html', {'object_list': end_list_pagination}, request=request)
+        data['html_table'] = render_to_string('end/end_table.html', {'end_list': end_list_pagination}, request=request)
 
     else:
         end_form = EnderecoForm(instance=end)
@@ -327,8 +360,4 @@ def end_delete(request, client_id, end_id):
         data['html_form'] = render_to_string('end/end_delete.html',
                                              context={'end_form': end_form}, request=request)
 
-
     return JsonResponse(data)
-
-
-

@@ -107,6 +107,7 @@ $(function(){
                 if(data.is_form_valid){
                     $('#contact-table tbody').html(data.html_table);
                     $('#client-form').html(data.html_form);
+                    $('.pagination_contact').html(data.html_pagination)
                     $('#modal').modal('hide');
 
                     alert(data.message);
@@ -132,6 +133,7 @@ $(function(){
             success: function(data){
 
                 $('#contact-table tbody').html(data.html_table);
+                $('.pagination').html(data.html_pagination)
                 $('#modal').modal('hide');
                 alert(data.message);
 
@@ -241,6 +243,7 @@ $(function(){
                         $("#modal input").attr('disabled','disabled');
                         $("#modal textarea").attr('disabled','disabled');
                         $("#modal select").attr('disabled','disabled');
+                         $('input[name=csrfmiddlewaretoken]').removeAttr('disabled');
                     });
 
                 }else{
@@ -257,10 +260,79 @@ $(function(){
 
     };
 
+    function saveEndForm(){
+
+        // liberar para que o cliente seja enviado no form.
+        $("#id_cliente").removeAttr('disabled');
+
+        var form = $(this);
+        $.ajax({
+
+            dataType: 'json',
+            url: form.attr('action'),
+            data: form.serialize(),
+            type: form.attr('method'),
+
+            success: function(data){
+
+                if(data.is_form_valid){
+
+                    alert('Endereço salvo com sucesso!')
+
+                    $('#address-table tbody').html(data.html_table);
+                    $('.pagination_end').html(data.html_pagination);
+                    $('#modal').modal('hide');
+
+                }else{
+
+                    $('#modal .modal-content').html(data.html_form);
+
+                }
+
+            }
+
+        });
+    return false;
+    };
+
     //  abre o formulario de cadastro do endereço de cliente
     $('.js-open-end-form').click(loadEnderecoForm );
+    $('#modal').on('submit', '.js-save-end-form', saveEndForm);
+
     $('#address-table').on('click', '.js-open-end-form-update' , loadEnderecoForm );
+    $('#modal').on('submit' , '.js-update-end-form', saveEndForm)
+
     $('#address-table').on('click', '.js-open-end-form-delete' , loadEnderecoForm );
+    $('#modal').on('submit' , '.js-delete-end-form', function(){
+
+        var form  = $(this);
+        $.ajax({
+
+            dataType: 'json',
+            data: form.serialize(),
+            url: form.attr('action'),
+            type: form.attr('method'),
+
+            beforeSend: function(){
+                var ask =  confirm('Deseja realmente desativar esse formulario ?')
+                if(ask  == false){
+                    return false;
+                }
+
+            },
+            success: function(data){
+
+                alert('Endereço foi desativado, mas ainda pode ser visto na area administrativa do sistema.');
+
+                $('#address-table thbody').html(data.html_table);
+                $('.pagination_end').html(data.html_pagination);
+
+                $('#modal').modal('hide');
+            }
+
+        });
+      return false;
+      });
 
 
 

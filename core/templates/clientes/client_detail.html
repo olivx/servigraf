@@ -45,7 +45,9 @@
                 </tfoot>
             </table>
 
-            {% include 'pagination.html' with object_list=contact_list %}
+            <div class="pagination_contact">
+                {% include 'pagination.html' with object_list=contact_list %}
+            </div>
 
         </div><!--  row contato -->
 
@@ -79,6 +81,10 @@
 
                 </tfoot>
             </table>
+
+            <div class="pagination_end">
+                {% include 'pagination.html' with object_list=end_list %}
+            </div>
 
         </div>
 

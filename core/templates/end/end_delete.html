@@ -1,4 +1,7 @@
-<form action="" method="get">
+<form action="{% url 'servigraf:end_delete' end_form.instance.cliente.id end_form.instance.id %}"
+      method="post" class="js-delete-end-form">
+
+    {% csrf_token %}
     <div class="modal-header">
         <button type="button" class="close" aria-label="close" data-dismiss="modal">
             <span aria-hidden="true">&times;</span>
@@ -16,7 +19,7 @@
 
     <div class="modal-footer">
 
-        <button type="button" class="btn btn-danger">
+        <button type="submit" class="btn btn-danger">
             Deletar
         </button>
 
