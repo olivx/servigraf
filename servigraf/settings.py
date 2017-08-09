@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
     'core',
+    'account',
 ]
 
 
@@ -48,6 +49,8 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    'account.middleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'servigraf.urls'
@@ -131,3 +134,7 @@ PAGINATION_SETTINGS = {
 
 # config ip debug toolbar
 INTERNAL_IPS = (config('INTERNAL_IPS'),)
+
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/account/login/'

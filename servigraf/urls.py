@@ -22,10 +22,11 @@ from servigraf import settings
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
-
     url(r'^$', views.home, name='home'),
+    url(r'^servigraf/', include('core.urls', namespace='servigraf')),
+    url(r'^account/', include('account.urls', namespace='account')),
 
-    url(r'^servigraf/', include('core.urls', namespace='servigraf'))
+
 ]
 
 if settings.DEBUG:
