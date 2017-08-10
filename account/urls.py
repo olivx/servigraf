@@ -1,14 +1,22 @@
 from django.conf.urls import url
-from django.contrib.auth import views as view_auth
 from account.forms import EmailUsernameAuthenticationForm
+from account import views as account_views
+from django.contrib.auth import views as auth_views
 urlpatterns = [
 
-    url(r'login/$', view_auth.login,
+    # login logout
+    url(r'login/$', auth_views.login,
         {
-            'template_name': 'registration/login.html',
+            'template_name': 'login.html',
             'authentication_form' : EmailUsernameAuthenticationForm
 
         },  name='login'),
-    url(r'logout', view_auth.logout ,{'next_page': '/'},  name='logout'),
+    url(r'logout', auth_views.logout ,{'next_page': '/'},  name='logout'),
+
+    url(r'reset/passwod_reset/$', account_views.reset_password , name='reset_password'),
+    url(r'reset/password_reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        account_views.password_confirm, name='password_confirm'),
+
+
 
 ]

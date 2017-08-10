@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-
+from django.contrib.auth import views as auth_views
 from core import views
 from servigraf import settings
 
@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^servigraf/', include('core.urls', namespace='servigraf')),
     url(r'^account/', include('account.urls', namespace='account')),
+
 
 
 ]
