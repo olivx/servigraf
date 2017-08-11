@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -10,11 +11,11 @@ from core.models import Cliente, Contato, Email, Telefone, Endereco
 from core.utils import paginator
 from django.shortcuts import resolve_url as r
 
-
+@login_required
 def home(request):
     return render(request, 'index.html', {})
 
-
+@login_required
 def clientes(request):
     template = 'clientes/client_list.html'
     search = request.GET.get('search')
@@ -28,7 +29,7 @@ def clientes(request):
     clients = paginator(request, clients_list)
     return render(request, template, {'client_list': clients})
 
-
+@login_required
 def save_client(request):
     data = {}
     template = 'clientes/client_modal_save.html'
@@ -60,7 +61,7 @@ def save_client(request):
         data['html_form'] = render_to_string(template, context, request=request)
     return JsonResponse(data)
 
-
+@login_required
 def update_client(request, pk):
     data = {}
     template = 'clientes/client_modal_update.html'
@@ -91,7 +92,7 @@ def update_client(request, pk):
 
     return JsonResponse(data)
 
-
+@login_required
 def delete_client(request, pk):
     data = {}
     template = 'clientes/client_modal_delete.html'
@@ -114,7 +115,7 @@ def delete_client(request, pk):
                                              request=request)
     return JsonResponse(data)
 
-
+@login_required
 def detail_client(request, pk):
     tempate_name = 'clientes/client_detail.html'
     client = get_object_or_404(Cliente, pk=pk)
@@ -128,7 +129,7 @@ def detail_client(request, pk):
     }
     return render(request, tempate_name, context)
 
-
+@login_required
 def contact_save(request, client_id):
     data = {}
     contact = Contato()
@@ -196,7 +197,7 @@ def contact_save(request, client_id):
     # return json
     return JsonResponse(data)
 
-
+@login_required
 def contact_update(request, client_id, contact_id):
     data = {}
     # get client end contact instances
@@ -262,7 +263,7 @@ def contact_update(request, client_id, contact_id):
 
     return JsonResponse(data)
 
-
+@login_required
 def contact_delete(request, client_id, contact_id):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
@@ -292,7 +293,7 @@ def contact_delete(request, client_id, contact_id):
 
     return JsonResponse(data)
 
-
+@login_required
 def end_service(request, client_id, end, template_success):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
@@ -329,17 +330,17 @@ def end_service(request, client_id, end, template_success):
 
     return JsonResponse(data)
 
-
+@login_required
 def end_save(request, client_id):
     end = Endereco()
     return end_service(request, client_id, end, 'end/end_save.html')
 
-
+@login_required
 def end_update(request, client_id, end_id):
     end = get_object_or_404(Endereco, pk=end_id)
     return end_service(request, client_id, end, 'end/end_update.html')
 
-
+@login_required
 def end_delete(request, client_id, end_id):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
