@@ -26,6 +26,7 @@ EMAIL_HOST=teste@email.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=teste@email.com
+EMAIL_HOST_PASSWORD=you_password
 
 INTERNAL_IPS=127.0.0.1
 
