@@ -20,12 +20,12 @@ ALLOWED_HOSTS=127.0.0.1, .localhost
 
 #DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/NAME
 
-#EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-#DEFAULT_FROM_EMAIL=
-#EMAIL_HOST=
-#EMAIL_PORT=
-#EMAIL_USE_TLS=
-#EMAIL_HOST_USER=
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+DEFAULT_FROM_EMAIL=smtp.teste.com
+EMAIL_HOST=teste@email.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=teste@email.com
 
 INTERNAL_IPS=127.0.0.1
 
