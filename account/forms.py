@@ -9,8 +9,43 @@ from django import forms
 class PasswordResetForm(forms.Form):
     email = forms.EmailField(label='E-mail')
 
-class PasswordResetConfirm(forms.Form):
 
+class PasswordChange(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(PasswordChange, self).__init__(*args, **kwargs)
+
+    old_password = forms.CharField(max_length=35, min_length=8, widget=forms.PasswordInput, required=True)
+    new_password1 = forms.CharField(max_length=35, label='Password ', widget=forms.PasswordInput, required=True)
+    new_password2 = forms.CharField(max_length=35, label='Password Confirm', widget=forms.PasswordInput, required=True)
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data['old_password']
+        if not self.user.check_password(old_password):
+            raise ValidationError('O password não é o mesmo que o Antigo')
+
+        return old_password
+
+    def clean_new_password2(self):
+        pass1 = self.cleaned_data['new_password1']
+        pass2 = self.cleaned_data['new_password2']
+
+        if pass1 != pass2:
+            raise ValidationError('Passwords não são identicos ')
+
+        if len(pass2) < 8:
+            raise ValidationError('Passord precisa de pelo menos 8 caracteres')
+
+        if not any(char.isdigit() for char in pass2):
+            raise ValidationError('Password precisa conter um numero pelo menos ')
+
+        if not any(char.isalpha() for char in pass2):
+            raise ValidationError('Password precisa conter Letras e Numeros ')
+
+        return pass2
+
+
+class PasswordResetConfirm(forms.Form):
     new_password1 = forms.CharField(max_length=35, label='Password ', widget=forms.PasswordInput, required=True)
     new_password2 = forms.CharField(max_length=35, label='Password Confirm', widget=forms.PasswordInput, required=True)
 
@@ -28,9 +63,10 @@ class PasswordResetConfirm(forms.Form):
             raise ValidationError('Password precisa conter um numero pelo menos ')
 
         if not any(char.isalpha() for char in pass2):
-            raise ValidationError('Password precisa conter alpha numericos ')
+            raise ValidationError('Password precisa conter Letras e Numeros ')
 
         return self.cleaned_data
+
 
 class EmailUsernameAuthenticationForm(AuthenticationForm):
     def clean_username(self):

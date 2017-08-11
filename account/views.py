@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
-from account.forms import PasswordResetConfirm, PasswordResetForm
+from account.forms import PasswordResetConfirm, PasswordResetForm, PasswordChange
 from account.tokens import account_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, force_bytes, force_text
 from django.core.exceptions import ObjectDoesNotExist
@@ -64,3 +65,23 @@ def password_confirm(request, uidb64, token):
         'form': form
     }
     return render(request, 'password_reset_confirm.html', context)
+
+
+@login_required
+def change_password(request):
+    form = PasswordChange(request.POST or None, user=request.user)
+    if request.POST:
+        if form.is_valid():
+            user = request.user
+            password = form.cleaned_data['new_password2']
+            user.set_password(password)
+            user.save()
+
+            current_user = authenticate(username=user.username, password=password)
+            login(request, current_user)
+            return render(request, 'password_change_done.html')
+
+    context = {
+        'form': form
+    }
+    return render(request, 'password_change_form.html', context)

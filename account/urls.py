@@ -17,7 +17,10 @@ urlpatterns = [
     url(r'reset/passwod_reset/$', account_views.reset_password , name='reset_password'),
     url(r'reset/password_reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         account_views.password_confirm, name='password_confirm'),
-    url(r'reset/password_reset/complete/$', account_views.password_reset_complete, name='reset_password_complete')
+    url(r'reset/password_reset/complete/$', account_views.password_reset_complete, name='reset_password_complete'),
+
+    # change password
+    url(r'change/change_password/', account_views.change_password, name='change_password')
 
 
 ]
