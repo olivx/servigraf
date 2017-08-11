@@ -1,7 +1,10 @@
 [run]
-source = core, servigraf
+source = core, servigraf, account
 omit =
+    servigraf/wsgi.py
     core/tests/*.py
     core/migrations/*.py
-    servigraf/wsgi.py
     core/apps.py
+    account/tests/*.py
+    account/migrations/*.py
+    account/apps.py

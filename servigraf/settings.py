@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
     'core',
+    'account',
 ]
 
 
@@ -48,6 +49,8 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    # 'account.middleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'servigraf.urls'
@@ -131,3 +134,16 @@ PAGINATION_SETTINGS = {
 
 # config ip debug toolbar
 INTERNAL_IPS = (config('INTERNAL_IPS'),)
+
+# email configurations
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT',  cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+
+
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/account/login/'
