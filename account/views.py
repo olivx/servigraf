@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from account.forms import PasswordResetConfirm, PasswordResetForm
 from account.tokens import account_token_generator
@@ -10,6 +11,10 @@ from django.core.mail import send_mail
 
 # Create your views here.
 from servigraf import settings
+
+
+def password_reset_complete(request):
+    return render(request, 'password_reset_complete.html')
 
 
 def reset_password(request):
@@ -38,21 +43,24 @@ def reset_password(request):
 
 
 def password_confirm(request, uidb64, token):
-    user_id =  urlsafe_base64_decode(force_text(uidb64))
-    user =  get_object_or_404(get_user_model(), pk=user_id)
+    user_id = urlsafe_base64_decode(force_text(uidb64))
+    user = get_object_or_404(get_user_model(), pk=user_id)
 
+    validlink = False
     if user is not None and account_token_generator.check_token(user, token):
         validlink = True
         form = PasswordResetConfirm(request.POST or None)
 
         if request.method == 'POST':
             if form.is_valid():
-                pass
+                password = form.cleaned_data['new_password1']
+                user.set_password(password)
+                user.save()
 
-            else:
-                pass
+                return redirect('account:reset_password_complete')
+
     context = {
         'validlink': validlink,
-        'form':form
+        'form': form
     }
     return render(request, 'password_reset_confirm.html', context)
