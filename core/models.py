@@ -105,7 +105,10 @@ class Telefone(Timestamp):
     contato = models.ForeignKey('core.Contato', related_name='telefones', null=True, blank=True)
 
     def __str__(self):
-        return '{}-{}'.format(self.telefone[:-4], self.telefone[4:])
+        _fixo =[self.FIXO, self.FAX, self.TRABALHO, self.CASA]
+        if self.tipo in _fixo:
+            return '{} {}-{}'.format(self.telefone[:3], self.telefone[3:7], self.telefone[-4:])
+        return '{} {}-{}'.format(self.telefone[:3], self.telefone[3:8], self.telefone[-4:])
 
     class Meta:
         verbose_name = 'Telefone'
