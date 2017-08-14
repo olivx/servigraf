@@ -12,7 +12,7 @@ class Produto(models.Model):
         (SERVICO, 'serviço')
     ]
 
-    grupo = models.ForeignKey('catalago.Grupo', null=True, blank=True, related_name='grupos')
+    grupo = models.ForeignKey('catalogo.GrupoProduto', null=True, blank=True, related_name='grupos')
 
     nome = models.CharField('Nome', max_length=100)
     desc = models.TextField('Descrição', blank=True, null=True)
@@ -21,20 +21,20 @@ class Produto(models.Model):
     obs = models.TextField('Observação', null=True, blank=True)
     quantidade = models.IntegerField('Quantidade')
     data_create = models.DateTimeField('Criado', auto_now_add=True, auto_now=False)
-    data_update = models.DateTimeField('Alterado', now_add=True, auto_now_add=False)
+    data_update = models.DateTimeField('Alterado',auto_now_add=False, auto_now=True)
     ativo = models.NullBooleanField(default=True)
 
     def __str__(self):
         return self.nome
 
     class Meta:
-        orderin = ['-id']
+        ordering = ['-id']
         verbose_name = 'Produto'
         verbose_name_plural = 'Produtos'
 
 
 class GrupoProduto(models.Model):
-    grupo = models.CharField('Grupo')
+    grupo = models.CharField('Grupo', max_length=50)
     desc = models.TextField('Descrição', null=True, blank=True)
 
     def __str__(self):
