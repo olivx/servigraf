@@ -8,7 +8,7 @@ from model_mommy import mommy
 import json
 
 from core.forms import ClientForm
-from core.models import Cliente
+from core.models import Cliente, Endereco, Contato
 
 
 class TestViewHome(TestCase):
@@ -140,6 +140,7 @@ class TestViewUpdate(TestCase):
         resp_dict = json.loads(resp.content.decode('utf-8'))
         self.assertTrue(resp_dict['is_form_valid'])
 
+
 class TestViewDelete(TestCase):
     def setUp(self):
         user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
@@ -162,8 +163,6 @@ class TestViewDelete(TestCase):
         self.assertTrue('para reativa-lo você precisa usar a area administrativa.' in resp_dict['message'])
         self.assertTrue(resp_dict['is_form_valid'])
         self.assertTrue(resp_dict['html_table'])
-
-
 
 
 class TestViewFormClient(TestCase):
@@ -203,3 +202,47 @@ class TestViewFormClient(TestCase):
         for count, expeted in html:
             with self.subTest():
                 self.assertContains(self.resp, expeted, count)
+
+
+class TestClienteDetail(TestCase):
+    def setUp(self):
+        user = User.objects.create(username='olvx', email='oliveravicente.net@gmial.com')
+        user.set_password('logan277')
+        user.save()
+        self.client.login(username='olvx', password='logan277')
+
+        self.cli = mommy.make(Cliente, nome_fantasia='cliente servigraf')
+        self.end = mommy.make(Endereco, endereco='rua do cliente', ativo=True)
+        self.end2 = mommy.make(Endereco, endereco='rua 2 do cliente', ativo=False)
+
+        self.contato = mommy.make(Contato, nome='contato do cliente', ativo=True)
+        self.contato2 = mommy.make(Contato, nome='outro contato', ativo=False)
+
+        self.cli.enderecos.add(self.end)
+        self.cli.enderecos.add(self.end2)
+
+        self.cli.contatos.add(self.contato)
+        self.cli.contatos.add(self.contato2)
+        # self.data =  model_to_dict(self.cli, fields=[fields.name for fields in self.cli._meta.fields])
+        self.resp = self.client.get(r('servigraf:detail_client', self.cli.id))
+
+    def test_get(self):
+        """Test cliente detail get"""
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_contato_all(self):
+        """Cliente must have 2 contacts """
+        self.assertEqual(2, Contato.objects.count())
+
+    def test_contatos_ativos(self):
+        """cliente must hav 1 contact ativo"""
+        self.assertEqual(1, Contato.objects.ativos().count())
+
+    def test_endereco_all(self):
+        """Cliente must have 2 end """
+        self.assertEqual(2, Endereco.objects.count())
+
+    def test_endereco_ativos(self):
+        """cliente must hav 1 end ativo"""
+        self.assertEqual(1, Endereco.objects.ativos().count())
+
