@@ -1,6 +1,7 @@
 import pymysql
 from django.core.management.base import BaseCommand
 
+from catalogo.models import Produto
 from core.models import Cliente, Contato, Endereco
 
 
@@ -148,7 +149,21 @@ class Command(BaseCommand):
 
         print('importando produtos...')
         for row in rows:
-            print(row)
+            tipo = 1
+            if row['tipo'] == 'SERVICO':
+                tipo = 2
+
+            Produto.objects.create(
+                id=row['produtoid'],
+                nome=row['nome'],
+                desc=row['descricao'],
+                quantidade=row['qdt'],
+                valor=row['preco'],
+                tipo=tipo,
+                data_create=row['dataCadastro'],
+                data_update=row['dataUpdate']
+
+            )
 
 
     def handle(self, *args, **options):
