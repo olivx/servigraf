@@ -1,6 +1,7 @@
 import pymysql
 from django.core.management.base import BaseCommand
 
+from catalogo.models import Produto
 from core.models import Cliente, Contato, Endereco
 
 
@@ -28,6 +29,10 @@ class Command(BaseCommand):
         parser.add_argument('--end', '-e',
                             action='store_true',
                             help='inicializa a tabela de endereço')
+
+        parser.add_argument('--prod', '-p',
+                            action='store_true',
+                            help='inicializa a tabela de produtos')
 
     def connect(self, query):
         """Conecta com banco de dados e devolve um cursor """
@@ -135,6 +140,32 @@ class Command(BaseCommand):
                     observacao=row['obj']
                 )
 
+    def init_produtos(self):
+        print('varrendo dados de produtos...')
+        conn = self.connect('select * from produto')
+
+        desc = tuple([desc[0] for desc in conn.description])
+        rows = [dict(zip(desc, row)) for row in conn.fetchall()]
+
+        print('importando produtos...')
+        for row in rows:
+            tipo = 1
+            if row['tipo'] == 'SERVICO':
+                tipo = 2
+
+            Produto.objects.create(
+                id=row['produtoid'],
+                nome=row['nome'],
+                desc=row['descricao'],
+                quantidade=row['qdt'],
+                valor=row['preco'],
+                tipo=tipo,
+                data_create=row['dataCadastro'],
+                data_update=row['dataUpdate']
+
+            )
+
+
     def handle(self, *args, **options):
 
         if options['client'] or options['all']:
@@ -145,3 +176,6 @@ class Command(BaseCommand):
 
         if options['end'] or options['all']:
             self.init_endereco()
+
+        if options['prod'] or options['all']:
+            self.init_produtos()
