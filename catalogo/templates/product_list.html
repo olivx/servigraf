@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-header" style="padding:0px; margin-top:0px;">Catalogo
+    <small>produtos</small>
+</h1>
+
+<div class="form-group">
+<button class="btn btn-primary">
+    NOVO
+    <i class="glyphicon glyphicon-plus"></i>
+</button>
+</div>
+
+<form action="">
+    <div class="form-group">
+        <div class="input-group col-md-8">
+            <input name="search" type="text"  class="form-control"
+                   placeholder="Buscar por: Nome , Descrição , Codigo">
+            <div class="input-group-btn">
+                <button class="btn btn-primary" data-url="">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table id="table-product" class="table table-striped table-hover table-condensed">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th width="600">NOME</th>
+            <th>QTDE</th>
+            <th>VALOR</th>
+            <th>TIPO</th>
+            <th>GRUPO</th>
+            <th>EDITAR</th>
+            <th>DELETAR</th>
+        </tr>
+    </thead>
+
+    <tbody>
+         <tr>
+            <th>1</th>
+            <th>A4</th>
+            <th>1000</th>
+            <th>0,14</th>
+            <th>PRODUTO</th>
+            <th>PAAPEL IMPRESSÃO</th>
+
+             <th>
+                 <button class="btn btn-warning">
+                     <i class="glyphicon glyphicon-pencil"></i>
+                 </button>
+             </th>
+
+             <th>
+                 <button class="btn btn-danger">
+                     <i class="glyphicon glyphicon-trash"></i>
+                 </button>
+             </th>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+{% endblock %}
