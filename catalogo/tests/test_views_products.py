@@ -8,3 +8,8 @@ class TestViewProduct(TestCase):
     def test_get(self):
         """Test status code 200 for get product """
         self.assertEqual(200, self.resp.status_code)
+
+    def test_template_in_use(self):
+        """Template in use must be product_list.html"""
+        self.assertTemplateUsed(self.resp , 'product_list.html')
+

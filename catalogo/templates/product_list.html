@@ -13,7 +13,8 @@
 </button>
 </div>
 
-<form action="">
+<form action="{% url 'catalogo:product_list'%}">
+    {% csrf_token %}
     <div class="form-group">
         <div class="input-group col-md-8">
             <input name="search" type="text"  class="form-control"
@@ -43,28 +44,12 @@
     </thead>
 
     <tbody>
-         <tr>
-            <th>1</th>
-            <th>A4</th>
-            <th>1000</th>
-            <th>0,14</th>
-            <th>PRODUTO</th>
-            <th>PAAPEL IMPRESSÃO</th>
-
-             <th>
-                 <button class="btn btn-warning">
-                     <i class="glyphicon glyphicon-pencil"></i>
-                 </button>
-             </th>
-
-             <th>
-                 <button class="btn btn-danger">
-                     <i class="glyphicon glyphicon-trash"></i>
-                 </button>
-             </th>
-        </tr>
+        {% include 'product_table.html'%}
     </tbody>
 </table>
+<div class="text-center">
+{% include '_pagination_cbv.html' with object_list=produto_list %}
+</div>
 
 
 

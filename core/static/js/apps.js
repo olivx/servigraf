@@ -2,8 +2,6 @@ $(function(){
 
 
 
-
-
     function loadClientForm(){
          var btn = $(this);
         $.ajax({
@@ -381,6 +379,8 @@ $(function(){
             $('textarea').val('');
 
     });
+
+
 
 
 

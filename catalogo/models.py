@@ -7,7 +7,7 @@ from django.db import models
 class Produto(models.Model):
     PRODUTO = 1
     SERVICO = 2
-    TIPO = [
+    TIPO_LIST = [
         (PRODUTO, 'produto'),
         (SERVICO, 'serviço')
     ]
@@ -16,7 +16,7 @@ class Produto(models.Model):
 
     nome = models.CharField('Nome', max_length=100)
     desc = models.TextField('Descrição', blank=True, null=True)
-    tipo = models.PositiveIntegerField('Tipo', default=PRODUTO)
+    tipo = models.PositiveIntegerField('Tipo', default=PRODUTO , choices=TIPO_LIST)
     valor = models.DecimalField('Valor', max_digits=10, decimal_places=3)
     obs = models.TextField('Observação', null=True, blank=True)
     quantidade = models.IntegerField('Quantidade')
