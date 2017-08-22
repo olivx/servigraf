@@ -63,7 +63,10 @@
     <div class="col-md-4">
         <div class="form-group {% if form.valor.errors %} has-error {% endif %}">
             {{ form.valor.label_tag }}
-            {% render_field form.valor class='form-control' %}
+            <div class="input-group">
+             <span class="input-group-addon">R$</span>
+            {% render_field form.valor class='form-control valor currency' type="text" %}
+            </div>
             {% for error in form.valor.errors %}
             <span class="help-block">{{ error }}</span>
             {% endfor %}

@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.template.loader import render_to_string
 from catalogo.models import Produto
 from core.utils import paginator
+from django.shortcuts import get_object_or_404
 from catalogo.forms import ProductForm
 from pure_pagination.mixins import PaginationMixin
 
@@ -29,7 +30,7 @@ class ProductList(PaginationMixin, LoginRequiredMixin , ListView):
         return products
 product_list = ProductList.as_view()
 
-class ProductCreate(PaginationMixin, LoginRequiredMixin,CreateView):
+class ProductCreate(LoginRequiredMixin,CreateView):
     model = Produto
 
     def get(self, request, *args, **kwargs):
@@ -54,3 +55,15 @@ class ProductCreate(PaginationMixin, LoginRequiredMixin,CreateView):
                 render_to_string('product_modal_save.html', {'form': form}, request=request)
         return JsonResponse(data)
 prodcut_create = ProductCreate.as_view()
+
+class ProductUpdate(LoginRequiredMixin,UpdateView):
+
+    model = Produto
+    def get(self, request, *args, **kwargs):
+        data = {}
+        prod = get_object_or_404(Produto, pk=kwargs['pk'])
+        form = ProductForm(instance=prod)
+        data['html_form'] = \
+            render_to_string('product_modal_update.html',{'form': form}, request=request)
+        return JsonResponse(data)
+product_update = ProductUpdate.as_view()

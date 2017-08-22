@@ -399,6 +399,7 @@ $(function(){
             success: function(data){
 
                 $('#modal-product .modal-content').html(data.html_form)
+                $('.valor').mask("#.##0,00", {reverse: true});
             }
 
 
@@ -413,6 +414,12 @@ $(function(){
             url: form.attr('action'),
             type: form.attr('method'),
             data: form.serialize(),
+
+            beforeSend: function(){
+
+                var v = $('.valor').unmask();
+                alert(v.val())
+            },
 
             success: function(data){
 
@@ -435,7 +442,7 @@ $(function(){
 
     $('#product-create').click(loadProductForm);
     $('#modal-product').on('submit' , '.js-form-product-save' , saveProductForm);
-
+    $('#table-product').on('click' , '.js-open-form-update', loadProductForm);
 
 
 
