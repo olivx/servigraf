@@ -1,0 +1,93 @@
+{% load widget_tweaks %}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group {% if form.tipo.errors %} has-error {% endif %}">
+            {{ form.tipo.label_tag }}
+            {% render_field form.tipo class='form-control upper' %}
+            {% for error in form.tipo.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form.grupo.label_tag }}
+        <div class="input-group col-md-7">
+           {% render_field form.grupo  class='form-control' %}
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-group">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group {% if form.nome.errors %} has-error {% endif %}">
+            {{ form.nome.label_tag }}
+            {% render_field form.nome class='form-control upper'%}
+            {% for error in form.nome.errors %}
+            <span class="help-block"> {{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="form-gorup {% if form.desc.errors %} has-error {% endif %}">
+            {{ form.desc.label_tag }}
+            {% render_field form.desc class='form-control upper' rows='3' %}
+            {% for error in form.desc.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top:1em;">
+    <div class="col-md-4">
+        <div class="form-group {% if form.quantidade.errors%} has-error {% endif %}">
+            {{ form.quantidade.label_tag }}
+            {% render_field form.quantidade class='form-control' disabled='True'%}
+            {% for error in form.quantidade.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group {% if form.valor.errors %} has-error {% endif %}">
+            {{ form.valor.label_tag }}
+            {% render_field form.valor class='form-control' %}
+            {% for error in form.valor.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div class="col-md-4">
+        <div class="form-group {% if form.ativo.errors %} has-error {% endif %}">
+            {{ form.ativo.label_tag }}
+            {% render_field form.ativo class='form-control upper' %}
+            {% for error in form.ativo.errors %}
+            <span class="help-block">{{ error }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+
+</div>
+
+<div class="form-group {% if form.obs.errors %} has-error {% endif %}" >
+    {{ form.obs.label_tag }}
+    {% render_field form.obs class='form-control upper' rows='3'%}
+    {% for error in form.obs.errors %}
+    <span class="help-block">{{ error }}</span>
+    {% endfor %}
+</div>

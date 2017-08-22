@@ -381,6 +381,60 @@ $(function(){
     });
 
 
+    function loadProductForm(){
+
+       var btn = $(this);
+
+       $.ajax({
+
+            type:'get',
+            dataType:'json',
+            url: btn.attr('data-url'),
+
+            beforeSend: function(){
+
+                $('#modal-product').modal('show');
+
+            },
+            success: function(data){
+
+                $('#modal-product .modal-content').html(data.html_form)
+            }
+
+
+       });
+
+    };
+
+    function saveProductForm(){
+        var form = $(this);
+        $.ajax({
+            dataType: 'json',
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: form.serialize(),
+
+            success: function(data){
+
+                if(data.is_form_valid){
+
+                    alert('Produto incluido com sucesso! ');
+                    $('#table-product tbody').html(data.html_table);
+
+                    $('#modal-product').modal('hide');
+
+                }else{
+                   $('#modal-product .modal-content').html(data.html_form);
+                }
+            }
+
+        });
+    return false;
+    };
+
+
+    $('#product-create').click(loadProductForm);
+    $('#modal-product').on('submit' , '.js-form-product-save' , saveProductForm);
 
 
 
