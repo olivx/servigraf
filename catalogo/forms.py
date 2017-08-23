@@ -20,4 +20,5 @@ class ProductForm(forms.ModelForm):
         valor = self.cleaned_data.get('valor')
         if valor <= 0:
             raise ValidationError('Valor precisa ser maior que zero')
+
         return valor

@@ -3,7 +3,7 @@
     <th>{{ product.id }}</th>
     <th><a class="link" href="">{{ product.nome| upper}}</a></th>
     <th>{{ product.quantidade }}</th>
-    <th data-mask="#.###0,000">R$ {{ product.valor }}</th>
+    <th >R$ {{ product.valor }}</th>
     <th>{{ product.get_tipo_display|upper }}</th>
     <th>
         {% if product.grupo  %}

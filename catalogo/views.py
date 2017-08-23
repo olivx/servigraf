@@ -12,7 +12,7 @@ from pure_pagination.mixins import PaginationMixin
 
 # Create your views here.
 
-class ProductList(PaginationMixin, LoginRequiredMixin , ListView):
+class ProductList(PaginationMixin, LoginRequiredMixin, ListView):
     model = Produto
     paginate_by = 5
     template_name = 'product_list.html'
@@ -28,9 +28,12 @@ class ProductList(PaginationMixin, LoginRequiredMixin , ListView):
                 products = products.filter(Q(nome__contains=search) |
                                            Q(desc__contains=search)).order_by('nome')
         return products
+
+
 product_list = ProductList.as_view()
 
-class ProductCreate(LoginRequiredMixin,CreateView):
+
+class ProductCreate(LoginRequiredMixin, CreateView):
     model = Produto
 
     def get(self, request, *args, **kwargs):
@@ -45,7 +48,8 @@ class ProductCreate(LoginRequiredMixin,CreateView):
         form = ProductForm(request.POST)
         if form.is_valid():
             form.save()
-            products = paginator(request,  Produto.objects.all() , 5)
+            products = paginator(request, Produto.objects.all(), 5)
+            data['message'] = 'Produto adicionado com sucesso! '
             data['is_form_valid'] = True
             data['html_table'] = \
                 render_to_string('product_table.html', {'produto_list': products.object_list}, request=request)
@@ -54,16 +58,38 @@ class ProductCreate(LoginRequiredMixin,CreateView):
             data['html_form'] = \
                 render_to_string('product_modal_save.html', {'form': form}, request=request)
         return JsonResponse(data)
-prodcut_create = ProductCreate.as_view()
 
-class ProductUpdate(LoginRequiredMixin,UpdateView):
 
+product_create = ProductCreate.as_view()
+
+
+class ProductUpdate(LoginRequiredMixin, UpdateView):
     model = Produto
+
     def get(self, request, *args, **kwargs):
         data = {}
         prod = get_object_or_404(Produto, pk=kwargs['pk'])
         form = ProductForm(instance=prod)
         data['html_form'] = \
-            render_to_string('product_modal_update.html',{'form': form}, request=request)
+            render_to_string('product_modal_update.html', {'form': form}, request=request)
         return JsonResponse(data)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        prod = get_object_or_404(Produto, pk=kwargs['pk'])
+        form = ProductForm(request.POST, instance=prod)
+        if form.is_valid():
+            form.save()
+            products = paginator(request, Produto.objects.all(), 5)
+            data['message'] = 'Produto alterado com sucesso! '
+            data['is_form_valid'] = True
+            data['html_table'] = \
+                render_to_string('product_table.html', {'produto_list': products.object_list}, request=request)
+        else:
+            data['is_form_valid'] = False
+            data['html_form'] = \
+                render_to_string('product_modal_update.html', {'form': form}, request=request)
+        return JsonResponse(data)
+
+
 product_update = ProductUpdate.as_view()

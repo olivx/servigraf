@@ -17,7 +17,7 @@ class Produto(models.Model):
     nome = models.CharField('Nome', max_length=100)
     desc = models.TextField('Descrição', blank=True, null=True)
     tipo = models.PositiveIntegerField('Tipo', default=PRODUTO , choices=TIPO_LIST)
-    valor = models.DecimalField('Valor', max_digits=10, decimal_places=3)
+    valor = models.DecimalField('Valor', max_digits=10, decimal_places=2)
     obs = models.TextField('Observação', null=True, blank=True)
     quantidade = models.IntegerField('Quantidade', default=0, null=True, blank=True)
     data_create = models.DateTimeField('Criado', auto_now_add=True, auto_now=False)
