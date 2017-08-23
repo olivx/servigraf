@@ -12,7 +12,7 @@ class Produto(models.Model):
         (SERVICO, 'serviço')
     ]
 
-    grupo = models.ForeignKey('catalogo.GrupoProduto', null=True, blank=True, related_name='grupos')
+    group = models.ForeignKey('catalogo.GroupProduct', null=True, blank=True, related_name='groups')
 
     nome = models.CharField('Nome', max_length=100)
     desc = models.TextField('Descrição', blank=True, null=True)
@@ -33,9 +33,10 @@ class Produto(models.Model):
         verbose_name_plural = 'Produtos'
 
 
-class GrupoProduto(models.Model):
-    grupo = models.CharField('Grupo', max_length=50)
+class GroupProduct(models.Model):
+    group = models.CharField('Grupo', max_length=50, unique=True)
     desc = models.TextField('Descrição', null=True, blank=True)
 
     def __str__(self):
-        return self.grupo
+        return self.group
+

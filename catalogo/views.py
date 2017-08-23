@@ -2,12 +2,12 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from django.template.loader import render_to_string
-from catalogo.models import Produto
+from catalogo.models import Produto, GroupProduct
 from core.utils import paginator
 from django.shortcuts import get_object_or_404, resolve_url as r
-from catalogo.forms import ProductForm
+from catalogo.forms import ProductForm, GroupProductForm
 from pure_pagination.mixins import PaginationMixin
 
 
@@ -119,3 +119,18 @@ class ProductDelete(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(r('catalogo:product_list'))
 
 product_delete = ProductDelete.as_view()
+
+
+
+class GroupProductList(LoginRequiredMixin, ListView):
+    model = GroupProduct
+    template_name = 'group_modal_crud.html'
+    context_object_name = 'group_list'
+
+    def get(self, request, *args, **kwargs):
+        data = {}
+        data['html_form'] = \
+            render_to_string('group_modal_form.html', {'group_form': GroupProductForm()}, request=request)
+        return JsonResponse(data)
+
+group_list = GroupProductList.as_view()

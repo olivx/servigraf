@@ -21,7 +21,7 @@ class TestViewProduct(TestCase):
 
     def test_html(self):
         content = [
-            (1, '<table'),
+            (2, '<table'),
             (1, '<button id="product-create"'),
             (1, '<tbody'),
             (1, 'Não há resultados'),

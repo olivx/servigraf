@@ -1,5 +1,5 @@
 from django.test import TestCase
-from catalogo.models import Produto, GrupoProduto
+from catalogo.models import Produto, GroupProduct
 from model_mommy import mommy
 
 # Create your tests here.
@@ -7,8 +7,8 @@ class TestModelProduto(TestCase):
 
     def setUp(self):
         self.prod = mommy.make(Produto)
-        self.group = mommy.make(GrupoProduto, grupo='Test Produto')
-        self.prod.grupo = self.group
+        self.group = mommy.make(GroupProduct, group='Test Produto')
+        self.prod.group = self.group
         self.prod.save()
 
 
@@ -38,15 +38,15 @@ class TestModelProduto(TestCase):
 
     def test_group_blank(self):
         """Grupo must be blank"""
-        self.assertTrue(self.get_field("grupo").blank)
+        self.assertTrue(self.get_field("group").blank)
 
     def test_must_have_group(self):
         """produto may have a group instance """
-        self.assertIsInstance(self.prod.grupo , GrupoProduto)
+        self.assertIsInstance(self.prod.group , GroupProduct)
 
     def test_has_group(self):
         """test if has a group Test Produto"""
-        self.assertTrue(Produto.objects.first().grupo)
+        self.assertTrue(Produto.objects.first().group)
 
     def test_str_produto(self):
         """Test if str is nome """
@@ -54,11 +54,11 @@ class TestModelProduto(TestCase):
 
     def test_str_group(self):
         """Test if str is nome"""
-        self.assertEqual(self.group.__str__(), self.group.grupo)
+        self.assertEqual(self.group.__str__(), self.group.group)
 
     def test_group_desc_blank(self):
         """Test group produto desc can be blank """
-        self.assertTrue(self.get_field("desc", klass=GrupoProduto).blank)
+        self.assertTrue(self.get_field("desc", klass=GroupProduct).blank)
 
     def test_datecreated(self):
         """test if have date create and date update is null"""

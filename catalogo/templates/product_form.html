@@ -14,11 +14,12 @@
     </div>
 
     <div class="form-group">
-        {{ form.grupo.label_tag }}
+        {{ form.group.label_tag }}
         <div class="input-group col-md-7">
-           {% render_field form.grupo  class='form-control' %}
+           {% render_field form.group  class='form-control' %}
             <div class="input-group-btn">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-group">
+                <button type="button" class="btn btn-primary js-open-modal-group"
+                        data-url="{% url 'catalogo:group_list'%}">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
             </div>

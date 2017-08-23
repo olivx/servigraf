@@ -440,15 +440,37 @@ $(function(){
     return false;
     };
 
-
+    // product
     $('#product-create').click(loadProductForm);
-//    $('#modal-product').on('submit' , '.js-form-product-save' , saveProductForm);
+    $('#modal-product').on('submit' , '.js-form-product-save' , saveProductForm);
 
     $('#table-product').on('click' , '.js-open-form-update', loadProductForm);
     $('#modal-product').on('submit', '.js-form-product-update', saveProductForm);
 
     $('#table-product').on('click' , '.js-open-form-delete', loadProductForm);
 
+    //group
+    $('#modal-product').on('click', '.js-open-modal-group', function(){
 
+         var btn = $(this);
+        $.ajax({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+
+           beforeSend: function(){
+
+                $('#modal-group').modal('show');
+
+           },
+            success: function(data){
+
+
+                $('#form-group').html(data.html_form);
+            }
+
+        });
+
+    });
 
 });
