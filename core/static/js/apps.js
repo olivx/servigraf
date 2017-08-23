@@ -421,15 +421,12 @@ $(function(){
             type: form.attr('method'),
             data: form.serialize(),
 
-
-
             success: function(data){
 
                 if(data.is_form_valid){
 
-                    alert(data.message);
+                    $('#messages').html(data.message)
                     $('#table-product tbody').html(data.html_table);
-
                     $('#modal-product').modal('hide');
 
                 }else{
@@ -445,10 +442,12 @@ $(function(){
 
 
     $('#product-create').click(loadProductForm);
-    $('#modal-product').on('submit' , '.js-form-product-save' , saveProductForm);
+//    $('#modal-product').on('submit' , '.js-form-product-save' , saveProductForm);
 
     $('#table-product').on('click' , '.js-open-form-update', loadProductForm);
     $('#modal-product').on('submit', '.js-form-product-update', saveProductForm);
+
+    $('#table-product').on('click' , '.js-open-form-delete', loadProductForm);
 
 
 

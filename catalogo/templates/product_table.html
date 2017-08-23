@@ -18,7 +18,8 @@
     </th>
 
     <th>
-        <button class="btn btn-danger">
+        <button class="btn btn-danger js-open-form-delete"
+                data-url="{% url 'catalogo:product_delete' product.id %}">
             <i class="glyphicon glyphicon-trash"></i>
         </button>
     </th>

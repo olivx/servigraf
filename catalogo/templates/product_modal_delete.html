@@ -1,8 +1,8 @@
-<form action="{% url 'catalogo:product_update' form.instance.id %}" class="js-form-product-update" method="post">
+<form action="{% url 'catalogo:product_delete' form.instance.id %}" class="js-form-product-delete" method="post">
     {% csrf_token %}
     <div class="modal-header">
         <button type="button" class="close" aria-label="Close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Alterar Produto </h4>
+        <h4 class="modal-title">Delete Produto </h4>
     </div>
 
     <div class="modal-body">
@@ -12,8 +12,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="submit" class="btn btn-warning">
-            Alterar
+        <button type="submit" class="btn btn-danger">
+            Salvar
         </button>
 
         <button type="button" data-dismiss="modal" class="btn btn-default">

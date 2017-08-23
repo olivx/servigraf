@@ -1,11 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import JsonResponse
-from django.views.generic import ListView, CreateView, UpdateView
+from django.http import JsonResponse, HttpResponseRedirect
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.template.loader import render_to_string
 from catalogo.models import Produto
 from core.utils import paginator
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, resolve_url as r
 from catalogo.forms import ProductForm
 from pure_pagination.mixins import PaginationMixin
 
@@ -47,12 +48,14 @@ class ProductCreate(LoginRequiredMixin, CreateView):
         data = {}
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            prod = form.save()
             products = paginator(request, Produto.objects.all(), 5)
-            data['message'] = 'Produto adicionado com sucesso! '
+            message = 'Produto: {} Adicionado com sucesso! '.format(prod.nome.upper())
+            messages.success(request, message)
             data['is_form_valid'] = True
-            data['html_table'] = \
-                render_to_string('product_table.html', {'produto_list': products.object_list}, request=request)
+            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['html_table'] = render_to_string('product_table.html', {'produto_list': products.object_list},
+                                                  request=request)
         else:
             data['is_form_valid'] = False
             data['html_form'] = \
@@ -76,15 +79,17 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         data = {}
-        prod = get_object_or_404(Produto, pk=kwargs['pk'])
-        form = ProductForm(request.POST, instance=prod)
+        produto = get_object_or_404(Produto, pk=kwargs['pk'])
+        form = ProductForm(request.POST, instance=produto)
         if form.is_valid():
-            form.save()
+            prod = form.save()
+            message = 'Produto: {},  Alterado com sucesso!'.format(prod.nome.upper())
+            messages.warning(request, message)
             products = paginator(request, Produto.objects.all(), 5)
-            data['message'] = 'Produto alterado com sucesso! '
             data['is_form_valid'] = True
-            data['html_table'] = \
-                render_to_string('product_table.html', {'produto_list': products.object_list}, request=request)
+            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['html_table'] = render_to_string('product_table.html',
+                                                  {'produto_list': products.object_list}, request=request)
         else:
             data['is_form_valid'] = False
             data['html_form'] = \
@@ -93,3 +98,24 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
 
 
 product_update = ProductUpdate.as_view()
+
+
+class ProductDelete(LoginRequiredMixin, DeleteView):
+    model = Produto
+
+    def get(self, request, *args, **kwargs):
+        data = {}
+        prod = get_object_or_404(Produto, pk=kwargs['pk'])
+        form = ProductForm(instance=prod)
+        data['html_form'] = \
+            render_to_string('product_modal_delete.html', {'form': form}, request=request)
+        return JsonResponse(data)
+
+    def post(self, request, *args, **kwargs):
+        prod = get_object_or_404(Produto, pk=kwargs['pk'])
+        prod.delete()
+        message =  'Produto: {}, Deletado com suscesso!'.format(prod.nome.upper())
+        messages.warning(request, message)
+        return HttpResponseRedirect(r('catalogo:product_list'))
+
+product_delete = ProductDelete.as_view()
