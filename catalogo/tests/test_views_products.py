@@ -23,7 +23,7 @@ class TestViewProduct(TestCase):
         content = [
             (2, '<table'),
             (1, '<button id="product-create"'),
-            (1, '<tbody'),
+            (2, '<tbody'),
             (1, 'Não há resultados'),
             (2, '<div class="modal-dialog')
         ]
@@ -48,7 +48,7 @@ class TestCreateViewGet(TestCase):
 
     def test_template_user(self):
         """Template used must be product_modal_save"""
-        self.assertTemplateUsed(self.rep , 'product_modal_save.html')
+        self.assertTemplateUsed(self.rep , 'product/product_modal_save.html')
 
     def test_html(self):
         content = [

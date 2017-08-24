@@ -8,6 +8,6 @@ urlpatterns = [
     url(r'product/update/(?P<pk>\d+)/$', catalogo_views.product_update, name='product_update'),
     url(r'product/delete/(?P<pk>\d+)/$', catalogo_views.product_delete, name='product_delete'),
 
-    url(r'product/group/list/$', catalogo_views.group_list, name='group_list'),
+    url(r'product/group/create/$', catalogo_views.group_create, name='group_create'),
 
 ]

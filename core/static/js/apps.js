@@ -322,7 +322,7 @@ $(function(){
 
                 alert('Endereço foi desativado, mas ainda pode ser visto na area administrativa do sistema.');
 
-                $('#address-table thbody').html(data.html_table);
+                $('#address-table tbody').html(data.html_table);
                 $('.pagination_end').html(data.html_pagination);
 
                 $('#modal').modal('hide');
@@ -451,13 +451,9 @@ $(function(){
 
     //group
 
-    $('#modal-group').on('hidden.bs.modal', function () {
-        $('#modal-product').modal('show');
-    });
+    function loadGroupProductForm (){
 
-    $('#modal-product').on('click', '.js-open-modal-group', function(){
-
-         var btn = $(this);
+        var btn = $(this);
         $.ajax({
             url: btn.attr('data-url'),
             type: 'get',
@@ -470,13 +466,52 @@ $(function(){
 
            },
             success: function(data){
-
-
                 $('#form-group').html(data.html_form);
+                $('#table-group tbody').html(data.html_table);
             }
 
         });
 
+    };
+
+    function saveGroupProductForm(){
+
+        var form = $('form');
+        var btn = $(this);
+        $.ajax({
+            url: btn.attr('data-url'),
+            type: 'post',
+            data: form.serialize(),
+            dataType: 'json',
+
+            success: function(data){
+                if(data.is_form_valid){
+                    $('#form-group').html(data.html_form);
+                    $('#modal-group  tbody').html(data.html_table);
+
+                }else{
+                    $('#form-group').html(data.html_form);
+
+                }
+            }
+        });
+       return false;
+    };
+
+    $('#modal-group').on('shown.bs.modal', function(){
+        $('.modal .modal-body').css('overflow-y','auto');
+        $('.modal .modal-body').css('height' , $(window).height() * 0.7 );
     });
+
+    $('#modal-group').on('hidden.bs.modal', function () {
+        $('#modal-product').modal('show');
+    });
+
+    $('#modal-product').on('click', '.js-open-modal-group', loadGroupProductForm);
+    $('#modal-group').on('click', '.js-save-modal-group', saveGroupProductForm);
+    $('#table-group').on('click', '.js-open-modal-group', loadGroupProductForm);
+
+
+
 
 });

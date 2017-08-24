@@ -16,10 +16,10 @@
     <div class="form-group">
         {{ form.group.label_tag }}
         <div class="input-group col-md-7">
-           {% render_field form.group  class='form-control' %}
+           {% render_field form.group  class='form-control upper' %}
             <div class="input-group-btn">
                 <button type="button" class="btn btn-primary js-open-modal-group"
-                        data-url="{% url 'catalogo:group_list'%}">
+                        data-url="{% url 'catalogo:group_create'%}">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
             </div>

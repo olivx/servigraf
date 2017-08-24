@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.template.loader import render_to_string
 from catalogo.models import Produto, GroupProduct
 from core.utils import paginator
@@ -41,7 +41,7 @@ class ProductCreate(LoginRequiredMixin, CreateView):
         data = {}
         form = ProductForm()
         data['html_form'] = \
-            render_to_string('product_modal_save.html', {'form': form}, request=request)
+            render_to_string('product/product_modal_save.html', {'form': form}, request=request)
         return JsonResponse(data)
 
     def post(self, request, *args, **kwargs):
@@ -59,7 +59,7 @@ class ProductCreate(LoginRequiredMixin, CreateView):
         else:
             data['is_form_valid'] = False
             data['html_form'] = \
-                render_to_string('product_modal_save.html', {'form': form}, request=request)
+                render_to_string('product/product_modal_save.html', {'form': form}, request=request)
         return JsonResponse(data)
 
 
@@ -74,7 +74,7 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
         prod = get_object_or_404(Produto, pk=kwargs['pk'])
         form = ProductForm(instance=prod)
         data['html_form'] = \
-            render_to_string('product_modal_update.html', {'form': form}, request=request)
+            render_to_string('product/product_modal_update.html', {'form': form}, request=request)
         return JsonResponse(data)
 
     def post(self, request, *args, **kwargs):
@@ -93,7 +93,7 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
         else:
             data['is_form_valid'] = False
             data['html_form'] = \
-                render_to_string('product_modal_update.html', {'form': form}, request=request)
+                render_to_string('product/product_modal_update.html', {'form': form}, request=request)
         return JsonResponse(data)
 
 
@@ -108,29 +108,51 @@ class ProductDelete(LoginRequiredMixin, DeleteView):
         prod = get_object_or_404(Produto, pk=kwargs['pk'])
         form = ProductForm(instance=prod)
         data['html_form'] = \
-            render_to_string('product_modal_delete.html', {'form': form}, request=request)
+            render_to_string('product/product_modal_delete.html', {'form': form}, request=request)
         return JsonResponse(data)
 
     def post(self, request, *args, **kwargs):
         prod = get_object_or_404(Produto, pk=kwargs['pk'])
         prod.delete()
-        message =  'Produto: {}, Deletado com suscesso!'.format(prod.nome.upper())
+        message = 'Produto: {}, Deletado com suscesso!'.format(prod.nome.upper())
         messages.warning(request, message)
         return HttpResponseRedirect(r('catalogo:product_list'))
+
 
 product_delete = ProductDelete.as_view()
 
 
-
-class GroupProductList(LoginRequiredMixin, ListView):
+class GroupProductCreate(LoginRequiredMixin, CreateView):
     model = GroupProduct
     template_name = 'group_modal_crud.html'
-    context_object_name = 'group_list'
 
     def get(self, request, *args, **kwargs):
         data = {}
+        data['html_table'] = \
+            render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
         data['html_form'] = \
-            render_to_string('group_modal_form.html', {'group_form': GroupProductForm()}, request=request)
+            render_to_string('group/group_modal_form.html', {'group_form': GroupProductForm()}, request=request)
         return JsonResponse(data)
 
-group_list = GroupProductList.as_view()
+    def post(self, request, *args, **kwargs):
+        data = {}
+        form = GroupProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            data['is_form_valid'] = True
+            data['html_table'] = \
+                render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
+            data['html_form'] = \
+                render_to_string('group/group_modal_form.html', {'group_form': GroupProductForm()}, request=request)
+
+        else:
+            data['is_form_valid'] = False
+            data['html_form'] = \
+                render_to_string('group/group_modal_form.html', {'group_form': form}, request=request)
+
+        return JsonResponse(data)
+
+
+group_create = GroupProductCreate.as_view()
+
+

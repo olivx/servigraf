@@ -37,6 +37,11 @@ class GroupProduct(models.Model):
     group = models.CharField('Grupo', max_length=50, unique=True)
     desc = models.TextField('Descrição', null=True, blank=True)
 
+    class Meta:
+        ordering = ['group']
+        verbose_name = 'Grupo de Produto'
+        verbose_name_plural ='Grupos de Produtos'
+
     def __str__(self):
         return self.group
 
