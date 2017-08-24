@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 
 # Register your models here.
-from catalogo.models import Produto
+from catalogo.forms import GroupProductForm
+from catalogo.models import Produto, GroupProduct
 
 
 class ListFilterTipo(SimpleListFilter):
@@ -33,3 +34,11 @@ class ProdutoModelAdmin(admin.ModelAdmin):
         if obj.tipo == 1:
             return 'PRODUTO'
         return 'SERVICO'
+
+@admin.register(GroupProduct)
+class GroupProductAdmin(admin.ModelAdmin):
+
+    list_display = ('group', 'desc', )
+    search_fields = ('group', 'desc', )
+    list_per_page = 10
+    form = GroupProductForm

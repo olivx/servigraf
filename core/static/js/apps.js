@@ -450,6 +450,11 @@ $(function(){
     $('#table-product').on('click' , '.js-open-form-delete', loadProductForm);
 
     //group
+
+    $('#modal-group').on('hidden.bs.modal', function () {
+        $('#modal-product').modal('show');
+    });
+
     $('#modal-product').on('click', '.js-open-modal-group', function(){
 
          var btn = $(this);
@@ -460,6 +465,7 @@ $(function(){
 
            beforeSend: function(){
 
+                $('#modal-product').modal('hide');
                 $('#modal-group').modal('show');
 
            },
