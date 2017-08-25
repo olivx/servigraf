@@ -466,8 +466,8 @@ $(function(){
 
            },
             success: function(data){
-                $('#form-group').html(data.html_form);
-                $('#table-group tbody').html(data.html_table);
+                $('#modal-group .modal-content').html(data.html_form);
+                $('#modal-group .modal-content tbody').html(data.html_table);
             }
 
         });
@@ -486,13 +486,19 @@ $(function(){
 
             success: function(data){
                 if(data.is_form_valid){
-                    $('#form-group').html(data.html_form);
-                    $('#modal-group  tbody').html(data.html_table);
+                    $('#modal-group .modal-content').html(data.html_form);
+                    $('#modal-group .modal-content tbody').html(data.html_table);
 
                 }else{
-                    $('#form-group').html(data.html_form);
+                    $('#modal-group .modal-content').html(data.html_form);
+                    $('#modal-group .modal-content tbody').html(data.html_table);
+
 
                 }
+
+                $('.modal .modal-body').css('overflow-y','auto');
+                $('.modal .modal-body').css('height' , $(window).height() * 0.7 );
+
             }
         });
        return false;
@@ -505,11 +511,29 @@ $(function(){
 
     $('#modal-group').on('hidden.bs.modal', function () {
         $('#modal-product').modal('show');
+
+        $.ajax({
+            url: 'api/product/group/list/',
+            dataType: 'json',
+
+            success: function(data){
+
+                 var json_obj = $.parseJSON(data.groups);
+                 if(json_obj ){
+                    $('select[name=group] option').remove()
+                 }
+                 $.each(json_obj, function(key, obj){
+                      $('select[name=group]').append($('<option>').text(obj.fields.group).attr('value', obj.pk));
+
+                 });
+
+            }
+
+        });
     });
 
     $('#modal-product').on('click', '.js-open-modal-group', loadGroupProductForm);
     $('#modal-group').on('click', '.js-save-modal-group', saveGroupProductForm);
-    $('#table-group').on('click', '.js-open-modal-group', loadGroupProductForm);
 
 
 

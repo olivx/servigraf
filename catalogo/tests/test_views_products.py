@@ -21,9 +21,9 @@ class TestViewProduct(TestCase):
 
     def test_html(self):
         content = [
-            (2, '<table'),
+            (1, '<table'),
             (1, '<button id="product-create"'),
-            (2, '<tbody'),
+            (1, '<tbody'),
             (1, 'Não há resultados'),
             (2, '<div class="modal-dialog')
         ]

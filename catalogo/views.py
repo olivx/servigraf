@@ -9,6 +9,8 @@ from core.utils import paginator
 from django.shortcuts import get_object_or_404, resolve_url as r
 from catalogo.forms import ProductForm, GroupProductForm
 from pure_pagination.mixins import PaginationMixin
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 
 # Create your views here.
@@ -54,7 +56,7 @@ class ProductCreate(LoginRequiredMixin, CreateView):
             messages.success(request, message)
             data['is_form_valid'] = True
             data['message'] = render_to_string('messages.html', {}, request=request)
-            data['html_table'] = render_to_string('product_table.html', {'produto_list': products.object_list},
+            data['html_table'] = render_to_string('product/product_table.html', {'produto_list': products.object_list},
                                                   request=request)
         else:
             data['is_form_valid'] = False
@@ -88,7 +90,7 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
             products = paginator(request, Produto.objects.all(), 5)
             data['is_form_valid'] = True
             data['message'] = render_to_string('messages.html', {}, request=request)
-            data['html_table'] = render_to_string('product_table.html',
+            data['html_table'] = render_to_string('product/product_table.html',
                                                   {'produto_list': products.object_list}, request=request)
         else:
             data['is_form_valid'] = False
@@ -122,37 +124,59 @@ class ProductDelete(LoginRequiredMixin, DeleteView):
 product_delete = ProductDelete.as_view()
 
 
+class GroupProductList(LoginRequiredMixin, ListView):
+
+    model = GroupProduct
+
+    def get(self, request, *args, **kwargs):
+        data =  {'groups': serializers.serialize('json', GroupProduct.objects.all())}
+        return JsonResponse(data, safe=False)
+group_list = GroupProductList.as_view()
+
+
+
 class GroupProductCreate(LoginRequiredMixin, CreateView):
     model = GroupProduct
     template_name = 'group_modal_crud.html'
 
     def get(self, request, *args, **kwargs):
         data = {}
+        messages.warning(request, 'somente é possivel alterar ou excluir  um Grupo '
+                                  'dentro da área administrativa do sistema. \n '
+                                  'Contate um administrador. para efutar a operação.')
+        data['message'] = render_to_string('messages.html',{}, request=request)
         data['html_table'] = \
             render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
         data['html_form'] = \
-            render_to_string('group/group_modal_form.html', {'group_form': GroupProductForm()}, request=request)
+            render_to_string('group/group_modal_save.html', {'group_form': GroupProductForm()}, request=request)
         return JsonResponse(data)
 
     def post(self, request, *args, **kwargs):
         data = {}
         form = GroupProductForm(request.POST)
         if form.is_valid():
-            form.save()
-            data['is_form_valid'] = True
+            grupo = form.save()
+            message = 'Grupo {} , Adcionado com Sucesso.'.format(grupo.group.upper())
+            messages.success(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['html_table'] = \
+                data['is_form_valid'] = True
             data['html_table'] = \
                 render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
             data['html_form'] = \
-                render_to_string('group/group_modal_form.html', {'group_form': GroupProductForm()}, request=request)
+                render_to_string('group/group_modal_save.html', {'group_form': GroupProductForm()}, request=request)
 
         else:
             data['is_form_valid'] = False
+            message = 'Formulario invalido, verifique as inconsistências apontada a baixo.'
+            messages.error(request, message)
+            data['html_table'] = \
+                render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
             data['html_form'] = \
-                render_to_string('group/group_modal_form.html', {'group_form': form}, request=request)
+                render_to_string('group/group_modal_save.html', {'group_form': form}, request=request)
 
         return JsonResponse(data)
 
 
 group_create = GroupProductCreate.as_view()
-
 

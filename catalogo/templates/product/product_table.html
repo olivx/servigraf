@@ -6,9 +6,12 @@
     <th >R$ {{ product.valor }}</th>
     <th>{{ product.get_tipo_display|upper }}</th>
     <th>
-        {% if product.grupo  %}
-        {{ product.grupo.nome|upper }}
-        {%endif%}</th>
+        {% if product.group %}
+        {{ product.group.group|upper  }}
+        {% else %}
+        SEM GRUPO
+        {% endif %}
+    </th>
 
     <th>
         <button class="btn btn-warning js-open-form-update"
