@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from catalogo.forms import ProductForm
+from catalogo.forms import ProductForm, GroupProductForm
 
 
 class TestFormProduct(TestCase):
@@ -49,3 +49,18 @@ class TestFormProduct(TestCase):
         data =  dict(valid, **kwargs)
         form = ProductForm(data)
         return form
+
+class TestFromGroupProduct(TestCase):
+
+    def make_form_valid(self, **kwargs):
+        valid = dict(group='produto valiado', desc='desc produto valido')
+        data = dict(valid, **kwargs)
+        form = GroupProductForm(data)
+        form.is_valid()
+        return form
+
+
+    def test_form_group_invalid(self):
+        """Group Product From must have a group name """
+        form = self.make_form_valid(group='')
+        self.assertEqual(False, form.is_valid())
