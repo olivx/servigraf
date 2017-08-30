@@ -60,6 +60,9 @@ class ProductCreate(LoginRequiredMixin, CreateView):
                                                   request=request)
         else:
             data['is_form_valid'] = False
+            message = 'Erro ao inserir produto, verifique os campos a baixo.'
+            messages.error(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_form'] = \
                 render_to_string('product/product_modal_save.html', {'form': form}, request=request)
         return JsonResponse(data)
@@ -94,6 +97,9 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
                                                   {'produto_list': products.object_list}, request=request)
         else:
             data['is_form_valid'] = False
+            message = 'Verifique os Erros a baixo.'
+            messages.error(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_form'] = \
                 render_to_string('product/product_modal_update.html', {'form': form}, request=request)
         return JsonResponse(data)
@@ -117,7 +123,7 @@ class ProductDelete(LoginRequiredMixin, DeleteView):
         prod = get_object_or_404(Produto, pk=kwargs['pk'])
         prod.delete()
         message = 'Produto: {}, Deletado com suscesso!'.format(prod.nome.upper())
-        messages.warning(request, message)
+        messages.error(request, message)
         return HttpResponseRedirect(r('catalogo:product_list'))
 
 

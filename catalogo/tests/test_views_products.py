@@ -1,13 +1,26 @@
+import json
+
 from django.contrib.auth.models import User
+from django.forms import model_to_dict
 from django.test import TestCase
 from django.shortcuts import resolve_url as r
+from django.contrib.messages import get_messages , get_level
+from model_mommy import mommy
+
+from catalogo.models import Produto
+
+
+def _get_user():
+    _user_name = 'olvx'
+    _password = 'logan277'
+    user = User.objects.create(username=_user_name, email='oliveiravicente.net@gmail.com')
+    user.set_password(_password)
+    user.save()
 
 
 class TestViewProduct(TestCase):
     def setUp(self):
-        user = User.objects.create(username='olvx', email='oliveiravicente.net@gmail.com')
-        user.set_password('logan277')
-        user.save()
+        _get_user()
         self.client.login(username='olvx', password='logan277')
         self.resp = self.client.get(r('catalogo:product_list'))
 
@@ -33,22 +46,19 @@ class TestViewProduct(TestCase):
                 self.assertContains(self.resp, expected, count)
 
 
-class TestCreateViewGet(TestCase):
-
+class TestCreateProductGet(TestCase):
     def setUp(self):
-        user = User.objects.create(username='olvx', email='oliveiravicente.net@gmail.com')
-        user.set_password('logan277')
-        user.save()
+        _get_user()
         self.client.login(username='olvx', password='logan277')
-        self.rep =  self.client.get(r('catalogo:product_create'))
+        self.resp = self.client.get(r('catalogo:product_create'))
 
     def test_get(self):
         """status code 200"""
-        self.assertEqual(200, self.rep.status_code)
+        self.assertEqual(200, self.resp.status_code)
 
     def test_template_user(self):
         """Template used must be product_modal_save"""
-        self.assertTemplateUsed(self.rep , 'product/product_modal_save.html')
+        self.assertTemplateUsed(self.resp, 'product/product_modal_save.html')
 
     def test_html(self):
         content = [
@@ -60,5 +70,133 @@ class TestCreateViewGet(TestCase):
 
         for count, expected in content:
             with self.subTest():
-                self.assertContains(self.rep, expected, count)
+                self.assertContains(self.resp, expected, count)
+
+
+class TestCreateProductPost(TestCase):
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        data = dict(nome='produto nome', desc='desc produto', tipo=1, valor=1.00, obs='obs produto',
+                    quantidade=1)
+        self.resp = self.client.post(r('catalogo:product_create'), data)
+
+    def test_create(self):
+        """Product must be created """
+        self.assertEqual(1, Produto.objects.count())
+
+    def test_form_is_valid(self):
+        """is_form_valid must be True"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertEqual(True, _json_response['is_form_valid'])
+
+    def test_has_html_table(self):
+        """html_table must be True"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue(_json_response['html_table'])
+
+    def test_message(self):
+        """must have message success"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue('alert-success' in _json_response['message'])
+
+
+class TestCreateProductInvalidPost(TestCase):
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        data = dict(nome='', desc='desc produto', tipo=1, valor=1.00, obs='obs produto',
+                    quantidade=1)
+        self.resp = self.client.post(r('catalogo:product_create'), data)
+
+    def test_not_create(self):
+        """Product don't must be created """
+        self.assertEqual(0, Produto.objects.count())
+
+    def test_form_is_invalid(self):
+        """is_form_valid must be False"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertEqual(False, _json_response['is_form_valid'])
+
+    def test_has_html_table(self):
+        """html_table must be True"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue(_json_response['html_form'])
+
+    def test_message(self):
+        """must have message success"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue('alert-danger' in _json_response['message'])
+
+
+class TestUpdateProductPost(TestCase):
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        self.prod = mommy.make(Produto, nome='produto nome', desc='desc produto',
+                               tipo=1, valor=1.00, obs='obs produto', quantidade=1)
+        data = dict(nome='produto nome alterado', desc='desc produto', tipo=1, valor=1.00, obs='obs produto',
+                    quantidade=1)
+        self.resp = self.client.post(r('catalogo:product_update', pk=self.prod.id), data)
+
+
+    def test_form_is_valid(self):
+        """is_form_valid must be True"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertEqual(True, _json_response['is_form_valid'])
+
+    def test_has_html_table(self):
+        """html_table must be True"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue(_json_response['html_table'])
+
+    def test_message(self):
+        """must have message success"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue('alert-warning' in _json_response['message'])
+
+
+class TestupdateProductInvalidPost(TestCase):
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        self.prod = mommy.make(Produto, nome='produto', desc='desc produto', tipo=1, valor=1.00, obs='obs produto',
+                    quantidade=1)
+        data = dict(nome='', desc='desc produto', tipo=1, valor=1.00, obs='obs produto',
+                    quantidade=1)
+        self.resp = self.client.post(r('catalogo:product_update', pk=self.prod.id), data)
+
+
+    def test_form_is_invalid(self):
+        """is_form_valid must be False"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertEqual(False, _json_response['is_form_valid'])
+
+    def test_has_html_table(self):
+        """html_table must be True"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue(_json_response['html_form'])
+
+    def test_message(self):
+        """must have message success"""
+        _json_response = json.loads(self.resp.content.decode('utf-8'))
+        self.assertTrue('alert-danger' in _json_response['message'])
+
+
+class TestDeleteProductPost(TestCase):
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        self.prod = mommy.make(Produto, nome='produto nome', desc='desc produto',
+                               tipo=1, valor=1.00, obs='obs produto', quantidade=1)
+        self.resp = self.client.post(r('catalogo:product_delete', pk=self.prod.id))
+
+
+    def test_count_model(self):
+        """must have  zero model """
+        self.assertEqual(0 , Produto.objects.count())
+
+    def test_status_code(self):
+        """Page must be recdirect """
+        self.assertEqual(302, self.resp.status_code)
 
