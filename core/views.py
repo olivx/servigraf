@@ -111,6 +111,7 @@ def delete_client(request, pk):
 
     else:
         form_client = ClientForm(instance=client)
+        data['disable_all'] = True
         data['html_form'] = render_to_string(template, {'form_client': form_client},
                                              request=request)
     return JsonResponse(data)

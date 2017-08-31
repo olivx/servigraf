@@ -1,0 +1,17 @@
+{% for group in group_list %}
+<tr>
+    <th>{{ group.id }}</th>
+    <th>
+        <a class="js-open-modal-group upper" href="#"
+            data-url="{%  url 'catalogo:group_update' group.id %}">
+            {{ group.group }}
+        </a>
+    </th>
+    <th class="upper">{{ group.desc }}</th>
+</tr>
+{% empty %}
+<th colspan="3" class="bg-warning">Não há Registros</th>
+<tr>
+
+</tr>
+{% endfor%}

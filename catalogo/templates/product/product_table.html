@@ -1,0 +1,39 @@
+{% for product in produto_list %}
+<tr>
+    <th>{{ product.id }}</th>
+    <th><a class="link js-open-form-update" href="#"
+           data-url="{% url 'catalogo:product_update' product.id %}">{{ product.nome| upper}}</a></th>
+    <th>{{ product.quantidade }}</th>
+    <th >R$ {{ product.valor }}</th>
+    <th>{{ product.get_tipo_display|upper }}</th>
+    <th>
+        {% if product.group %}
+        {{ product.group.group|upper  }}
+        {% else %}
+        SEM GRUPO
+        {% endif %}
+    </th>
+
+    <th>
+        <button class="btn btn-warning js-open-form-update"
+                data-url="{% url 'catalogo:product_update' product.id %}">
+            <i class="glyphicon glyphicon-pencil"></i>
+        </button>
+    </th>
+
+    <th>
+        <button class="btn btn-danger js-open-form-delete"
+                data-url="{% url 'catalogo:product_delete' product.id %}">
+            <i class="glyphicon glyphicon-trash"></i>
+        </button>
+    </th>
+
+    {% empty %}
+<tr>
+    <th class="bg-warning text-center " colspan="8">
+        Não há resultados para essa pesquisa
+    </th>
+</tr>
+
+</tr>
+{% endfor %}

@@ -1,0 +1,19 @@
+{% load widget_tweaks %}
+<form>
+    {% csrf_token %}
+    <div class="form-group {% if group_form.group.errors %} has-error {% endif %}">
+        {{ group_form.group.label_tag }}
+        {% render_field group_form.group class='form-control upper' %}
+        {% for error in group_form.group.errors %}
+        <span class="help-block">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="form-group{% if group_form.desc.errors %} has-error {% endif %}">
+        {{ group_form.desc.label_tag }}
+        {% render_field group_form.desc class="form-control upper" rows='3' %}
+        {% for error in group_form.desc.errors %}
+        <span class="help-block">{{ error }}</span>
+        {% endfor %}
+    </div>
+</form>

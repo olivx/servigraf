@@ -109,9 +109,9 @@ class TestViewUpdate(TestCase):
         user.set_password('logan277')
         user.save()
         self.client.login(username='olvx', password='logan277')
-        self.cli = Cliente(razao_social='Thiago', nome_fantasia='Oliveira', tipo=2, documento='32283627877')
-        self.data = model_to_dict(self.cli, fields=[field.name for field in self.cli._meta.fields])
-        self.client.post(r('servigraf:save_client'), self.data)
+        self.cli = mommy.make(Cliente, razao_social='Thiago', nome_fantasia='Oliveira', tipo=2, documento='32283627877')
+        self.data = dict(razao_social='Thiago', nome_fantasia='Oliveira', tipo=2, documento='32283627877')
+        self.client.post(r('servigraf:update_client', pk=self.cli.id), self.data)
 
     def test_create(self):
         """Test create new client """

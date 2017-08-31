@@ -7,6 +7,7 @@ $(function(){
         doc = documento.replace(/[\.\-\/ ]+/g, '')
         if (doc.length == 14 ){
 
+<<<<<<< HEAD
              $('.documento').mask('00.000.000/0000-00', {reverse: true});
         }else{
             $('.documento').mask('000.000.000-00', {reverse: true});
@@ -14,6 +15,8 @@ $(function(){
    });
 
 
+=======
+>>>>>>> catalogo
     function loadClientForm(){
          var btn = $(this);
         $.ajax({
@@ -25,6 +28,12 @@ $(function(){
             },
             success: function(data){
                 $('#cliente-modal .modal-content').html(data.html_form);
+                if(data.disable_all){
+                    $('#cliente-modal input').attr('disabled','disabled');
+                    $('#cliente-modal textarea').attr('disabled','disabled');
+                    $('#cliente-modal select').attr('disabled','disabled');
+                    $('#cliente-modal input[name=csrfmiddlewaretoken]').removeAttr('disabled');
+                }
             }
         });
     };
@@ -253,7 +262,7 @@ $(function(){
                         $("#modal input").attr('disabled','disabled');
                         $("#modal textarea").attr('disabled','disabled');
                         $("#modal select").attr('disabled','disabled');
-                         $('input[name=csrfmiddlewaretoken]').removeAttr('disabled');
+                        $('input[name=csrfmiddlewaretoken]').removeAttr('disabled');
                     });
 
                 }else{
@@ -334,7 +343,7 @@ $(function(){
 
                 alert('Endereço foi desativado, mas ainda pode ser visto na area administrativa do sistema.');
 
-                $('#address-table thbody').html(data.html_table);
+                $('#address-table tbody').html(data.html_table);
                 $('.pagination_end').html(data.html_pagination);
 
                 $('#modal').modal('hide');
@@ -393,6 +402,215 @@ $(function(){
     });
 
 
+    function loadProductForm(){
+
+       var btn = $(this);
+
+       $.ajax({
+
+            type:'get',
+            dataType:'json',
+            url: btn.attr('data-url'),
+
+            beforeSend: function(){
+
+                $('#modal-product').modal('show');
+
+            },
+            success: function(data){
+
+                $('#modal-product .modal-content').html(data.html_form)
+                $('.money').mask("#.##0,00", {reverse: true});
+
+                if(data.disable_all){
+
+                   $("#modal-product input").attr('disabled','disabled');
+                   $("#modal-product select").attr('disabled','disabled');
+                   $("#modal-product textarea").attr('disabled','disabled');
+                   $("#modal-product input[name=csrfmiddlewaretoken]").removeAttr('disabled');
+
+
+                }
+            }
+
+
+       });
+
+    };
+
+    function saveProductForm(){
+        var form = $(this);
+
+        var valor = $('.money').val();
+        $('.money').val(valor.replace('.','').replace(',', '.'))
+
+
+
+        $.ajax({
+            dataType: 'json',
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: form.serialize(),
+
+            success: function(data){
+
+                if(data.is_form_valid){
+
+                    $('#messages').html(data.message)
+                    $('#table-product tbody').html(data.html_table);
+                    $('#modal-product').modal('hide');
+
+                }else{
+
+                   $('#modal-product .modal-content').html(data.html_form);
+                   $('.money').mask("#.##0,00", {reverse: true});
+
+                }
+            }
+
+        });
+    return false;
+    };
+
+    // product
+    $('#product-create').click(loadProductForm);
+    $('#modal-product').on('submit' , '.js-form-product-save' , saveProductForm);
+
+    $('#table-product').on('click' , '.js-open-form-update', loadProductForm);
+    $('#modal-product').on('submit', '.js-form-product-update', saveProductForm);
+
+    $('#table-product').on('click' , '.js-open-form-delete', loadProductForm);
+
+    //group
+
+    function loadGroupProductForm (){
+
+        var btn = $(this);
+        $.ajax({
+            url: btn.attr('data-url'),
+            type: 'get',
+            dataType: 'json',
+
+           beforeSend: function(){
+
+                $('#modal-product').modal('hide');
+                $('#modal-group').modal('show');
+
+           },
+            success: function(data){
+
+                $('#modal-group .modal-content').html(data.html_form);
+                $('#modal-group .modal-content tbody').html(data.html_table);
+
+            }
+
+        });
+
+    };
+
+    function saveGroupProductForm(){
+
+        var form = $('form');
+        var btn = $(this);
+        $.ajax({
+            url: btn.attr('data-url'),
+            type: 'post',
+            data: form.serialize(),
+            dataType: 'json',
+
+            success: function(data){
+                if(data.is_form_valid){
+                    $('#modal-group .modal-content').html(data.html_form);
+                    $('#modal-group .modal-content tbody').html(data.html_table);
+
+                }else{
+                    $('#modal-group .modal-content').html(data.html_form);
+                    $('#modal-group .modal-content tbody').html(data.html_table);
+
+
+                }
+
+                $('.modal .modal-body').css('overflow-y','auto');
+                $('.modal .modal-body').css('height' , $(window).height() * 0.7 );
+
+            }
+        });
+       return false;
+    };
+
+    $('#modal-group').on('shown.bs.modal', function(){
+        $('.modal .modal-body').css('overflow-y','auto');
+        $('.modal .modal-body').css('height' , $(window).height() * 0.7 );
+    });
+
+    $('#modal-group').on('hidden.bs.modal', function () {
+        $('#modal-product').modal('show');
+
+        $.ajax({
+            url: 'api/product/group/list/',
+            dataType: 'json',
+
+            success: function(data){
+
+                 var json_obj = $.parseJSON(data.groups);
+                 if(json_obj ){
+                    $('select[name=group] option').remove();
+                   // <option value="" selected="selected">---------</option>
+                    $('select[name=group]').append($('<option>').text('---------').
+                    attr('selected','selected').attr('value',''));
+                 }
+                 $.each(json_obj, function(key, obj){
+                      $('select[name=group]').append($('<option>').text(obj.fields.group).attr('value', obj.pk));
+
+                 });
+
+            }
+
+        });
+    });
+
+    // open from product form
+    $('#modal-product').on('click', '.js-open-modal-group', loadGroupProductForm);
+
+    // open from grou form link or clean form from button limpar
+    $('#modal-group').on('click', '.js-open-modal-group', loadGroupProductForm);
+
+    // save update and delete from group from
+    $('#modal-group').on('click', '.js-save-modal-group', saveGroupProductForm);
+    $('#modal-group').on('click', '.js-update-modal-group', saveGroupProductForm);
+
+    // delete group
+    $('#modal-group').on('click', '.js-delete-modal-group', function(){
+
+        var btn = $(this);
+        var form = $('form');
+        $.ajax({
+            url: btn.attr('data-url'),
+            type: 'post',
+            data: form.serialize(),
+            dataType: 'json',
+            beforeSend: function(){
+                var _confirm = confirm('Você realmente deseja deletar esse Grupo');
+                if(_confirm == false){
+                    return false;
+                }
+            },
+            success: function(data){
+
+                if(data.is_form_valid){
+                    $('#modal-group .modal-content').html(data.html_form);
+                    $('#modal-group .modal-content tbody').html(data.html_table);
+                }else{
+                        $('#modal-group .modal-content').html(data.html_form);
+                        $('#modal-group .modal-content tbody').html(data.html_table);
+                    }
+
+                $('.modal .modal-body').css('overflow-y','auto');
+                $('.modal .modal-body').css('height' , $(window).height() * 0.7 );
+            }
+        });
+    return false;
+    });
 
 
 });

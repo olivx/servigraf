@@ -1,0 +1,61 @@
+{% load widget_tweaks %}
+<form action="" class="" method="post">
+    {% csrf_token %}
+    <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">ADD Grupo </h4>
+    </div>
+
+    <div class="modal-body">
+
+        {% include 'messages.html'%}
+
+        <div id="form-group">
+            {% include 'group/group_modal_form.html'%}
+        </div>
+
+        <table id="table-group" class="table table-striped table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>GRUPO</th>
+                <th>DESCRIÇÃO</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% include 'group/group_table.html' %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default js-open-modal-group"
+                data-url="{% url 'catalogo:group_create' %}">
+           Limpar
+        </button>
+
+        <button type="button" class="btn btn-primary js-save-modal-group"
+                data-url="{% url 'catalogo:group_create' %}">
+            Salvar
+        </button>
+
+        <button type="button" class="btn btn-warning js-update-modal-group"
+                data-url="{% url 'catalogo:group_update' group_form.instance.id %}">
+            Alterar
+        </button>
+
+        <button type="button" class="btn btn-danger js-delete-modal-group"
+                data-url="{% url 'catalogo:group_delete' group_form.instance.id %}">
+           Deletar
+        </button>
+
+
+
+        <button type="button" data-dismiss="modal" class="btn btn-default">
+            Fechar
+        </button>
+
+    </div>
+</form>
