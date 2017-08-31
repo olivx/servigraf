@@ -520,7 +520,10 @@ $(function(){
 
                  var json_obj = $.parseJSON(data.groups);
                  if(json_obj ){
-                    $('select[name=group] option').remove()
+                    $('select[name=group] option').remove();
+                   // <option value="" selected="selected">---------</option>
+                    $('select[name=group]').append($('<option>').text('---------').
+                    attr('selected','selected').attr('value',''));
                  }
                  $.each(json_obj, function(key, obj){
                       $('select[name=group]').append($('<option>').text(obj.fields.group).attr('value', obj.pk));

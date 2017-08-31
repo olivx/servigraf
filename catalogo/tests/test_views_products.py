@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from django.forms import model_to_dict
 from django.test import TestCase
 from django.shortcuts import resolve_url as r
-from django.contrib.messages import get_messages , get_level
+from django.contrib.messages import get_messages, get_level
 from model_mommy import mommy
 
-from catalogo.models import Produto
+from catalogo.models import Produto, GroupProduct
 
 
 def _get_user():
@@ -139,7 +139,6 @@ class TestUpdateProductPost(TestCase):
                     quantidade=1)
         self.resp = self.client.post(r('catalogo:product_update', pk=self.prod.id), data)
 
-
     def test_form_is_valid(self):
         """is_form_valid must be True"""
         _json_response = json.loads(self.resp.content.decode('utf-8'))
@@ -161,11 +160,10 @@ class TestupdateProductInvalidPost(TestCase):
         _get_user()
         self.client.login(username='olvx', password='logan277')
         self.prod = mommy.make(Produto, nome='produto', desc='desc produto', tipo=1, valor=1.00, obs='obs produto',
-                    quantidade=1)
+                               quantidade=1)
         data = dict(nome='', desc='desc produto', tipo=1, valor=1.00, obs='obs produto',
                     quantidade=1)
         self.resp = self.client.post(r('catalogo:product_update', pk=self.prod.id), data)
-
 
     def test_form_is_invalid(self):
         """is_form_valid must be False"""
@@ -191,12 +189,138 @@ class TestDeleteProductPost(TestCase):
                                tipo=1, valor=1.00, obs='obs produto', quantidade=1)
         self.resp = self.client.post(r('catalogo:product_delete', pk=self.prod.id))
 
-
     def test_count_model(self):
         """must have  zero model """
-        self.assertEqual(0 , Produto.objects.count())
+        self.assertEqual(0, Produto.objects.count())
 
     def test_status_code(self):
         """Page must be recdirect """
         self.assertEqual(302, self.resp.status_code)
+
+
+class TestListGrouProdct(TestCase):
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        mommy.make(GroupProduct, _quantity=10)
+        self.resp = self.client.get(r('catalogo:group_list'))
+
+    def test_status_code(self):
+        """status code must be 200"""
+        self.assertEqual(200, self.resp.status_code)
+
+class TestGroupProductGet(TestCase):
+
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        data = dict(group='group name', desc='desc group')
+        self.resp = self.client.get(r('catalogo:group_create'), data)
+
+    def get_json(self):
+        return json.loads(self.resp.content.decode('utf-8'))
+
+    def test_status_code(self):
+        """status code must be 200"""
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_template_used(self):
+        """template in used must be group_modal_save.html"""
+        self.assertTemplateUsed(self.resp, 'group/group_modal_save.html')
+
+    def test_josn(self):
+        """test json has html_table , message html_form"""
+        json_resp = self.get_json()
+        with self.subTest():
+            self.assertTrue(json_resp['message'])
+            self.assertTrue(json_resp['html_form'])
+            self.assertTrue(json_resp['html_table'])
+
+    def test_message(self):
+        json_resp = self.get_json()
+        with self.subTest():
+            self.assertTrue('alert-warning' in json_resp['message'])
+            self.assertTrue('Contate um administrador. para efutar a operação.' in json_resp['message'])
+
+class TestGroupProductPostValid(TestCase):
+
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        data = dict(group='group name', desc='desc group')
+        self.resp = self.client.post(r('catalogo:group_create'), data)
+
+    def get_json(self):
+        return json.loads(self.resp.content.decode('utf-8'))
+
+    def test_status_code(self):
+        """status code must be 200"""
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_template_used(self):
+        """template in used must be group_modal_save.html"""
+        self.assertTemplateUsed(self.resp, 'group/group_modal_save.html')
+
+    def test_josn(self):
+        """test json has html_table , message html_form"""
+        json_resp = self.get_json()
+        with self.subTest():
+            self.assertTrue(json_resp['message'])
+            self.assertTrue(json_resp['html_form'])
+            self.assertTrue(json_resp['html_table'])
+            self.assertEqual(True, json_resp['is_form_valid'])
+
+    def test_message(self):
+        json_resp = self.get_json()
+        with self.subTest():
+            self.assertTrue('alert-success' in json_resp['message'])
+            self.assertTrue('Adicionado com Sucesso' in json_resp['message'])
+
+
+    def test_count(self):
+        """must have 1 group poroduct"""
+        self.assertEqual(1, GroupProduct.objects.count())
+
+
+class TestGroupProductPostInvalid(TestCase):
+
+    def setUp(self):
+        _get_user()
+        self.client.login(username='olvx', password='logan277')
+        data = dict(group='', desc='desc group')
+        self.resp = self.client.post(r('catalogo:group_create'), data)
+
+    def get_json(self):
+        return json.loads(self.resp.content.decode('utf-8'))
+
+    def test_status_code(self):
+        """status code must be 200"""
+        self.assertEqual(200, self.resp.status_code)
+
+    def test_template_used(self):
+        """template in used must be group_modal_save.html"""
+        self.assertTemplateUsed(self.resp, 'group/group_modal_save.html')
+
+    def test_josn(self):
+        """test json has html_table , message html_form"""
+        json_resp = self.get_json()
+        with self.subTest():
+            self.assertTrue(json_resp['message'])
+            self.assertTrue(json_resp['html_form'])
+            self.assertTrue(json_resp['html_table'])
+            self.assertEqual(False, json_resp['is_form_valid'])
+
+    def test_message(self):
+        json_resp = self.get_json()
+        with self.subTest():
+            self.assertTrue('alert-danger' in json_resp['message'])
+            self.assertTrue('Formulario invalido, verifique as inconsistências apontada a baixo' in
+                            json_resp['message'])
+
+
+    def test_count(self):
+        """must have 1 group poroduct"""
+        self.assertEqual(0, GroupProduct.objects.count())
+
+
 

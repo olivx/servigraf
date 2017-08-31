@@ -131,14 +131,14 @@ product_delete = ProductDelete.as_view()
 
 
 class GroupProductList(LoginRequiredMixin, ListView):
-
     model = GroupProduct
 
     def get(self, request, *args, **kwargs):
-        data =  {'groups': serializers.serialize('json', GroupProduct.objects.all())}
+        data = {'groups': serializers.serialize('json', GroupProduct.objects.all())}
         return JsonResponse(data, safe=False)
-group_list = GroupProductList.as_view()
 
+
+group_list = GroupProductList.as_view()
 
 
 class GroupProductCreate(LoginRequiredMixin, CreateView):
@@ -150,7 +150,7 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
         messages.warning(request, 'somente é possivel alterar ou excluir  um Grupo '
                                   'dentro da área administrativa do sistema. \n '
                                   'Contate um administrador. para efutar a operação.')
-        data['message'] = render_to_string('messages.html',{}, request=request)
+        data['message'] = render_to_string('messages.html', {}, request=request)
         data['html_table'] = \
             render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
         data['html_form'] = \
@@ -162,7 +162,7 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
         form = GroupProductForm(request.POST)
         if form.is_valid():
             grupo = form.save()
-            message = 'Grupo {} , Adcionado com Sucesso.'.format(grupo.group.upper())
+            message = 'Grupo {} , Adicionado com Sucesso.'.format(grupo.group.upper())
             messages.success(request, message)
             data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_table'] = \
@@ -176,6 +176,7 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
             data['is_form_valid'] = False
             message = 'Formulario invalido, verifique as inconsistências apontada a baixo.'
             messages.error(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_table'] = \
                 render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
             data['html_form'] = \
@@ -185,4 +186,3 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
 
 
 group_create = GroupProductCreate.as_view()
-
