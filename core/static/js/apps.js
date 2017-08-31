@@ -13,6 +13,12 @@ $(function(){
             },
             success: function(data){
                 $('#cliente-modal .modal-content').html(data.html_form);
+                if(data.disable_all){
+                    $('#cliente-modal input').attr('disabled','disabled');
+                    $('#cliente-modal textarea').attr('disabled','disabled');
+                    $('#cliente-modal select').attr('disabled','disabled');
+                    $('#cliente-modal input[name=csrfmiddlewaretoken]').removeAttr('disabled');
+                }
             }
         });
     };
@@ -400,6 +406,16 @@ $(function(){
 
                 $('#modal-product .modal-content').html(data.html_form)
                 $('.money').mask("#.##0,00", {reverse: true});
+
+                if(data.disable_all){
+
+                   $("#modal-product input").attr('disabled','disabled');
+                   $("#modal-product select").attr('disabled','disabled');
+                   $("#modal-product textarea").attr('disabled','disabled');
+                   $("#modal-product input[name=csrfmiddlewaretoken]").removeAttr('disabled');
+
+
+                }
             }
 
 
@@ -432,6 +448,7 @@ $(function(){
                 }else{
 
                    $('#modal-product .modal-content').html(data.html_form);
+                   $('.money').mask("#.##0,00", {reverse: true});
 
                 }
             }
@@ -467,10 +484,9 @@ $(function(){
            },
             success: function(data){
 
-
-
                 $('#modal-group .modal-content').html(data.html_form);
                 $('#modal-group .modal-content tbody').html(data.html_table);
+
             }
 
         });
