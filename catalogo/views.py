@@ -115,6 +115,7 @@ class ProductDelete(LoginRequiredMixin, DeleteView):
         data = {}
         prod = get_object_or_404(Produto, pk=kwargs['pk'])
         form = ProductForm(instance=prod)
+        data['disable_all'] = True
         data['html_form'] = \
             render_to_string('product/product_modal_delete.html', {'form': form}, request=request)
         return JsonResponse(data)
@@ -147,10 +148,6 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
 
     def get(self, request, *args, **kwargs):
         data = {}
-        messages.warning(request, 'somente é possivel alterar ou excluir  um Grupo '
-                                  'dentro da área administrativa do sistema. \n '
-                                  'Contate um administrador. para efutar a operação.')
-        data['message'] = render_to_string('messages.html', {}, request=request)
         data['html_table'] = \
             render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
         data['html_form'] = \
