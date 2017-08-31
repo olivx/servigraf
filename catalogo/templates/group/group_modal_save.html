@@ -31,10 +31,26 @@
     </div>
 
     <div class="modal-footer">
+        <button type="button" class="btn btn-default js-open-modal-group"
+                data-url="{% url 'catalogo:group_create' %}">
+           Limpar
+        </button>
+
         <button type="button" class="btn btn-primary js-save-modal-group"
                 data-url="{% url 'catalogo:group_create' %}">
             Salvar
         </button>
+
+        <button type="button" class="btn btn-warning js-update-modal-group"
+                data-url="{% url 'catalogo:group_update' group_form.instance.id %}">
+            Alterar
+        </button>
+
+        <button type="button" class="btn btn-danger js-delete-modal-group"
+                data-url="{% url 'catalogo:group_delete' group_form.instance.id %}">
+           Deletar
+        </button>
+
 
 
         <button type="button" data-dismiss="modal" class="btn btn-default">

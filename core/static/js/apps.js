@@ -241,7 +241,7 @@ $(function(){
                         $("#modal input").attr('disabled','disabled');
                         $("#modal textarea").attr('disabled','disabled');
                         $("#modal select").attr('disabled','disabled');
-                         $('input[name=csrfmiddlewaretoken]').removeAttr('disabled');
+                        $('input[name=csrfmiddlewaretoken]').removeAttr('disabled');
                     });
 
                 }else{
@@ -466,6 +466,9 @@ $(function(){
 
            },
             success: function(data){
+
+
+
                 $('#modal-group .modal-content').html(data.html_form);
                 $('#modal-group .modal-content tbody').html(data.html_table);
             }
@@ -535,10 +538,48 @@ $(function(){
         });
     });
 
+    // open from product form
     $('#modal-product').on('click', '.js-open-modal-group', loadGroupProductForm);
+
+    // open from grou form link or clean form from button limpar
+    $('#modal-group').on('click', '.js-open-modal-group', loadGroupProductForm);
+
+    // save update and delete from group from
     $('#modal-group').on('click', '.js-save-modal-group', saveGroupProductForm);
+    $('#modal-group').on('click', '.js-update-modal-group', saveGroupProductForm);
 
+    // delete group
+    $('#modal-group').on('click', '.js-delete-modal-group', function(){
 
+        var btn = $(this);
+        var form = $('form');
+        $.ajax({
+            url: btn.attr('data-url'),
+            type: 'post',
+            data: form.serialize(),
+            dataType: 'json',
+            beforeSend: function(){
+                var _confirm = confirm('Você realmente deseja deletar esse Grupo');
+                if(_confirm == false){
+                    return false;
+                }
+            },
+            success: function(data){
+
+                if(data.is_form_valid){
+                    $('#modal-group .modal-content').html(data.html_form);
+                    $('#modal-group .modal-content tbody').html(data.html_table);
+                }else{
+                        $('#modal-group .modal-content').html(data.html_form);
+                        $('#modal-group .modal-content tbody').html(data.html_table);
+                    }
+
+                $('.modal .modal-body').css('overflow-y','auto');
+                $('.modal .modal-body').css('height' , $(window).height() * 0.7 );
+            }
+        });
+    return false;
+    });
 
 
 });

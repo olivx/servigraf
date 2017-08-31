@@ -143,7 +143,7 @@ group_list = GroupProductList.as_view()
 
 class GroupProductCreate(LoginRequiredMixin, CreateView):
     model = GroupProduct
-    template_name = 'group_modal_crud.html'
+    template_name = 'group_modal_save.html'
 
     def get(self, request, *args, **kwargs):
         data = {}
@@ -162,7 +162,7 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
         form = GroupProductForm(request.POST)
         if form.is_valid():
             grupo = form.save()
-            message = 'Grupo {} , Adicionado com Sucesso.'.format(grupo.group.upper())
+            message = 'Grupo {} , Adcionado com Sucesso.'.format(grupo.group.upper())
             messages.success(request, message)
             data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_table'] = \
@@ -176,7 +176,6 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
             data['is_form_valid'] = False
             message = 'Formulario invalido, verifique as inconsistências apontada a baixo.'
             messages.error(request, message)
-            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_table'] = \
                 render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
             data['html_form'] = \
@@ -186,3 +185,95 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
 
 
 group_create = GroupProductCreate.as_view()
+
+
+class GroupProductUpdate(LoginRequiredMixin, UpdateView):
+    model = GroupProduct
+    template_name = 'group_modal_save.html'
+
+    def get(self, request, *args, **kwargs):
+        data = {}
+        group = get_object_or_404(GroupProduct, pk=kwargs['pk'])
+        data['html_table'] = \
+            render_to_string('group/group_table.html',
+                             {'group_list': GroupProduct.objects.all()}, request=request)
+        data['html_form'] = \
+            render_to_string('group/group_modal_save.html',
+                             {'group_form': GroupProductForm(instance=group)}, request=request)
+        return JsonResponse(data)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        group = get_object_or_404(GroupProduct, pk=kwargs['pk'])
+        form = GroupProductForm(request.POST, instance=group)
+        if form.is_valid():
+            grupo = form.save()
+            message = 'Grupo {} , Alterado com Sucesso.'.format(grupo.group.upper())
+            messages.info(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['html_table'] = \
+                data['is_form_valid'] = True
+            data['html_table'] = \
+                render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
+            data['html_form'] = \
+                render_to_string('group/group_modal_save.html', {'group_form': GroupProductForm()}, request=request)
+
+        else:
+            data['is_form_valid'] = False
+            message = 'Formulario invalido, verifique as inconsistências apontada a baixo.'
+            messages.error(request, message)
+            data['html_table'] = \
+                render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
+            data['html_form'] = \
+                render_to_string('group/group_modal_save.html', {'group_form': form}, request=request)
+
+        return JsonResponse(data)
+
+
+group_update = GroupProductUpdate.as_view()
+
+
+class GroupProductDelete(LoginRequiredMixin, DeleteView):
+    model = GroupProduct
+    template_name = 'group_modal_save.html'
+
+    def get(self, request, *args, **kwargs):
+        data = {}
+        group = get_object_or_404(GroupProduct, pk=kwargs['pk'])
+        data['html_table'] = \
+            render_to_string('group/group_table.html',
+                             {'group_list': GroupProduct.objects.all()}, request=request)
+        data['html_form'] = \
+            render_to_string('group/group_modal_save.html',
+                             {'group_form': GroupProductForm(instance=group)}, request=request)
+        return JsonResponse(data)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        group = get_object_or_404(GroupProduct, pk=kwargs['pk'])
+        form = GroupProductForm(request.POST, instance=group)
+        if form.is_valid():
+            group.delete()
+            message = 'Grupo {} , Deletado com Sucesso.'.format(group.group.upper())
+            messages.error(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['html_table'] = \
+                data['is_form_valid'] = True
+            data['html_table'] = \
+                render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
+            data['html_form'] = \
+                render_to_string('group/group_modal_save.html', {'group_form': GroupProductForm()}, request=request)
+
+        else:
+            data['is_form_valid'] = False
+            message = 'Formulario invalido, verifique as inconsistências apontada a baixo.'
+            messages.error(request, message)
+            data['html_table'] = \
+                render_to_string('group/group_table.html', {'group_list': GroupProduct.objects.all()}, request=request)
+            data['html_form'] = \
+                render_to_string('group/group_modal_save.html', {'group_form': form}, request=request)
+
+        return JsonResponse(data)
+
+
+group_delete = GroupProductDelete.as_view()
