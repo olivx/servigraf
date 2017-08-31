@@ -1,7 +1,17 @@
 $(function(){
 
 
+    // ajustar
+   $('.documento').each(function(){
+        var documento = $(this).text();
+        doc = documento.replace(/[\.\-\/ ]+/g, '')
+        if (doc.length == 14 ){
 
+             $('.documento').mask('00.000.000/0000-00', {reverse: true});
+        }else{
+            $('.documento').mask('000.000.000-00', {reverse: true});
+        }
+   });
 
 
     function loadClientForm(){

@@ -2,9 +2,9 @@
 {% for client  in client_list.object_list %}
 <tr>
     <th>{{ client.id }}</th>
-    <th><a href="{{ client.get_absolute_url }}">{{ client.razao_social }}</a></th>
-    <th>{{ client.get_tipo_display }}</th>
-    <th>{{ client.documento }}</th>
+    <th class="upper"><a href="{{ client.get_absolute_url }}">{{ client.razao_social }}</a></th>
+    <th class="upper">{{ client.get_tipo_display }}</th>
+    <th class="documento">{{ client.documento }}</th>
     <th>{{ client.modificado_em|date:'d/m/Y' }}</th>
 
     <th><input class="form-control"
