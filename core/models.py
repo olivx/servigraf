@@ -15,7 +15,7 @@ class EntidadeAbstract(Timestamp):
     nome_fantasia = models.CharField('Nome Fantasia', max_length=255, blank=False, null=False)
     razao_social = models.CharField('Razão Social', max_length=255, blank=False, null=False)
     observacao = models.TextField('Descrição', blank=True, null=False)
-    documento = models.CharField('CNPJ', max_length=18, blank=True, null=False)
+    documento = models.CharField('CNPJ', max_length=30, blank=True, null=False)
     ativo  = models.NullBooleanField('Ativo', default=True)
 
     def __str__(self):
@@ -25,8 +25,8 @@ class EntidadeAbstract(Timestamp):
         abstract = True
 
 class ContatoAstract(models.Model):
-    nome = models.CharField(max_length=30)
-    sobre_nome = models.CharField(max_length=30)
+    nome = models.CharField(max_length=70)
+    sobre_nome = models.CharField(max_length=70)
     observacao = models.TextField('observação', null=True, blank=True)
     ativo = models.BooleanField(default=True)
 
@@ -51,9 +51,9 @@ class Cliente(EntidadeAbstract):
     )
 
     user = models.ForeignKey('auth.User', blank=True, null=True, related_name='cli_user')
-    tipo = models.PositiveSmallIntegerField('Fisico/Juridico', choices=TIPO_CLIENTE,
+    tipo = models.SmallIntegerField('Fisico/Juridico', choices=TIPO_CLIENTE,
                                             default=TIPO_JURIDICO, blank=False, null=False)
-    ramo = models.CharField('Ramo', max_length=20, blank=True, null=False)
+    ramo = models.CharField('Ramo', max_length=100, blank=True, null=False)
     mensalista = models.BooleanField(default=False)
 
     class Meta:
@@ -68,7 +68,7 @@ class Cliente(EntidadeAbstract):
         return r('servigraf:detail_client', pk=self.pk)
 
 class Email(Timestamp):
-    email = models.EmailField('E-mail', max_length=30)
+    email = models.EmailField('E-mail', max_length=70)
     contato = models.ForeignKey('core.Contato', related_name='emails', null=True, blank=True)
 
     def __str__(self):
@@ -132,7 +132,7 @@ class Endereco(models.Model):
 
     cliente = models.ForeignKey('core.Cliente', related_name='enderecos')
 
-    logradouro = models.CharField('Logradouro', max_length=20)
+    logradouro = models.CharField('Logradouro', max_length=50)
     endereco = models.CharField('Endereço', max_length=60)
     numero = models.PositiveIntegerField("Numero")
     complemento = models.CharField('Complemento', max_length=40, null=True, blank=True)

@@ -110,7 +110,7 @@ class TestViewUpdate(TestCase):
         user.save()
         self.client.login(username='olvx', password='logan277')
         self.cli = mommy.make(Cliente, razao_social='Thiago', nome_fantasia='Oliveira', tipo=2, documento='32283627877')
-        self.data = dict(razao_social='Thiago', nome_fantasia='Oliveira', tipo=2, documento='32283627877')
+        self.data = dict(razao_social='Thiago', nome_fantasia='vicente', tipo=2, documento='32283627877')
         self.client.post(r('servigraf:update_client', pk=self.cli.id), self.data)
 
     def test_create(self):
@@ -119,7 +119,7 @@ class TestViewUpdate(TestCase):
 
     def test_get_update(self):
         """Test update client """
-        resp = self.client.get(r('servigraf:update_client', 1))
+        resp = self.client.get(r('servigraf:update_client', pk=self.cli.id))
         resp_dict = json.loads(resp.content.decode('utf-8'))
         key = [keys for keys, value in resp_dict.items()]
         self.assertIn(''.join(key), 'html_form')
@@ -127,7 +127,7 @@ class TestViewUpdate(TestCase):
     def test_post_update_invalid(self):
         """Test update client invalid  """
         self.data['documento'] = '112236985'
-        resp = self.client.post(r('servigraf:update_client', 1), self.data)
+        resp = self.client.post(r('servigraf:update_client', pk=self.cli.id), self.data)
         resp_dict = json.loads(resp.content.decode('utf-8'))
         self.assertFalse(resp_dict['is_form_valid'])
         self.assertTrue('Erros foram processado' in resp_dict['message'])
@@ -136,7 +136,7 @@ class TestViewUpdate(TestCase):
         """Test update client valid"""
         self.data['tipo'] = 1
         self.data['documento'] = '09.081.524/0001-29'
-        resp = self.client.post(r('servigraf:update_client', 1), self.data)
+        resp = self.client.post(r('servigraf:update_client', pk=self.cli.id), self.data)
         resp_dict = json.loads(resp.content.decode('utf-8'))
         self.assertTrue(resp_dict['is_form_valid'])
 
@@ -149,8 +149,8 @@ class TestViewDelete(TestCase):
         self.client.login(username='olvx', password='logan277')
         self.cli = mommy.make(Cliente, tipo=2, documento='32283627877')
         self.data = model_to_dict(self.cli, fields=[field.name for field in self.cli._meta.fields])
-        self.get_resp = self.client.get(r('servigraf:delete_client', 1))
-        self.post_resp = self.client.post(r('servigraf:delete_client', 1))
+        self.get_resp = self.client.get(r('servigraf:delete_client', pk=self.cli.id))
+        self.post_resp = self.client.post(r('servigraf:delete_client', pk=self.cli.id))
 
     def test_get_delete(self):
         """Test get for """
