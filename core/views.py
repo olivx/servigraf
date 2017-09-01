@@ -21,8 +21,8 @@ def clientes(request):
     search = request.GET.get('search')
     if search is not None:
         clients_list = Cliente.objects.filter(Q(ativo=True) &
-                                              Q(nome_fantasia__contains=search,
-                                                razao_social__icontains=search))
+                                              Q(nome_fantasia__contains=search) |
+                                              Q(razao_social__icontains=search))
     else:
         clients_list = Cliente.objects.filter(ativo=True)
 
