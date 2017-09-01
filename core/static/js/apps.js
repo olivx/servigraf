@@ -3,13 +3,13 @@ $(function(){
 
     // ajustar
    $('.documento').each(function(){
-
+        var documento = ''
         if ($(this).is('th')){
-            var documento = $(this).text();
+            documento = $(this).text();
         }
 
         if ($(this).is('input')){
-            var documento = $(this).val();
+            documento = $(this).val();
         }
 
         doc = documento.replace(/[\.\-\/ ]+/g, '')
