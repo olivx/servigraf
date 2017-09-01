@@ -5,7 +5,6 @@
     <th class="upper"><a href="{{ client.get_absolute_url }}">{{ client.razao_social }}</a></th>
     <th class="upper">{{ client.get_tipo_display }}</th>
     <th class="documento">{{ client.documento }}</th>
-    <th>{{ client.modificado_em|date:'d/m/Y' }}</th>
 
     <th><input class="form-control"
                type="checkbox" {% if client.mensalista %} checked {% endif %} disabled />
