@@ -232,15 +232,9 @@ class TestGroupProductGet(TestCase):
         """test json has html_table , message html_form"""
         json_resp = self.get_json()
         with self.subTest():
-            self.assertTrue(json_resp['message'])
             self.assertTrue(json_resp['html_form'])
             self.assertTrue(json_resp['html_table'])
 
-    def test_message(self):
-        json_resp = self.get_json()
-        with self.subTest():
-            self.assertTrue('alert-warning' in json_resp['message'])
-            self.assertTrue('Contate um administrador. para efutar a operação.' in json_resp['message'])
 
 class TestGroupProductPostValid(TestCase):
 
@@ -265,16 +259,10 @@ class TestGroupProductPostValid(TestCase):
         """test json has html_table , message html_form"""
         json_resp = self.get_json()
         with self.subTest():
-            self.assertTrue(json_resp['message'])
             self.assertTrue(json_resp['html_form'])
             self.assertTrue(json_resp['html_table'])
             self.assertEqual(True, json_resp['is_form_valid'])
 
-    def test_message(self):
-        json_resp = self.get_json()
-        with self.subTest():
-            self.assertTrue('alert-success' in json_resp['message'])
-            self.assertTrue('Adicionado com Sucesso' in json_resp['message'])
 
 
     def test_count(self):
@@ -305,17 +293,11 @@ class TestGroupProductPostInvalid(TestCase):
         """test json has html_table , message html_form"""
         json_resp = self.get_json()
         with self.subTest():
-            self.assertTrue(json_resp['message'])
             self.assertTrue(json_resp['html_form'])
             self.assertTrue(json_resp['html_table'])
             self.assertEqual(False, json_resp['is_form_valid'])
 
-    def test_message(self):
-        json_resp = self.get_json()
-        with self.subTest():
-            self.assertTrue('alert-danger' in json_resp['message'])
-            self.assertTrue('Formulario invalido, verifique as inconsistências apontada a baixo' in
-                            json_resp['message'])
+  
 
 
     def test_count(self):
