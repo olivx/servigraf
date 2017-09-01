@@ -9,7 +9,7 @@ class ClienteAdmin(admin.ModelAdmin):
 
     list_display = ['__str__', 'razao_social', 'documento', 'tipo', 'mensalista']
     search_fields = ('nome_fantasia', 'razao_social', 'documento')
-    list_filter = ('mensalista','ativo')
+    list_filter = ('mensalista','ativo', 'tipo')
     ordering = ('-criado_em',)
 
     # form = ClientForm
