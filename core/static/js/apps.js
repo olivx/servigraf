@@ -3,11 +3,18 @@ $(function(){
 
     // ajustar
    $('.documento').each(function(){
-        var documento = $(this).text();
+
+        if ($(this).is('th')){
+            var documento = $(this).text();
+        }
+
+        if ($(this).is('input')){
+            var documento = $(this).val();
+        }
+
         doc = documento.replace(/[\.\-\/ ]+/g, '')
         if (doc.length == 14 ){
 
-<<<<<<< HEAD
              $('.documento').mask('00.000.000/0000-00', {reverse: true});
         }else{
             $('.documento').mask('000.000.000-00', {reverse: true});
@@ -15,8 +22,6 @@ $(function(){
    });
 
 
-=======
->>>>>>> catalogo
     function loadClientForm(){
          var btn = $(this);
         $.ajax({
