@@ -297,7 +297,7 @@ class TestGroupProductPostInvalid(TestCase):
             self.assertTrue(json_resp['html_table'])
             self.assertEqual(False, json_resp['is_form_valid'])
 
-  
+
 
 
     def test_count(self):

@@ -1,4 +1,5 @@
 import pymysql
+import re
 from django.core.management.base import BaseCommand
 
 from catalogo.models import Produto
@@ -53,6 +54,7 @@ class Command(BaseCommand):
         cursor = self.connect('select * from cliente')
 
         client_list = []
+        pattern =  re.compile('\d+')
         for row in cursor.fetchall():
             mensalista = True
             documento = ''
@@ -63,10 +65,12 @@ class Command(BaseCommand):
 
             # verifica se o documento é cpf ou cnpj
             if row[3] == 'J':
-                documento = row[4]
+                cnpj = pattern.findall(row[4])
+                documento = ''.join(cnpj)
                 tipo = 1
             else:
-                documento = row[5]
+                cpf = pattern.findall(row[5])
+                documento = ''.join(cpf)
                 tipo = 2
 
             data = {
