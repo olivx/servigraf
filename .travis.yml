@@ -1,8 +1,12 @@
 language: python
 python:
     - "3.5.1"
+services:
+  - postgresql
 install:
     - pip install -q -r requirements.txt
     - python contrib/generate_.env.py
+before_script:
+    - psql -c "create database travisci" -U postgres
 script:
 - python manage.py test --nomigrations

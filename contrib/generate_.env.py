@@ -19,11 +19,11 @@ DEBUG=True
 ALLOWED_HOSTS=127.0.0.1, .localhost
 
 #DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/NAME
-DB_NAME=my_db
+DB_NAME=travisci
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_USER=my_user
-DB_PASSWORD=my_password
+DB_USER=postgres
+DB_PASSWORD=
 
 
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
