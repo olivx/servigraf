@@ -2,6 +2,7 @@
 <form action="{% url 'servigraf:save_client' %}" class="js-save-client-form"
       method="post"  >
 
+
     {% csrf_token %}
     <div class="modal-header">
         <h4 class="modal-title">Cadastro de Cliente</h4>
@@ -11,6 +12,7 @@
     </div>
 
     <div class="modal-body">
+    {% include 'messages.html' %}
 
        {% include 'clientes/client_form.html' %}
     
