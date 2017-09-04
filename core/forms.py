@@ -1,3 +1,4 @@
+import re
 from django import forms
 from core import utils
 from django.core.exceptions import ValidationError
@@ -25,23 +26,33 @@ class ClientForm(forms.ModelForm):
             raise ValidationError('Nome Fantasia não pode ter menos de 3 letras.', code='MIN_3')
         return ''.join(n.upper() for n in nome_fantasia)
 
+    def clean_documento(self):
+        pattern = re.compile('\d+')
+        documento = pattern.findall(self.cleaned_data.get('documento'))
+
+        return ''.join(documento)
+
     def clean(self):
         documento = self.cleaned_data.get('documento')
         tipo = self.cleaned_data.get('tipo')
         # cnpj precisa ser informado.
         if not documento:
             if tipo == 1:
+                self.add_error('documento','CNPJ precisa ser informado.')
                 raise ValidationError('CNPJ precisa ser informado.', code='CNPJ_REQUIRED')
             else:
+                self.add_error('documento', 'CPF precisa ser informado')
                 raise ValidationError('CPF precisa ser informado', code='CPF_REQUIRED')
 
         # não pode validar um cpf se o tipo for cnpj
         if tipo == 1:
             if not utils.validar_cnpj(documento):
+                self.add_error('documento','CNPJ informado invalido, verifique e tente novamente.')
                 raise ValidationError('CNPJ informado invalido, verifique e tente novamente.', code='CNPJ_INVALIDO')
 
         elif tipo == 2:
             if not utils.validar_cpf(documento):
+                self.add_error('documento','CPF informado invalido, verifique e tente novamente.')
                 raise ValidationError('CPF informado invalido, verifique e tente novamente.', code='CPF_INVALIDO')
 
         return self.cleaned_data
@@ -68,5 +79,5 @@ class TelefoneFrom(forms.ModelForm):
 class EnderecoForm(forms.ModelForm):
     class Meta:
         model = Endereco
-        fields = ('cliente', 'cep', 'endereco' , 'numero' , 'complemento' ,
-                  'bairro' , 'cidade' , 'uf' , 'observacao' , 'tipo_end')
+        fields = ('cliente', 'cep', 'endereco', 'numero', 'complemento',
+                  'bairro', 'cidade', 'uf', 'observacao', 'tipo_end')
