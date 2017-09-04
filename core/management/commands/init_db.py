@@ -1,3 +1,5 @@
+import os
+
 import pymysql
 import re
 from django.core.management.base import BaseCommand
@@ -183,3 +185,8 @@ class Command(BaseCommand):
 
         if options['prod'] or options['all']:
             self.init_produtos()
+
+        print('Ajustando o Bando de dados PostgreSQL')
+        os.system('python manage.py sqlsequencereset core| python manage.py dbshell')
+        os.system('python manage.py sqlsequencereset catalogo| python manage.py dbshell')
+
