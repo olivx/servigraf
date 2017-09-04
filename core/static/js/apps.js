@@ -54,32 +54,32 @@ $(function(){
                     if(data.is_form_valid){
 
                         $('#cliente-table tbody').html(data.html_table);
+                        $('.message').html(data.message)
                         $('#cliente-modal').modal('hide');
 
                     }else{
                         $('#cliente-modal .modal-content').html(data.html_form);
+                        tipo = $('select').val()
+                        if(tipo  == 2){
+                            $('.documento').mask('000.000.000-00', {reverse: true});
+                        }else{
+                            $('.documento').mask('00.000.000/000-00', {reverse: true});
+                        }
                     }
                 }
         });
     return false;
     };
 
-    $("#cliente-modal").on("shown.bs.modal", function (e) {
-
-        $('.documento').mask('00.000.000/0000-00', {reverse: true});
-        $('select').on('change', function(){
+     $('#cliente-modal').on('change', 'select', function(){
             var _select = $(this);
             if(_select.val() == 2){
-                $('[href="#section-contact"]').closest('li').hide();
                 $('form').find('#div-razao-social label').text('Nome:');
                 $('form').find('#div-nome-fantasia label').text('Sobre Nome:');
                 $('form').find('#div-documento label').text('CPF:');
                 $('.documento').val('')
                 $('.documento').mask('000.000.000-00', {reverse: true});
-
-
             }else{
-                $('[href="#section-contact"]').closest('li').show();
                 $('form').find('#div-razao-social label').text('Razão Social:');
                 $('form').find('#div-nome-fantasia label').text('Nome Fantasia:');
                 $('form').find('#div-documento label').text('CNPJ:');
@@ -87,8 +87,20 @@ $(function(){
                 $('.documento').mask('00.000.000/0000-00', {reverse: true});
             }
         });
-    });
 
+     $("#cliente-modal").on("shown.bs.modal", function (e) {
+        $('.documento').mask('00.000.000/0000-00', {reverse: true});
+        $('select').on('change', function(){
+            var _select = $(this);
+            if(_select.val() == 2){
+                $('.documento').val('')
+                $('.documento').mask('000.000.000-00', {reverse: true});
+            }else{
+                $('.documento').val('')
+                $('.documento').mask('00.000.000/0000-00', {reverse: true});
+                }
+            });
+        });
 
     // save cliente form
     $('.js-open-form-cliente').click(loadClientForm);

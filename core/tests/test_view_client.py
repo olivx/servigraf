@@ -128,7 +128,6 @@ class TestViewUpdate(TestCase):
         resp = self.client.post(r('servigraf:update_client', pk=self.cli.id), self.data)
         resp_dict = json.loads(resp.content.decode('utf-8'))
         self.assertFalse(resp_dict['is_form_valid'])
-        self.assertTrue('Erros foram processado' in resp_dict['message'])
 
     def test_post_update_valid(self):
         """Test update client valid"""

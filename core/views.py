@@ -48,11 +48,11 @@ def save_client(request):
             message = 'cliente: {} foi adicionado com sucesso!'.format(
                 form_client.cleaned_data['nome_fantasia'])
             messages.success(request, message)
-            data['message'] =  render_to_string('messages.html', {}, request=request)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_table'] = render_to_string(template_success, context=context, request=request)
         else:
             data['is_form_valid'] = False
-            message = 'Form encontrados algos erros no processo, ' \
+            message = 'Foi encontrado algo errado no processo, ' \
                       'corrija os erros a baixo no formulario e tente novamente'
             messages.error(request, message)
             data['message'] = render_to_string('messages.html', {}, request=request)
@@ -76,20 +76,22 @@ def update_client(request, pk):
     if request.method == 'POST':
         form_client = ClientForm(request.POST, instance=client)
         if form_client.is_valid():
-            form_client.save()
+            cli = form_client.save()
             client_list = Cliente.objects.filter(ativo=True)
             context = {
                 'client_list': paginator(request, client_list)
             }
             data['is_form_valid'] = True
-            data['message'] = 'cliente: {} foi Alterado com Sucesso!' \
-                .format(form_client.cleaned_data['nome_fantasia'])
-
+            message = 'cliente: {} foi Alterado com Sucesso!'.format(cli.nome_fantasia)
+            messages.warning(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_table'] = render_to_string(template_success, context=context, request=request)
         else:
             data['is_form_valid'] = False
-            data['message'] = 'Erros foram processado durante a ação,\npor favor verifique o formulario e tente ' \
-                              'novamente. '
+            message = 'Foi encontrado algo errado no processo, ' \
+                             'corrija os erros a baixo no formulario e tente novamente'
+            messages.error(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_form'] = render_to_string(template, {'form_client': form_client}, request=request)
 
     else:
@@ -108,9 +110,11 @@ def delete_client(request, pk):
         client.ativo = False
         client.save()
         data['is_form_valid'] = True
-        data['message'] = 'Cliente: {0} \nDesativado com sucesso.\n\n' \
+        message = 'Cliente: {0} \nDesativado com sucesso.\n\n' \
                           'para reativa-lo você precisa usar a area administrativa.' \
             .format(client)
+        messages.error(request, message)
+        data['message'] =render_to_string('messages.html', {}, request=request)
         cliente_list = Cliente.objects.filter(ativo=True)
         data['html_table'] = render_to_string(template_success, {'client_list': paginator(request, cliente_list)},
                                               request=request)
