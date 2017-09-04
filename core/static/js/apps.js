@@ -21,7 +21,6 @@ $(function(){
         }
    });
 
-
     function loadClientForm(){
          var btn = $(this);
         $.ajax({
@@ -56,10 +55,8 @@ $(function(){
 
                         $('#cliente-table tbody').html(data.html_table);
                         $('#cliente-modal').modal('hide');
-                        alert(data.message)
 
                     }else{
-                        alert(data.message)
                         $('#cliente-modal .modal-content').html(data.html_form);
                     }
                 }
@@ -69,6 +66,7 @@ $(function(){
 
     $("#cliente-modal").on("shown.bs.modal", function (e) {
 
+        $('.documento').mask('00.000.000/0000-00', {reverse: true});
         $('select').on('change', function(){
             var _select = $(this);
             if(_select.val() == 2){
@@ -76,6 +74,8 @@ $(function(){
                 $('form').find('#div-razao-social label').text('Nome:');
                 $('form').find('#div-nome-fantasia label').text('Sobre Nome:');
                 $('form').find('#div-documento label').text('CPF:');
+                $('.documento').val('')
+                $('.documento').mask('000.000.000-00', {reverse: true});
 
 
             }else{
@@ -83,6 +83,8 @@ $(function(){
                 $('form').find('#div-razao-social label').text('Razão Social:');
                 $('form').find('#div-nome-fantasia label').text('Nome Fantasia:');
                 $('form').find('#div-documento label').text('CNPJ:');
+                $('.documento').val('')
+                $('.documento').mask('00.000.000/0000-00', {reverse: true});
             }
         });
     });
