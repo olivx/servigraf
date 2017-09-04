@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
@@ -44,13 +45,17 @@ def save_client(request):
             context = {
                 'client_list': paginator(request, client_list)
             }
-            data['message'] = 'cliente: {} foi adicionado com sucesso!'.format(
+            message = 'cliente: {} foi adicionado com sucesso!'.format(
                 form_client.cleaned_data['nome_fantasia'])
+            messages.success(request, message)
+            data['message'] =  render_to_string('messages.html', {}, request=request)
             data['html_table'] = render_to_string(template_success, context=context, request=request)
         else:
             data['is_form_valid'] = False
-            data['message'] = 'Erros foram processado durante a ação,\npor favor verifique o formulario e tente ' \
-                              'novamente. '
+            message = 'Form encontrados algos erros no processo, ' \
+                      'corrija os erros a baixo no formulario e tente novamente'
+            messages.error(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_form'] = render_to_string(template,
                                                  {'form_client': form_client}, request=request)
 

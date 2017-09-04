@@ -90,7 +90,6 @@ class TestViewSave(TestCase):
     def test_pot_save(self):
         """Test is save post """
         resp_dict = json.loads(self.post_resp.content.decode('utf-8'))
-        self.assertTrue('foi adicionado com sucesso!' in resp_dict['message'])
         self.assertTrue(resp_dict['is_form_valid'])
         self.assertTrue(resp_dict['html_table'])
 
@@ -100,7 +99,6 @@ class TestViewSave(TestCase):
         resp = self.client.post(r('servigraf:save_client'), self.data)
         resp_cli = json.loads(resp.content.decode('utf-8'))
         self.assertFalse(resp_cli['is_form_valid'])
-        self.assertTrue('Erros foram processado durante' in resp_cli['message'])
 
 
 class TestViewUpdate(TestCase):
