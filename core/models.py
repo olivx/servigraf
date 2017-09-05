@@ -147,8 +147,8 @@ class Endereco(models.Model):
     objects = EnderecoManager()
 
     def __str__(self):
-        return '{0} {1}, {2} {3}'.format(
-            self.logradouro, self.endereco, self.numero , self.complemento
+        return '{0} {1}, Nº {2}'.format(
+            self.logradouro, self.endereco, self.numero
         ).upper()
 
     class Meta:

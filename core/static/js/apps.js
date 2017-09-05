@@ -71,6 +71,43 @@ $(function(){
     return false;
     };
 
+
+    function deleteClientForm(){
+        var form =  $(this);
+            $.ajax({
+                url:  form.attr('action'),
+                type: form.attr('method'),
+                data: form.serialize(),
+                dataType: 'json',
+                beforeSend:function(){
+
+                    var x = confirm('Você realmente deseja desativar esse cliente ?')
+                    if (x == false){
+                        return false;
+                    }
+
+                },
+                success: function(data){
+                    if(data.is_form_valid){
+
+                        $('#cliente-table tbody').html(data.html_table);
+                        $('.message').html(data.message)
+                        $('#cliente-modal').modal('hide');
+
+                    }else{
+                        $('#cliente-modal .modal-content').html(data.html_form);
+                        tipo = $('select').val()
+                        if(tipo  == 2){
+                            $('.documento').mask('000.000.000-00', {reverse: true});
+                        }else{
+                            $('.documento').mask('00.000.000/000-00', {reverse: true});
+                        }
+                    }
+                }
+        });
+    return false;
+    };
+
      $('#cliente-modal').on('change', 'select', function(){
             var _select = $(this);
             if(_select.val() == 2){
@@ -112,7 +149,7 @@ $(function(){
 
     // delete client
     $('#cliente-table').on('click', '.js-delete-modal-cliente', loadClientForm);
-    $('#cliente-modal').on('submit', '.js-delete-client-form', saveClientForm);
+    $('#cliente-modal').on('submit', '.js-delete-client-form', deleteClientForm);
 
 
     // contact methods
@@ -129,6 +166,16 @@ $(function(){
             },
             success: function(data){
                 $('#modal .modal-content').html(data.html_form);
+                if(data.disable_all){
+
+                    $('input').attr('disabled', 'disabled')
+                    $('textarea').attr('disabled', 'disabled')
+                    $('select').attr('disabled', 'disabled')
+                    $('#modal .btn-primary').attr('disabled', 'disabled')
+                    $('input[name=csrfmiddlewaretoken]').removeAttr('disabled')
+
+
+                }
             }
         });
     };
@@ -146,9 +193,9 @@ $(function(){
                     $('#contact-table tbody').html(data.html_table);
                     $('#client-form').html(data.html_form);
                     $('.pagination_contact').html(data.html_pagination)
+                    $('.messages').html(data.message);
                     $('#modal').modal('hide');
 
-                    alert(data.message);
 
                 }else{
 
@@ -168,12 +215,18 @@ $(function(){
             url: form.attr('action'),
             type: 'post',
 
+            beforeSend: function(){
+                var x = confirm('Voce realmente deseja Desativar esse cliente ?')
+                if(x == false){
+                    return false;
+                }
+            },
             success: function(data){
 
                 $('#contact-table tbody').html(data.html_table);
                 $('.pagination').html(data.html_pagination)
                 $('#modal').modal('hide');
-                alert(data.message);
+                $('.messages').html(data.message);
 
             }
 
@@ -302,7 +355,6 @@ $(function(){
 
         // liberar para que o cliente seja enviado no form.
         $("#id_cliente").removeAttr('disabled');
-
         var form = $(this);
         $.ajax({
 
@@ -315,8 +367,7 @@ $(function(){
 
                 if(data.is_form_valid){
 
-                    alert('Endereço salvo com sucesso!')
-
+                    $('.messages').html(data.message)
                     $('#address-table tbody').html(data.html_table);
                     $('.pagination_end').html(data.html_pagination);
                     $('#modal').modal('hide');
@@ -360,8 +411,7 @@ $(function(){
             },
             success: function(data){
 
-                alert('Endereço foi desativado, mas ainda pode ser visto na area administrativa do sistema.');
-
+                $('.messages').html(data.message)
                 $('#address-table tbody').html(data.html_table);
                 $('.pagination_end').html(data.html_pagination);
 

@@ -145,19 +145,16 @@ def contact_save(request, client_id):
     data = {}
     contact = Contato()
     client = get_object_or_404(Cliente, pk=client_id)
-
-    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm,
-                                                  can_delete=False,
-                                                  extra=1, min_num=0, validate_min=True)
-    telefone_contact_formset = inlineformset_factory(Contato, Telefone, form=TelefoneFrom,
-                                                     can_delete=False,
-                                                     extra=1, min_num=0, validate_min=True)
+    email_contact_formset = \
+        inlineformset_factory(Contato, Email, form=EmailForm,can_delete=False,extra=1, min_num=0, validate_min=True)
+    telefone_contact_formset = \
+        inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=False, extra=1, min_num=0, validate_min=True)
 
     contact_form = ContactForm(request.POST or None, instance=contact, prefix='contact')
     email_formset = email_contact_formset(request.POST or None, instance=contact, prefix='email')
     telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
-    form_client = ClientForm(instance=client)
 
+    form_client = ClientForm(instance=client)
     if request.method == 'POST':
         if contact_form.is_valid() and email_formset.is_valid() and telefone_formset.is_valid():
             contato = contact_form.save(commit=False)
@@ -169,9 +166,10 @@ def contact_save(request, client_id):
 
             data['is_form_valid'] = True
 
-            data['message'] = 'Contado: {} do cliente {},\nadicionado com sucesso.'. \
+            message = 'Contado: {} do cliente {},\nadicionado com sucesso.'. \
                 format(contato.nome.upper(), client.nome_fantasia.upper())
-
+            messages.success(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_pagination'] = render_to_string('pagination.html',
                                                        {'object_list': _contact_list}, request=request)
 
@@ -185,13 +183,14 @@ def contact_save(request, client_id):
                                                  {'form_client': form_client},
                                                  request=request)
         else:  # post not valid
+            messages.error(request, 'Foram econtrados erros durante o processamento, '
+                                    'corrija os campos a baixo e tente novamente')
             context = {
                 'form_client': form_client,
                 'form_contact': contact_form,
                 'formset_email': email_formset,
                 'formset_telefone': telefone_formset
             }
-
             data['is_form_valid'] = False
             data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
     else:  # if is a get
@@ -216,15 +215,15 @@ def contact_update(request, client_id, contact_id):
     contact = get_object_or_404(Contato, pk=contact_id)
 
     # formset
-    email_contact_formset = inlineformset_factory(Contato, Email, form=EmailForm, can_delete=True,
-                                                  min_num=0, extra=1, validate_min=True)
-
-    telefone_contact_formset = inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=True,
-                                                     min_num=0, extra=1, validate_min=True)
+    email_contact_formset = \
+        inlineformset_factory(Contato, Email, form=EmailForm, can_delete=True, min_num=0, extra=1, validate_min=True)
+    telefone_contact_formset = \
+        inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=True, min_num=0, extra=1, validate_min=True)
 
     # forms initialization
     form_contact = ContactForm(request.POST or None, instance=contact, prefix='contact')
     email_formset = email_contact_formset(request.POST or None, instance=contact, prefix='email')
+
     telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
     form_client = ClientForm(instance=client)
     if request.method == 'POST':
@@ -242,8 +241,10 @@ def contact_update(request, client_id, contact_id):
                 'form_client': form_client
             }
             data['is_form_valid'] = True
-            data['message'] = 'Contato: {} do Cliente: {} ,\n alterado com sucesso.' \
-                .format(contact.nome.upper() + contact.sobre_nome.upper(), client.nome_fantasia.upper())
+            message = 'Contato: {} do Cliente: {} ,\n alterado com sucesso.' \
+                .format(contact.nome.upper() +' '+ contact.sobre_nome.upper(), client.nome_fantasia.upper())
+            messages.warning(request, message)
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_pagination'] = render_to_string('pagination.html', {'object_list': _contact_list},
                                                        request=request)
             data['html_table'] = render_to_string('contact/contact_table.html', context, request=request)
@@ -258,7 +259,8 @@ def contact_update(request, client_id, contact_id):
                 'formset_email': email_formset,
                 'formset_telefone': telefone_formset
             }
-
+            messages.error(request, 'Foram econtrados erros durante o processamento,'
+                                    'corrija os campos a baixo e tente novamente')
             data['is_form_valid'] = False
             data['html_form'] = render_to_string('contact/contact_update.html', context, request=request)
 
@@ -280,6 +282,19 @@ def contact_delete(request, client_id, contact_id):
     client = get_object_or_404(Cliente, pk=client_id)
     contact = get_object_or_404(Contato, pk=contact_id)
 
+    # formset
+    email_contact_formset = \
+        inlineformset_factory(Contato, Email, form=EmailForm, can_delete=True, min_num=0, extra=1, validate_min=True)
+    telefone_contact_formset = \
+        inlineformset_factory(Contato, Telefone, form=TelefoneFrom, can_delete=True, min_num=0, extra=1,
+                              validate_min=True)
+
+    # forms initialization
+    form_contact = ContactForm(instance=contact, prefix='contact')
+    email_formset = email_contact_formset(instance=contact, prefix='email')
+
+    telefone_formset = telefone_contact_formset(request.POST or None, instance=contact, prefix='telefone')
+
     if request.method == 'POST':
         contact.ativo = False
         contact.save()
@@ -290,22 +305,27 @@ def contact_delete(request, client_id, contact_id):
             'contact_list': _contact_list,
         }
 
-        data['html_pagination'] = render_to_string('pagination.html', {'object_list': _contact_list}, request=request)
-        data['message'] = 'Contato {} , desativado com sucesso.\n' \
+        message = 'Contato {} , desativado com sucesso.\n' \
                           'para ativalo é Necessario usar a area admistrativa'.format(contact)
+        messages.error(request, message)
+        data['message'] = render_to_string('messages.html', {}, request=request)
         data['html_table'] = render_to_string('contact/contact_table.html', context, request=request)
+        data['html_pagination'] = render_to_string('pagination.html', {'object_list': _contact_list}, request=request)
 
     else:
         context = {
-            'contact': contact,
-            'client': client
+            'form_contact': ContactForm(instance=contact),
+            'client': client,
+            'formset_email': email_formset,
+            'formset_telefone': telefone_formset
         }
+        data['disable_all'] = True
         data['html_form'] = render_to_string('contact/contact_delete.html', context, request=request)
 
     return JsonResponse(data)
 
 @login_required
-def end_service(request, client_id, end, template_success):
+def end_service(request, client_id, end, template_success, message='', operation='save'):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
     end.cliente = client
@@ -315,7 +335,7 @@ def end_service(request, client_id, end, template_success):
     if request.method == 'POST':
         if end_form.is_valid():
             data['is_form_valid'] = True
-            form = end_form.save()
+            end = end_form.save()
             ends = client.enderecos.ativos()
             end_list = paginator(request, ends, 2)
 
@@ -323,12 +343,25 @@ def end_service(request, client_id, end, template_success):
                 'end_list': end_list,
                 'form_client': ClientForm(instance=client)
             }
+
+            if operation == 'save':
+                messages.success(request, message.format(end))
+
+            if operation == 'update':
+                messages.warning(request, message.format(end))
+
+            if operation == 'delete':
+                messages.error(request, message)
+
+            data['message'] = render_to_string('messages.html', {}, request=request)
             data['html_table'] = render_to_string('end/end_table.html', context, request=request)
             data['html_pagination'] = render_to_string('pagination.html', {'object_list': end_list}, request=request)
 
 
 
         else:
+            messages.error(request,'Erros, foram encontrados durante o processo, '
+                                   'por favor corrija o formulário a baixo e tente novamente.')
             data['is_form_valid'] = False
             data['disable_all'] = False
             data['html_form'] = render_to_string(template_success,
@@ -344,12 +377,12 @@ def end_service(request, client_id, end, template_success):
 @login_required
 def end_save(request, client_id):
     end = Endereco()
-    return end_service(request, client_id, end, 'end/end_save.html')
+    return end_service(request, client_id, end, 'end/end_save.html', 'Endereço {}  Salvo com sucesso!')
 
 @login_required
 def end_update(request, client_id, end_id):
     end = get_object_or_404(Endereco, pk=end_id)
-    return end_service(request, client_id, end, 'end/end_update.html')
+    return end_service(request, client_id, end, 'end/end_update.html','Endereço {}  Alterado com sucesso!', 'update')
 
 @login_required
 def end_delete(request, client_id, end_id):
@@ -360,11 +393,17 @@ def end_delete(request, client_id, end_id):
     if request.method == 'POST':
         end.ativo = False
         end.save()
-        data['is_form_valid'] = False
+        message = 'O Endereço: {},  do Cliente: {}, foi desativado com sucesso, ' \
+                  'mas o mesmo pode ser acessado no painel administrativo'.format(end , client)
+        messages.error(request, message)
+        data['message'] =  render_to_string('messages.html', {} , request=request)
+        data['is_form_valid'] = True
         end_list = client.enderecos.ativos()
         end_list_pagination = paginator(request, end_list, 2)
-        data['html_pagination'] = render_to_string('pagination.html', {'object_list': end_list_pagination}, request=request)
-        data['html_table'] = render_to_string('end/end_table.html', {'end_list': end_list_pagination}, request=request)
+        data['html_pagination'] = \
+            render_to_string('pagination.html', {'object_list': end_list_pagination}, request=request)
+        data['html_table'] = \
+            render_to_string('end/end_table.html', {'end_list': end_list_pagination}, request=request)
 
     else:
         end_form = EnderecoForm(instance=end)
