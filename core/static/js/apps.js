@@ -549,6 +549,14 @@ $(function(){
     $('#modal-product').on('submit', '.js-form-product-update', saveProductForm);
 
     $('#table-product').on('click' , '.js-open-form-delete', loadProductForm);
+    $('#modal-product').on('submit' , '.js-form-product-delete', function(){
+
+        var x = confirm('Tem certeza que deseja deletar esse produto ?')
+        if(x == false){
+            return false;
+        }
+
+    });
 
     //group
 
