@@ -17,17 +17,6 @@ class Projects(models.Model):
     def get_absolute_url(self):
         return r('projects:project_detail', pk=self.pk)
 
-class ProjectServices(models.Model):
-
-    service = models.ForeignKey('catalogo.Produto')
-    valor = models.DecimalField('Valor', decimal_places=2, max_digits=10)
-
-    class Meta:
-        verbose_name = 'Serviço do Projeto'
-        verbose_name_plural = 'Serviços dos Projetos'
-
-    def __str__(self):
-        return self.service.name
 
 
 
