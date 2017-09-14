@@ -2,10 +2,118 @@
 
 {% block content %}
 <div class="row">
-    <h1 class="page-header upper"
+    <h1 class="page-header upper text-info"
         style="margin-top:0px; padding:0px;">
         {{ project }}
     </h1>
+
+</div>
+
+<div class="row">
+
+<div>
+    <div class="col-md-6">
+
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button class="btn  btn-primary" style="">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </button>
+                    </div><!--  input group btn-->
+
+                    <input type="text" class="form-control search_services_list" placeholder="Filtrar por nome do Serviço Produto">
+
+                    <div class="input-group-btn">
+                        <button class="btn  btn-primary" style="">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div><!-- input group btn -->
+                </div><!-- input group -->
+            </div><!-- from group -->
+        </div><!--  row -->
+
+        <div class="row">
+            <div id="list-services" class="list-group">
+
+                <a href="#" class="list-group-item active">
+                    Serviços
+                </a>
+
+                <li class="list-group-item upper">
+                    Dapibus ac facilisis in
+                    <a  class="pull-right" href="#">
+                        <i class="glyphicon glyphicon-pencil text-warning"></i>
+                    </a>
+                    <a style="padding: 0px 10px;" class="pull-right" href="#">
+                        <i class="glyphicon glyphicon-trash text-danger"></i>
+                    </a>
+                </li>
+
+            </div>
+        </div><!--  row list group item -->
+    </div><!--  col md 6 -->
+</div><!-- row -->
+
+
+
+<div class="col-md-1"></div>
+
+
+
+<div>
+    <div class="col-md-5">
+
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button class="btn  btn-primary" style="">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </button>
+                    </div><!--  input group btn-->
+
+                    <input type="text" class="form-control search_client_list" placeholder="Filtrar por nome de Cliente">
+
+                    <div class="input-group-btn">
+                        <button class="btn  btn-primary" style="">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div><!-- input group btn -->
+                </div><!-- input group -->
+            </div><!-- from group -->
+        </div><!--  row -->
+
+        <div class="row">
+            <div id="list-client" class="list-group filter">
+
+                <a href="#" class="list-group-item active">
+                    Clientes
+                </a>
+
+                <li class="list-group-item upper">
+                    Dapibus ac facilisis in
+
+                    <a  class="pull-right" href="#">
+                        <i class="glyphicon glyphicon-pencil text-warning"></i>
+                    </a>
+
+                    <a style="padding: 0px 10px;" class="pull-right" href="#">
+                        <i class="glyphicon glyphicon-trash text-danger"></i>
+                    </a>
+
+                    <a style="padding: 0px 10px;" class="pull-right" href="#">
+                        <i class="glyphicon glyphicon-plus text-success"></i>
+                    </a>
+
+
+                </li>
+            </div>
+        </div><!--  row list group item -->
+    </div><!--  col md 6 -->
+</div><!-- row -->
+
 
 </div>
 

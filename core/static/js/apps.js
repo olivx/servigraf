@@ -689,5 +689,24 @@ $(function(){
     return false;
     });
 
+    function filter(element, selector) {
+        var value = $(element).val().toUpperCase();
+        $(selector +" li").each(function () {
+            if ($(this).text().toUpperCase().indexOf(value)> -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+     }
+
+    $('.search_client_list').keyup(function(){
+        filter(this, '#list-client');
+    })
+   $('.search_services_list').keyup(function(){
+        filter(this, '#list-services');
+    })
+
+
 
 });
