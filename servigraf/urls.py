@@ -25,7 +25,8 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^servigraf/', include('core.urls', namespace='servigraf')),
     url(r'^account/', include('account.urls', namespace='account')),
-    url(r'catalogo/', include('catalogo.urls', namespace='catalogo')),
+    url(r'^catalogo/', include('catalogo.urls', namespace='catalogo')),
+    url(r'^projects/', include('project.urls', namespace='projects')),
 
 
 

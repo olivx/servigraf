@@ -15,6 +15,7 @@ urlpatterns = [
 
     url(r'endereco/save/(?P<client_id>\d+)/$', views.end_save, name='end_save'),
     url(r'endereco/update/(?P<client_id>\d+)/(?P<end_id>\d+)/$', views.end_update, name='end_update'),
-    url(r'endereco/delete/(?P<client_id>\d+)/(?P<end_id>\d+)/$', views.end_delete, name='end_delete')
+    url(r'endereco/delete/(?P<client_id>\d+)/(?P<end_id>\d+)/$', views.end_delete, name='end_delete'),
+
 
 ]
