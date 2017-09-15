@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-md-8 col-md-offset-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template" style="padding: 40px">
+                <h1 class="page-head text-info">
+                    Oops!</h1>
+                <h2 class="text-warning">
+                    404 Essa Pagina não foi encontrada
+                </h2>
+
+                <div class="error-details ">
+                    Desculpe-nos, Requisição não foi encontrada !
+                </div>
+
+                <div class="row text-center"  style="margin-top:50px">
+
+                    <div class="col-md-3">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                            <span class="glyphicon glyphicon-home"></span>
+                            Página Inicial
+                        </a>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">
+                        <a href="#" class="btn btn-default btn-lg">
+                            <span class="glyphicon glyphicon-envelope"></span> Contate  o Suporte
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
