@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404
-
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from project.models import Projects
 
 
-def projeto_detail(request, pk):
-    project = get_object_or_404(Projects, pk=pk)
-    return render(request, 'project_details.html', {'project': project})
+class ProjectDetail(LoginRequiredMixin, DetailView):
+    model = Projects
+    pk_url_kwarg = 'pk'
+
+
+projeto_detail = ProjectDetail.as_view()

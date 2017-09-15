@@ -7,7 +7,7 @@ from django.shortcuts import resolve_url as r
 class Projects(models.Model):
     name = models.CharField('Projeto', max_length=200)
     desc = models.TextField('Desccrição')
-
+    clients =  models.ManyToManyField('core.Cliente')
     class Meta:
         verbose_name = 'Projeto'
         verbose_name_plural = 'Projetos'
@@ -19,21 +19,15 @@ class Projects(models.Model):
         return r('projects:project_detail', pk=self.pk)
 
 
-class ProjectClient(models.Model):
-    client = models.ForeignKey('core.Cliente')
-    project = models.ForeignKey('project.Projects')
 
     class Meta:
         verbose_name = 'Projeto Cliente'
         verbose_name_plural = 'Projetos Clientes'
 
-    def __str__(self):
-        return self.client
-
 
 class ProjectServices(models.Model):
     project = models.ForeignKey('project.Projects')
-    service = models.ForeignKey('catalogo.Produto')
+    service = models.ForeignKey('catalogo.Produto', related_name='services')
     valor = models.DecimalField('Valor', decimal_places=2, max_digits=10)
 
     class Meta:
@@ -45,7 +39,7 @@ class ProjectServices(models.Model):
 
 
 class ProjetoSales(models.Model):
-    client = models.ForeignKey('project.ProjectClient')
+    client = models.ForeignKey('project.Projects')
     service = models.ForeignKey('project.ProjectServices')
     user = models.ForeignKey('auth.User')
 
