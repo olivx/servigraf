@@ -3,8 +3,7 @@ from django import forms
 from project.models import Projects
 
 
-class ProjectCreateClientForm(forms.ModelForm):
+class ProjectCreateClientForm(forms.Form):
 
-        class Meta:
-            model = Projects
-            fields = ('name', 'clients')
+        client =   forms.CharField(label='Cliente', max_length='255')
+        project =  forms.CharField(label='Cliente', max_length='255')
