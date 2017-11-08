@@ -1,6 +1,12 @@
 $(function(){
 
 
+    $(".modal").modal({
+		backdrop: 'static',
+		keyboard: false,
+		show: false
+	})
+
     // ajustar
    $('.documento').each(function(){
         var documento = ''
@@ -700,12 +706,47 @@ $(function(){
         });
      }
 
-    $('.search_client_list').keyup(function(){
+   $('.search_client_list').keyup(function(){
         filter(this, '#list-client');
     })
    $('.search_services_list').keyup(function(){
         filter(this, '#list-services');
     })
+
+   $('.modal').on('hidden.bs.modal', function(e){
+        $('input').val('')
+   }) ;
+
+
+
+
+    $('.js-project-create-client').on('click' , function(){
+
+            btn =  $('.js-project-create-client')
+
+        $.ajax({
+
+            url: btn.attr('data-url'),
+            dataType: 'json',
+
+            beforeSend: function(){
+                $('#modal-projeto-cliente').modal('show')
+
+            },
+            success: function(data){
+                $('#modal-projeto-cliente .modal-dialog').html(data.html_form)
+
+                $('.autocomplete').autocomplete({
+                    appendTo: 'autocomplete_projeto_cliente',
+                    minLength: 3,
+                    source: $('#autocomplete-url').attr('data-url')
+                });
+            }
+
+        });
+    });
+
+
 
 
 

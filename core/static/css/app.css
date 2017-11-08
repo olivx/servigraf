@@ -8,3 +8,7 @@
 .upper {
     text-transform: uppercase;
 }
+
+.ui-autocomplete{
+	z-index:1050;
+}

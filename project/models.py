@@ -7,7 +7,8 @@ from django.shortcuts import resolve_url as r
 class Projects(models.Model):
     name = models.CharField('Projeto', max_length=200)
     desc = models.TextField('Desccrição')
-    clients =  models.ManyToManyField('core.Cliente')
+    clients = models.ManyToManyField('core.Cliente')
+
     class Meta:
         verbose_name = 'Projeto'
         verbose_name_plural = 'Projetos'
@@ -17,8 +18,6 @@ class Projects(models.Model):
 
     def get_absolute_url(self):
         return r('projects:project_detail', pk=self.pk)
-
-
 
     class Meta:
         verbose_name = 'Projeto Cliente'

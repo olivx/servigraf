@@ -1,0 +1,34 @@
+{% load widget_tweaks %}
+<form action="{% url 'projects:project_create'  project.id   %}" method="post"
+      class="js-form-create-project-client">
+    {% csrf_token  %}
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"
+                    aria-hidden="true">&times;</button>
+            <div class="modal-title">
+                <h4 class="modal-title"> ADD </h4>
+            </div>
+
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group js-modal-form">
+                <input type="hidden" name="project" value="{{ project }}" />
+                {% render_field form.clients class="form-control autocomplete" placeholder="Buscar cliente por Nome Fantasia" %}
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" >
+                Salvar
+            </button>
+
+            <button class="btn btn-default" type="button" data-dismiss="modal">
+                Fechar
+            </button>
+        </div>
+
+    </div>
+</form>

@@ -4,7 +4,7 @@
 <div class="row">
     <h1 class="page-header upper text-info"
         style="margin-top:0px; padding:0px;">
-        {{ project }}
+        {{ view.project_name }}
     </h1>
 
 </div>
@@ -13,6 +13,8 @@
 
 <div>
     <div class="col-md-6">
+
+        <!-- clientes -->
 
         <div class="row">
             <div class="form-group">
@@ -23,7 +25,8 @@
                         </button>
                     </div><!--  input group btn-->
 
-                    <input type="text" class="form-control search_services_list" placeholder="Filtrar por nome do Serviço Produto">
+                    <input type="text" class="form-control search_services_list"
+                           placeholder="Filtrar por nome do Serviço Produto">
 
                     <div class="input-group-btn">
                         <button class="btn  btn-primary" style="">
@@ -34,6 +37,8 @@
             </div><!-- from group -->
         </div><!--  row -->
 
+        <!-- services -->
+
         <div class="row">
             <div id="list-services" class="list-group">
 
@@ -41,8 +46,9 @@
                     Serviços
                 </a>
 
+                {% for service in view.services %}
                 <li class="list-group-item upper">
-                    Dapibus ac facilisis in
+                    {{ service }}
                     <a  class="pull-right" href="#">
                         <i class="glyphicon glyphicon-pencil text-warning"
                         title="Editar Serviço"></i>
@@ -52,6 +58,7 @@
                            title="Deletar Serviço"></i>
                     </a>
                 </li>
+                {% endfor %}
 
             </div>
         </div><!--  row list group item -->
@@ -71,12 +78,17 @@
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-btn">
-                        <button class="btn  btn-primary" title="ADD">
+                        <button class="btn  btn-primary js-project-create-client"
+                                title="ADD" type="button"
+                                data-toggle="modal"
+                                data-url="{% url 'projects:project_create' view.project_name.id %}">
+
                             <i class="glyphicon glyphicon-plus"></i>
                         </button>
                     </div><!--  input group btn-->
 
-                    <input type="text" class="form-control search_client_list" placeholder="Filtrar por nome de Cliente">
+                    <input type="text" class="form-control search_client_list"
+                           placeholder="Filtrar por nome de Cliente">
 
                     <div class="input-group-btn">
                         <button class="btn  btn-primary">
@@ -94,8 +106,9 @@
                     Clientes
                 </a>
 
+                {% for project in project_client_list %}
                 <li class="list-group-item upper">
-                    Dapibus ac facilisis in
+                    {{ project |truncatechars:40 }}
 
                     <a  class="pull-right" href="#">
                         <i class="glyphicon glyphicon-pencil text-warning"
@@ -111,13 +124,24 @@
                         <i class="glyphicon glyphicon-plus text-success"
                         title="ADD Serviços Executados "></i>
                     </a>
-
-
                 </li>
+                {% endfor %}
+
             </div>
         </div><!--  row list group item -->
     </div><!--  col md 6 -->
 </div><!-- row -->
+    <input id="autocomplete-url" type="hidden"
+           data-url="{% url 'projects:project_autocomplete_client' %}">
+
+
+
+    <div id="modal-projeto-cliente" class="modal fade">
+        <div class="modal-dialog" role="dialog">
+
+
+        </div>
+    </div>
 
 
 </div>
