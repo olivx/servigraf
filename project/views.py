@@ -1,10 +1,9 @@
 from django.contrib import messages
-from django.core.mail import message
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView, ListView, CreateView
-from django.shortcuts import render, get_object_or_404, resolve_url as r
+from django.shortcuts import render, redirect ,get_object_or_404, resolve_url as r
 
 from project.forms import ProjectCreateClientForm
 from project.models import Projects, ProjectServices
@@ -80,7 +79,12 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
         project = get_object_or_404(Projects, pk=kwargs['pk'])
 
         if form.is_valid():
-            client = get_object_or_404(Cliente, nome_fantasia=form.cleaned_data['clients'])
+            print('é valido')
+            print(form.cleaned_data['client'])
+            import ipdb; ipdb.set_trace()
+
+            client = get_object_or_404(Cliente, nome_fantasia__icontains=form.cleaned_data['client'])
+            print('é o cliente  ',client)
             project.clients.add(client)
             project.save()
             messages.success(request, 'Cliente adicionado com sucesso!')
@@ -88,7 +92,7 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
             data['html_form'] = render_to_string('project/project_form_create.html',
                                                  context={'form': form}, request=request)
 
-        return r('projects:project_detail', pk=project.id)
+        return redirect(r('projects:project_detail', pk=project.id))
 
 
 projeto_cliente_create = ProjectCreateClients.as_view()
