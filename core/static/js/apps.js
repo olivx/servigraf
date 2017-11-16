@@ -720,9 +720,9 @@ $(function(){
 
 
 
-    $('.js-project-create-client').on('click' , function(){
+    function ProjectClientLoad(){
 
-            btn =  $('.js-project-create-client')
+        btn =  $('.js-project-create-client')
 
         $.ajax({
 
@@ -731,11 +731,9 @@ $(function(){
 
             beforeSend: function(){
                 $('#modal-projeto-cliente').modal('show')
-
             },
             success: function(data){
                 $('#modal-projeto-cliente .modal-dialog').html(data.html_form)
-
                 $('.autocomplete').autocomplete({
                     appendTo: 'autocomplete_projeto_cliente',
                     minLength: 3,
@@ -744,8 +742,44 @@ $(function(){
             }
 
         });
-    });
+    }
 
+    function ProjectClientCreate(){
+        var form =  $(this)
+        $.ajax({
+
+            dataType: 'json',
+            data: form.serialize(),
+            url: form.attr('action'),
+            type: form.attr('method'),
+
+            success: function(data){
+
+                if(data.is_form_valid ==  true ){
+
+                    $('.message').httml(data.message)
+                    $('#modal-projeto-cliente').modal('hide')
+
+                }else{
+
+                    $('.message_modal').html(data.message)
+                    $('#modal-projeto-cliente .modal-dialog').html(data.html_form)
+                    $('.autocomplete').autocomplete({
+                        appendTo: 'autocomplete_projeto_cliente',
+                        minLength: 3,
+                        source: $('#autocomplete-url').attr('data-url')
+                    });
+
+                }
+            }
+
+        });
+     return false;
+    }
+
+
+   $('.js-project-create-client').on('click' , ProjectClientLoad);
+   $('#modal-projeto-cliente').on('submit', '.js-form-create-project-client', ProjectClientCreate);
 
 
 

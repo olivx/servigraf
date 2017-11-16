@@ -21,6 +21,7 @@ class ProjectDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProjectDetail, self).get_context_data(*args, **kwargs)
+        context['project'] = self.object
         context['project_client_list'] = self.object.clients.all()
         context['project_services_list'] = ProjectServices.objects.all()
 
@@ -75,24 +76,29 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         data = {}
-        form = ProjectCreateClientForm(request.POST)
         project = get_object_or_404(Projects, pk=kwargs['pk'])
+        form = ProjectCreateClientForm(request.POST or None)
 
         if form.is_valid():
-            print('é valido')
-            print(form.cleaned_data['client'])
-            import ipdb; ipdb.set_trace()
-
             client = get_object_or_404(Cliente, nome_fantasia__icontains=form.cleaned_data['client'])
-            print('é o cliente  ',client)
             project.clients.add(client)
             project.save()
             messages.success(request, 'Cliente adicionado com sucesso!')
-            data['is_form_valid'] = True
-            data['html_form'] = render_to_string('project/project_form_create.html',
-                                                 context={'form': form}, request=request)
 
-        return redirect(r('projects:project_detail', pk=project.id))
+            data['is_form_valid'] = True
+            data['message'] = render_to_string('messages.html', {}, request=request)
+            context = {'project': project, 'form': form}
+            data['html_form'] = render_to_string('project/project_form_create.html',
+                                                 context=context, request=request)
+            return redirect(r('projects:project_detail', pk=project.id))
+        else:
+            data['is_form_valid'] = False
+            context = {'project': project, 'form': form}
+            messages.error(request, 'Erro ao adicionar cliente !')
+            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['html_form'] = render_to_string('project/project_form_create.html',
+                                                 context=context, request=request)
+            return JsonResponse(data)
 
 
 projeto_cliente_create = ProjectCreateClients.as_view()
