@@ -34,6 +34,11 @@ projeto_detail = ProjectDetail.as_view()
 class ProjectAutocompleteService(LoginRequiredMixin, ListView):
     model = Produto
 
+class ProjetoList(LoginRequiredMixin, ListView):
+    model = Projects
+    template_name = 'project/project_list.html'
+
+project_list = ProjetoList.as_view()
 
 class ProjectAutocomplieteClient(LoginRequiredMixin, ListView):
     model = Cliente
