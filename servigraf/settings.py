@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'test_without_migrations',
+    'django_extensions',
     'pure_pagination',
     'widget_tweaks',
     'debug_toolbar',
