@@ -1,0 +1,20 @@
+{% for project in project_client_list %}
+    <li class="list-group-item upper">
+        {{ project |truncatechars:40 }}
+
+        <a  class="pull-right" href="#">
+            <i class="glyphicon glyphicon-pencil text-warning"
+               title="Editar CLiente"></i>
+        </a>
+
+        <a style="padding: 0px 10px;" class="pull-right" href="#">
+            <i class="glyphicon glyphicon-trash text-danger"
+               title="Deletar Cliente"></i>
+        </a>
+
+        <a style="padding: 0px 10px;" class="pull-right" href="#">
+            <i class="glyphicon glyphicon-plus text-success"
+               title="ADD Serviços Executados "></i>
+        </a>
+    </li>
+{% endfor %}

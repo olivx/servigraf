@@ -757,8 +757,9 @@ $(function(){
 
                 if(data.is_form_valid ==  true ){
 
-                    $('.message').httml(data.message)
+                    $('.message').html(data.message)
                     $('#modal-projeto-cliente').modal('hide')
+                    $('.js-list-client-project').html(data.list_client)
 
                 }else{
 
