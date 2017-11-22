@@ -7,7 +7,7 @@ from django.shortcuts import resolve_url as r
 class Projects(models.Model):
     name = models.CharField('Projeto', max_length=200)
     desc = models.TextField('Desccrição')
-    clients = models.ManyToManyField('core.Cliente')
+    clients = models.ManyToManyField('core.Cliente', through='ProjectClient')
 
     class Meta:
         verbose_name = 'Projeto'
@@ -22,6 +22,13 @@ class Projects(models.Model):
     class Meta:
         verbose_name = 'Projeto Cliente'
         verbose_name_plural = 'Projetos Clientes'
+
+
+class ProjectClient(models.Model):
+
+    client = models.ForeignKey('core.Cliente')
+    project = models.ForeignKey('project.Projects')
+    active = models.NullBooleanField('Ativo', default=True)
 
 
 class ProjectServices(models.Model):
@@ -43,9 +50,11 @@ class ProjetoSales(models.Model):
     user = models.ForeignKey('auth.User')
 
     pi = models.CharField('PI', max_length=20)
-    valor_unitario = models.DecimalField('Valor Unitario', decimal_places=2, max_digits=10)
+    valor_unitario = models.DecimalField(
+        'Valor Unitario', decimal_places=2, max_digits=10)
     quantidade = models.PositiveIntegerField('Valor Unitario')
-    acabamento = models.DecimalField('Acabamento', decimal_places=2, max_digits=10, null=True, blank=True)
+    acabamento = models.DecimalField(
+        'Acabamento', decimal_places=2, max_digits=10, null=True, blank=True)
     timestamp = models.DateField('Data pedido')
     entrega = models.TimeField('Horario de Entrega')
     obs = models.TextField('Observação', null=True, blank=True)
