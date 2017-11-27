@@ -12,6 +12,4 @@ class ProjectsAdmin(admin.ModelAdmin):
 
 @admin.register(ProjectServices)
 class ProjectServices(admin.ModelAdmin):
-	pass 
-
-
+    pass

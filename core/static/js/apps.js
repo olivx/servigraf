@@ -759,6 +759,7 @@ $(function(){
 
                     $('.message').html(data.message)
                     $('#modal-projeto-cliente').modal('hide')
+                    $('.js-list-client-project').html(data.list_client)
 
                 }else{
 

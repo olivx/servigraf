@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView, ListView, CreateView
-from django.shortcuts import render, redirect ,get_object_or_404, resolve_url as r
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url as r
 
 from project.forms import ProjectCreateClientForm
 from project.models import Projects, ProjectServices
@@ -34,11 +34,13 @@ projeto_detail = ProjectDetail.as_view()
 class ProjectAutocompleteService(LoginRequiredMixin, ListView):
     model = Produto
 
+
 class ProjetoList(LoginRequiredMixin, ListView):
     model = Projects
     template_name = 'project/project_list.html'
 
 project_list = ProjetoList.as_view()
+
 
 class ProjectAutocomplieteClient(LoginRequiredMixin, ListView):
     model = Cliente
@@ -48,7 +50,7 @@ class ProjectAutocomplieteClient(LoginRequiredMixin, ListView):
         _list = []
         if term:
             client_list = Cliente.objects.filter(nome_fantasia__icontains=term)
-            _list = [dict(id=client.pk, label=client.nome_fantasia, value=client.nome_fantasia) \
+            _list = [dict(id=client.pk, label=client.nome_fantasia, value=client.nome_fantasia)
                      for client in client_list]
 
         return JsonResponse(_list, safe=False)
@@ -80,13 +82,19 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
         form = ProjectCreateClientForm(request.POST)
 
         if form.is_valid():
-            client = get_object_or_404(Cliente, nome_fantasia__icontains=form.cleaned_data['client'])
+            client = get_object_or_404(
+                Cliente, nome_fantasia__icontains=form.cleaned_data['client'])
             project.clients.add(client)
             project.save()
             messages.success(request, 'Cliente adicionado com sucesso!')
 
             data['is_form_valid'] = True
-            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['message'] = render_to_string(
+                'messages.html', {}, request=request)
+
+            data['list_client'] = render_to_string('project/_list_client_project.html',
+                                                   {'project_client_list': project.clients.all()}, request=request)
+
             context = {'project': project, 'form': form}
             data['html_form'] = render_to_string('project/project_form_create.html',
                                                  context=context, request=request)
@@ -95,14 +103,21 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
             data['is_form_valid'] = False
             context = {'project': project, 'form': form}
             messages.error(request, 'Erro ao adicionar cliente !')
-            data['message'] = render_to_string('messages.html', {}, request=request)
+            data['message'] = render_to_string(
+                'messages.html', {}, request=request)
             data['html_form'] = render_to_string('project/project_form_create.html',
                                                  context=context, request=request)
-            return JsonResponse(data)
+
+        return JsonResponse(data)
 
 
 projeto_cliente_create = ProjectCreateClients.as_view()
 
 
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
+    model = Projects
+
+
+class ProjectClientDelete(LoginRequiredMixin, UpdateView):
+
     model = Projects
