@@ -23,8 +23,9 @@
 
             <div class="form-group js-modal-form {% if form.client.errors%} has-error {% endif %}">
                 {% render_field form.project value=project %}
-                {% render_field form.client  class="form-control autocomplete" placeholder="Buscar cliente por Nome Fantasia" %}
-                {% for error in form.client.errors%}
+                {% render_field form.client required=true class="form-control autocomplete" placeholder="Buscar cliente por Nome Fantasia" %}
+
+                {% for error in form.client.errors %}
                 <div class="help-block">
                     <span> {{ error }}</span>
                 </div>

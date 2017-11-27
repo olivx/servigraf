@@ -77,7 +77,7 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         data = {}
         project = get_object_or_404(Projects, pk=kwargs['pk'])
-        form = ProjectCreateClientForm(request.POST or None)
+        form = ProjectCreateClientForm(request.POST)
 
         if form.is_valid():
             client = get_object_or_404(Cliente, nome_fantasia__icontains=form.cleaned_data['client'])
@@ -90,7 +90,7 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
             context = {'project': project, 'form': form}
             data['html_form'] = render_to_string('project/project_form_create.html',
                                                  context=context, request=request)
-            return redirect(r('projects:project_detail', pk=project.id))
+            return JsonResponse(data)
         else:
             data['is_form_valid'] = False
             context = {'project': project, 'form': form}

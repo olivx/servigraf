@@ -2,6 +2,8 @@ from django.conf.urls import url
 from core import views
 
 
+url_uuid = r'\b[0-9A-Fa-f]{8}\b(-\b[0-9A-Fa-f]{4}\b){3}-\b[0-9A-Fa-f]{12}\b'
+
 urlpatterns = [
     url(r'clientes/$', views.clientes, name='clientes'),
     url(r'clientes/save/$', views.save_client, name='save_client'),

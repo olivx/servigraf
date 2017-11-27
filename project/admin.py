@@ -8,7 +8,7 @@ from project.models import Projects, ProjectServices
 class ProjectsAdmin(admin.ModelAdmin):
 
     search_fields = ['name', 'desc']
-    fields = ['name', 'desc', 'clients']
+    fields = ['name', 'desc']
 
 @admin.register(ProjectServices)
 class ProjectServices(admin.ModelAdmin):
