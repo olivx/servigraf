@@ -1,20 +1,47 @@
-{% for project in project_client_list %}
+{% for client in project_client_list %}
     <li class="list-group-item upper">
-        {{ project |truncatechars:40 }}
+        {{ client |truncatechars:40 }}
 
-        <a  class="pull-right" href="#">
-            <i class="glyphicon glyphicon-pencil text-warning"
-               title="Editar CLiente"></i>
-        </a>
-
-        <a style="padding: 0px 10px;" class="pull-right" href="#">
+        <a id="{{ client.id }}" style="padding: 0px 10px;" class="pull-right js-deactive-client-project" href="#">
             <i class="glyphicon glyphicon-trash text-danger"
-               title="Deletar Cliente"></i>
+               title="desativar cliente"></i>
         </a>
 
         <a style="padding: 0px 10px;" class="pull-right" href="#">
-            <i class="glyphicon glyphicon-plus text-success"
-               title="ADD Serviços Executados "></i>
+            <i class="glyphicon glyphicon-plus text-success js-add-services-on-client"
+               title="adicionar serviços executados "></i>
         </a>
     </li>
+
+<!-- Modal -->
+<div id="modal-deactivate-project" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Desativar Cliente</h4>
+      </div>
+
+        <div class="modal-body">
+        <p class="text-warning">Tem certeza que deseja desativar esse cliente ?</p>
+            <form method="post">
+
+                <input type="hidden">
+                <button type="submit" class="btn btn-info"
+                        data-dismiss="modal">
+                    Confirmar Desativação
+                </button>
+            </form>
+
+      </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endfor %}
