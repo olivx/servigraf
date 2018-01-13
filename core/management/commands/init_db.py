@@ -9,11 +9,12 @@ from core.models import Cliente, Contato, Endereco
 
 
 class Command(BaseCommand):
+
     def __init__(self):
         self.host = 'localhost'
         self.port = 3306
-        self.user = 'root'
-        self.password = 'root'
+        self.user = 'servigraf'
+        self.password = 'servigraf'
         self.db_name = 'grafica'
 
     def add_arguments(self, parser):
@@ -56,7 +57,7 @@ class Command(BaseCommand):
         cursor = self.connect('select * from cliente')
 
         client_list = []
-        pattern =  re.compile('\d+')
+        pattern = re.compile('\d+')
         for row in cursor.fetchall():
             mensalista = True
             documento = ''
@@ -171,7 +172,6 @@ class Command(BaseCommand):
 
             )
 
-
     def handle(self, *args, **options):
 
         if options['client'] or options['all']:
@@ -187,6 +187,7 @@ class Command(BaseCommand):
             self.init_produtos()
 
         print('Ajustando o Bando de dados PostgreSQL')
-        os.system('python manage.py sqlsequencereset core| python manage.py dbshell')
-        os.system('python manage.py sqlsequencereset catalogo| python manage.py dbshell')
-
+        os.system(
+            'python manage.py sqlsequencereset core| python manage.py dbshell')
+        os.system(
+            'python manage.py sqlsequencereset catalogo| python manage.py dbshell')

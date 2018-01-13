@@ -6,7 +6,7 @@ from django.views.generic import DetailView, UpdateView, ListView, CreateView
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url as r
 
 from project.forms import ProjectCreateClientForm
-from project.models import Projects, ProjectServices
+from project.models import Projects, ProjectServices, ProjectClient
 
 from core.models import Cliente
 from catalogo.models import Produto
@@ -84,8 +84,8 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
         if form.is_valid():
             client = get_object_or_404(
                 Cliente, nome_fantasia__icontains=form.cleaned_data['client'])
-            project.clients.add(client)
-            project.save()
+
+            ProjectClient.objects.create(project=project, clients=client)
             messages.success(request, 'Cliente adicionado com sucesso!')
 
             data['is_form_valid'] = True

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 <div class="col-md-6 col-md-offset-3">
@@ -7,7 +7,8 @@
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-btn">
-                    <button class="btn  btn-primary" title="ADD">
+                    <button id='js-project-btn'class="btn btn-primary js-project-create-client"
+                            type="button" title="ADD">
                         <i class="glyphicon glyphicon-plus"></i>
                     </button>
                 </div><!--  input group btn-->
@@ -28,7 +29,7 @@
         <div id="list-services" class="list-group">
 
             <a href="#" class="list-group-item active">
-                Serviços
+                Projetos
             </a>
 
             {% for object in object_list %}
@@ -52,11 +53,12 @@
     </div><!--  row list group item -->
 </div><!--  col md 6 -->
 
-<div id="modal-projeto-cliente" class="modal fade">
+<div id="modal-projeto" class="modal fade">
     <div class="modal-dialog" role="dialog">
 
 
     </div>
-</div
+</div>
 
-        {% endblock %}
+{% endblock %}
+

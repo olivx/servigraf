@@ -783,6 +783,17 @@ $(function(){
    $('#modal-projeto-cliente').on('submit', '.js-form-create-project-client', ProjectClientCreate);
 
 
+    $('.js-project-create-client').click(function(){
+        alert('Inplementar !')
+    });
+
+
+    $('.js-deactive-client-project').click(function(){
+        $('#modal-deactivate-project').modal('show');
+        var client_id  =  $(this).attr('id')
+        $('#modal-deactivate-project input[type=hidden]').val(client_id)
+
+    });
 
 
 });
