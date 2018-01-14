@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from django.utils import timezone 
 from django.db import models
 from django.shortcuts import resolve_url as r
 import uuid
@@ -11,6 +14,10 @@ class Projects(models.Model):
     clients = models.ManyToManyField(
         'core.Cliente', through='project.ProjectClient')
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    user = models.ForeignKey('auth.User', null=True)
+    created =  models.DateTimeField(default=timezone.now)
+    updated =  models.DateTimeField(auto_now=True, null=True)
+    active = models.NullBooleanField('Ativo', default=True)
 
     class Meta:
         verbose_name = 'Projeto'
@@ -22,10 +29,6 @@ class Projects(models.Model):
     def get_absolute_url(self):
         return r('projects:project_detail', pk=self.pk)
 
-    class Meta:
-        verbose_name = 'Projeto Cliente'
-        verbose_name_plural = 'Projetos Clientes'
-
 
 class ProjectClient(models.Model):
 
@@ -33,6 +36,12 @@ class ProjectClient(models.Model):
     project = models.ForeignKey('project.Projects')
     active = models.NullBooleanField('Ativo', default=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    
+    class Meta:
+        verbose_name = 'Projeto Cliente'
+        verbose_name_plural = 'Projetos Clientes'
+
 
 
 class ProjectServices(models.Model):

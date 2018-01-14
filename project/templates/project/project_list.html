@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 
+{% include 'messages.html' %}
+
 <div class="col-md-6 col-md-offset-3">
     <div class="row">
         <div class="form-group">
@@ -42,7 +44,7 @@
                     <i class="glyphicon glyphicon-pencil text-warning"
                        title="Editar Serviço"></i>
                 </a>
-                <a style="padding: 0px 10px;" class="pull-right" href="#">
+                <a style="padding: 0px 10px;" class="pull-right btn-deactive" href="#">
                     <i class="glyphicon glyphicon-trash text-danger"
                        title="Deletar Serviço"></i>
                 </a>
@@ -55,10 +57,92 @@
 
 <div id="modal-projeto" class="modal fade">
     <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+            <form class="js-create-project-form" method="post" action="{% url 'projects:project_create' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    <h4 class="modal-title">
+                        Criando Projeto.
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="id_title"> Nome do Projeto:</label>
+                        <input type="text" name="title"  class="form-control">
+                    </div>
 
 
+                    <div class="form-group">
+                        <label for="id_desc"> Descrição do Porjeto:</label>
+                        <textarea class="form-control" rows="3" name="descricao">
+                            
+                        </textarea> 
+                    </div>
+                    
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-default" data-dismiss="modal" > Close </button>
+                    <button class="btn btn-primary" type="submit" > Salvar </button>
+                    
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="deactive" tabindex="-1" 
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    
+    <div class="modal-dialog">
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Desativar Projeto.</h4>
+            </div>
+        
+            <div class="modal-body">
+                <p>
+                  <div class="alert alert-danger alert-dismissible" role="alert">
+                    Você está prestes a disativar o projeto, após desativar o projeto o mesmo 
+                    só estará disponivel pelo acesso adimistrativo.
+                  </div>
+                </p>
+                
+                <p class="lead">Deseja continuar ?</p>
+
+                <form class="js-projeto-deactive-form">
+                    {% csrf_token %}
+
+                    <div class="project-deactive">
+                        <input type="hidden" name="deactive-project">
+                        
+                        <div class="form-group">
+                            <div style="padding:10px; bg-info">
+                                lmsalpdmslpmpaslmdpslm
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}
 
