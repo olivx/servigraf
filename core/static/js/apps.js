@@ -784,7 +784,7 @@ $(function(){
 
 
     $('.js-project-create-client').click(function(){
-        alert('Inplementar !')
+        $('#modal-projeto').modal('show')
     });
 
 
@@ -792,6 +792,12 @@ $(function(){
         $('#modal-deactivate-project').modal('show');
         var client_id  =  $(this).attr('id')
         $('#modal-deactivate-project input[type=hidden]').val(client_id)
+
+    });
+
+    $('.btn-deactive').click(function(event) {
+        /* Act on the event */
+        $('#deactive').modal('show')
 
     });
 
