@@ -797,7 +797,12 @@ $(function(){
 
     $('.btn-deactive').click(function(event) {
         /* Act on the event */
-        $('#deactive').modal('show')
+        $('#deactive-project').modal('show')
+        $('#deactive-project input[name=deactive-input-project]').val($(this).data('id'))
+
+        $('#deactive-project #div-deactivate').html($(this).data('name'))
+        $('#deactive-project .js-project-deactive-form').attr('action', $(this).data('url'))
+
 
     });
 

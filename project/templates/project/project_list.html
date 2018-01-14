@@ -44,7 +44,11 @@
                     <i class="glyphicon glyphicon-pencil text-warning"
                        title="Editar Serviço"></i>
                 </a>
-                <a style="padding: 0px 10px;" class="pull-right btn-deactive" href="#">
+                <a style="padding: 0px 10px;" 
+                    data-id="{{ object.pk }}" 
+                    data-name="{{ object.name }}"
+                    data-url="{% url 'projects:project_deactivate' object.pk %}"
+                    class="pull-right btn-deactive" href="#">
                     <i class="glyphicon glyphicon-trash text-danger"
                        title="Deletar Serviço"></i>
                 </a>
@@ -98,7 +102,7 @@
 
 
 
-<div class="modal fade" id="deactive" tabindex="-1" 
+<div class="modal fade" id="deactive-project" tabindex="-1" 
     role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     
     <div class="modal-dialog">
@@ -112,27 +116,35 @@
             <div class="modal-body">
                 <p>
                   <div class="alert alert-danger alert-dismissible" role="alert">
+                    <small>
                     Você está prestes a disativar o projeto, após desativar o projeto o mesmo 
                     só estará disponivel pelo acesso adimistrativo.
+                    </small>
                   </div>
                 </p>
                 
-                <p class="lead">Deseja continuar ?</p>
+                <p class="">Deseja continuar ?</p>
 
-                <form class="js-projeto-deactive-form">
+                <form class="js-project-deactive-form" action="" method="post">
                     {% csrf_token %}
 
                     <div class="project-deactive">
-                        <input type="hidden" name="deactive-project">
+                        <input type="hidden" name="deactive-input-project">
                         
                         <div class="form-group">
-                            <div style="padding:10px; bg-info">
-                                lmsalpdmslpmpaslmdpslm
+                            <div id="div-deactivate" 
+                                style="padding:20px; border: 1px dashed black;
+                                        background-color:#e6f2ff;
+                                        text-transform: uppercase;">
+                                
                             </div>
                         </div>
                     </div>
-                </form>
 
+                    <button class="btn btn-danger" type="submit">
+                        Desativar
+                    </button>
+                </form>
             </div>
             
             <div class="modal-footer">
