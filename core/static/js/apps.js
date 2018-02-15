@@ -795,7 +795,7 @@ $(function(){
 
     });
 
-    $('.btn-deactive').click(function(event) {
+    $('.btn-project-deactive').click(function(event) {
         /* Act on the event */
         $('#deactive-project').modal('show')
         $('#deactive-project input[name=deactive-input-project]').val($(this).data('id'))
@@ -805,6 +805,20 @@ $(function(){
 
 
     });
+
+    $('.btn-project-update').click(function(event) {
+        /* Act on the event */
+        $('#update-project').modal('show')
+        $('#update-project input[name=deactive-input-project]').val($(this).data('id'))
+
+        $('#update-project #id_title_update').val($(this).data('name'))
+        $('#update-project #id_desc_update').val($(this).data('desc'))
+        $('#update-project #id_project').val($(this).data('id'))
+        $('#update-project .js-project-update-form').attr('action', $(this).data('url'))
+
+
+    });
+
 
 
 });

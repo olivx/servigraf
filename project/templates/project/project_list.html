@@ -19,7 +19,7 @@
                        placeholder="Filtrar por nome do Projeto">
 
                 <div class="input-group-btn">
-                    <button class="btn  btn-primary" style="">
+                    <button class="btn btn-primary">
                         <i class="glyphicon glyphicon-search"></i>
                     </button>
                 </div><!-- input group btn -->
@@ -40,16 +40,21 @@
                     {{ object }}
                 </a>
 
-                <a  class="pull-right" href="#">
-                    <i class="glyphicon glyphicon-pencil text-warning"
+                <a  class="pull-right btn-project-update" href="#"
+                    data-id="{{ object.pk }}" 
+                    data-name="{{ object.name|upper }}"
+                    data-desc="{{ object.desc|upper }}"
+                    data-url="{% url 'projects:project_update' object.pk %}">
+                    <i class="glyphicon glyphicon-pencil" style="color:darkslategray"
                        title="Editar Serviço"></i>
                 </a>
+
                 <a style="padding: 0px 10px;" 
                     data-id="{{ object.pk }}" 
                     data-name="{{ object.name }}"
                     data-url="{% url 'projects:project_deactivate' object.pk %}"
-                    class="pull-right btn-deactive" href="#">
-                    <i class="glyphicon glyphicon-trash text-danger"
+                    class="pull-right btn-project-deactive" href="#">
+                    <i class="glyphicon glyphicon-trash" style="color:red"
                        title="Deletar Serviço"></i>
                 </a>
             </li>
@@ -103,7 +108,7 @@
 
 
 <div class="modal fade" id="deactive-project" tabindex="-1" 
-    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     
     <div class="modal-dialog">
         <div class="modal-content">
@@ -147,6 +152,55 @@
                 </form>
             </div>
             
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="update-project" tabindex="-1" 
+    role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    
+    <div class="modal-dialog">
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="ModalLabel">Alterar Projeto.</h4>
+            </div>
+        
+            <div class="modal-body">          
+                
+                <div class="modal-body">
+                    <p class="">Deseja Fazer a alteração ?</p>
+                    <br>
+                    
+                    <form class="js-project-update-form" action="" method="post">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="id_project" id="id_project" value="">
+
+                        <div class="form-group">
+                            <label  for="id_title_update"> Nome do Projeto:</label>
+                            <input  id="id_title_update" type="text" 
+                                    name="title"  class="form-control">
+                        </div>
+    
+    
+                        <div class="form-group">
+                            <label for="id_desc_update"> Descrição do Porjeto:</label>
+                            <textarea   id="id_desc_update" class="form-control" 
+                                        rows="3" name="descricao">
+                                
+                            </textarea> 
+                        </div>
+
+                        <button type="submit" class="btn btn-warning">Alterar</button>
+                    </form>
+                </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 

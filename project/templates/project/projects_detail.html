@@ -81,7 +81,7 @@
                             <button class="btn  btn-primary js-project-create-client"
                                     title="ADD" type="button"
                                     data-toggle="modal"
-                                    data-url="{% url 'projects:project_create_cliente' view.project_name.id %}">
+                                    data-url="{% url 'projects:project_create_client' view.project_name.id %}">
 
                                 <i class="glyphicon glyphicon-plus"></i>
                             </button>
@@ -115,13 +115,9 @@
     </div><!-- row -->
     <input id="autocomplete-url" type="hidden"
            data-url="{% url 'projects:project_autocomplete_client' %}">
-
-
-
-    <div id="modal-projeto-cliente" class="modal fade">
+  
+           <div id="modal-projeto-cliente" class="modal fade">
         <div class="modal-dialog" role="dialog">
-
-
         </div>
     </div>
 
