@@ -167,34 +167,41 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = {'project': project, 'form': form}
-        data['html_form'] = render_to_string('project/project_form_create.html',
+        data['html_form'] = render_to_string(self.template_name,
                                              context=context, request=request)
 
         return JsonResponse(data)
 
     def post(self, request, *args, **kwargs):
+
+        # import ipdb; ipdb.set_trace()
+
+
         data = {}
         project = get_object_or_404(Projects, pk=kwargs['pk'])
         form = ProjectCreateClientForm(request.POST)
+        client_id = request.POST.get('id_client')
 
         if form.is_valid():
-            client = get_object_or_404(
-                Cliente, nome_fantasia__icontains=form.cleaned_data['client'])
 
-            ProjectClient.objects.create(project=project, clients=client)
-            messages.success(request, 'Cliente adicionado com sucesso!')
+            if client_id:
+                client = get_object_or_404(Cliente, pk=client_id)
 
-            data['is_form_valid'] = True
-            data['message'] = render_to_string(
-                'messages.html', {}, request=request)
+                ProjectClient.objects.create(project=project, clients=client)
+                messages.success(request, 'Cliente adicionado com sucesso!')
 
-            data['list_client'] = render_to_string('project/_list_client_project.html',
-                                                   {'project_client_list': project.clients.all()}, request=request)
+                data['is_form_valid'] = True
+                data['list_client'] = render_to_string('project/_list_client_project.html',
+                                                   {'project_client_list': project.clients.all()}, 
+                                                   request=request)
 
-            context = {'project': project, 'form': form}
-            data['html_form'] = render_to_string('project/project_form_create.html',
-                                                 context=context, request=request)
-            return JsonResponse(data)
+                context = {'project': project, 'form': form}
+                data['html_form'] = render_to_string('project/project_form_create.html',
+                                                   context=context, request=request)
+            else:
+                messages.warning(request, 'Cliente não encontrado.')                
+            
+            data['message'] = render_to_string('messages.html', {}, request=request)
         else:
             data['is_form_valid'] = False
             context = {'project': project, 'form': form}
