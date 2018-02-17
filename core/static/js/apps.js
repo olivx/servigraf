@@ -737,11 +737,14 @@ $(function(){
                 $('.autocomplete').autocomplete({
                     appendTo: 'autocomplete_projeto_cliente',
                     minLength: 3,
-                    source: $('#autocomplete-url').attr('data-url')
+                    source: $('#autocomplete-url').attr('data-url'),
+                    select: function( event, ui ) {
+                        $('#modal-projeto-cliente #id_client').val(ui.item.id)
+                    }
                 });
             }
-
         });
+    return false;
     }
 
     function ProjectClientCreate(){
@@ -753,6 +756,11 @@ $(function(){
             url: form.attr('action'),
             type: form.attr('method'),
 
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status)
+                console.log(thrownError)
+                console.log(xhr.responseText)
+            },
             success: function(data){
 
                 if(data.is_form_valid ==  true ){

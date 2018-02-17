@@ -1,5 +1,5 @@
 {% load widget_tweaks %}
-<form action="{% url 'projects:project_create'  project.id   %}" method="post"
+<form action="{% url 'projects:project_create' %}" method="post"
       class="js-form-create-project-client">
     {% csrf_token  %}
 
@@ -22,7 +22,7 @@
 
 
             <div class="form-group js-modal-form {% if form.client.errors%} has-error {% endif %}">
-                {% render_field form.project value=project %}
+                {% render_field form.project value=project  %}
                 {% render_field form.client required=true class="form-control autocomplete" placeholder="Buscar cliente por Nome Fantasia" %}
 
                 {% for error in form.client.errors %}
