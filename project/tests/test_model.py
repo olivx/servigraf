@@ -4,7 +4,7 @@ from model_mommy import mommy
 
 from core.models import Cliente
 from catalogo.models import Produto
-from project.models import Projects, ProjectServices
+from project.models import Projects, ProjectServices, ProjectClient
 
 
 # Create your tests here.
@@ -23,8 +23,8 @@ class TestModelProject(TestCase):
         self.cliente_1 = mommy.make(Cliente, nome_fantasia='Cliente 1')
         self.cliente_2 = mommy.make(Cliente, nome_fantasia='Cliente 2')
         self.project = mommy.make(Projects, name='project name')
-        self.project.clients.add(self.cliente_1)
-        self.project.clients.add(self.cliente_2)
+        ProjectClient.objects.create(project=self.project, clients=self.cliente_1)
+        ProjectClient.objects.create(project=self.project, clients=self.cliente_2)
 
     def test_create(self):
         """test count must have 1 project """
