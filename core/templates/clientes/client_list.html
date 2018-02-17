@@ -67,7 +67,9 @@
     </tfoot>
 </table>
 
-{% include 'pagination.html' with object_list=client_list %}
+<div class="text-center">
+    {% include '_pagination_cbv.html' with object_list=client_list %}
+</div>
 
 <div id="cliente-modal"   class="modal fade">
     <div class="modal-dialog">

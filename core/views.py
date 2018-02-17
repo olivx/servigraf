@@ -5,6 +5,10 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from pure_pagination.mixins import PaginationMixin
+from django.views.generic import ListView
+
 # Create your views here.
 from core.forms import ClientForm, ContactForm, EmailForm, TelefoneFrom, EnderecoForm
 from django.forms import inlineformset_factory
@@ -16,20 +20,21 @@ from django.shortcuts import resolve_url as r
 def home(request):
     return render(request, 'index.html', {})
 
-@login_required
-def clientes(request):
-    template = 'clientes/client_list.html'
-    search = request.GET.get('search')
-    if search is not None:
-        clients_list = Cliente.objects.filter(Q(ativo=True) &
-                                              (Q(nome_fantasia__icontains=search) |
-                                               Q(razao_social__icontains=search) |
-                                               Q(documento__icontains=search)))
-    else:
-        clients_list = Cliente.objects.filter(ativo=True)
+class ClienteList(PaginationMixin, LoginRequiredMixin, ListView):
+    model = Cliente
+    paginate_by = 5
+    template_name = 'clientes/client_list.html'
 
-    clients = paginator(request, clients_list)
-    return render(request, template, {'client_list': clients})
+    def get_queryset(self):
+        clients_list = Cliente.objects.filter(ativo=True)
+        search = self.request.GET.get('search')
+        if search is not None:
+            clients_list = Cliente.objects.filter(Q(ativo=True) &
+                                            (Q(nome_fantasia__icontains=search) |
+                                            Q(razao_social__icontains=search) |
+                                            Q(documento__icontains=search)))
+        return clients_list
+clientes =  ClienteList.as_view()
 
 @login_required
 def save_client(request):
