@@ -128,6 +128,18 @@ project_detail = ProjectDetail.as_view()
 class ProjectAutocompleteService(LoginRequiredMixin, ListView):
     model = Produto
 
+    def get(self, request, *args, **kwargs):
+        term = request.GET.get('term')
+        _list = []
+        if term:
+            service_list = Produto.objects.filter(tipo=2, nome__icontains=term)[:10]
+            _list =  [dict(id=service.id, value=service.nome.upper(), 
+                                label=service.nome.upper(), price=service.valor) 
+                                    for service in service_list]
+        
+        return JsonResponse(_list, safe=False)
+project_service_autocomplete = ProjectAutocompleteService.as_view()
+
 class ProjetoList(LoginRequiredMixin, ListView):
     model = Projects
     template_name = 'project/project_list.html'
