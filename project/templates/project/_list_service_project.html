@@ -1,0 +1,45 @@
+{% for service in project_service_list %}
+    <li class="list-group-item upper">
+        {{ service |truncatechars:40 }}
+
+        <a  id="{{ client.id }}" style="padding: 0px 10px;" 
+            class="pull-right js-deactive-client-project" href="#">
+            
+            <i class="glyphicon glyphicon-trash text-danger"
+               title="desativar cliente">
+            </i>
+        </a>
+    </li>
+
+<!-- Modal -->
+<div id="modal-service-deactivate-project" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Desativar Serviço</h4>
+      </div>
+
+        <div class="modal-body">
+        <p class="text-warning">Tem certeza que deseja desativar esse cliente ?</p>
+            <form method="post">
+
+                <input type="hidden">
+                <button type="submit" class="btn btn-info"
+                        data-dismiss="modal">
+                    Confirmar Desativação
+                </button>
+            </form>
+
+      </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endfor %}
