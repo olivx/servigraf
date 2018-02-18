@@ -24,7 +24,8 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-btn">
-                            <button class="btn  btn-primary" title="ADD">
+                            <button id="add-service-to-project" 
+                                    class="btn  btn-primary" title="ADD">
                                 <i class="glyphicon glyphicon-plus"></i>
                             </button>
                         </div><!--  input group btn-->
@@ -50,30 +51,21 @@
                         Serviços
                     </a>
 
-                    {% for service in view.services %}
-                    <li class="list-group-item upper">
-                        {{ service }}
-                        <a style="padding: 0px 10px;" class="pull-right" href="#">
-                            <i class="glyphicon glyphicon-trash text-danger"
-                               title="Deletar Serviço"></i>
-                        </a>
-                    </li>
-                    {% endfor %}
+                    <div class="js-list-client-project">
+                            {% include 'project/_list_service_project.html' %}
+                    </div>
+    
 
                 </div>
             </div><!--  row list group item -->
         </div><!--  col md 6 -->
     </div><!-- row -->
-
-
+    
 
     <div class="col-md-1"></div>
-
-
-
+    {% comment %} cliente  {% endcomment %}
     <div>
         <div class="col-md-5">
-
             <div class="row">
                 <div class="form-group">
                     <div class="input-group">
@@ -113,14 +105,54 @@
             </div><!--  row list group item -->
         </div><!--  col md 6 -->
     </div><!-- row -->
-    <input id="autocomplete-url" type="hidden"
-           data-url="{% url 'projects:project_autocomplete_client' %}">
+  
+    <input id="autocomplete-cliente-project-url" type="hidden"
+           data-url="{% url 'projects:project_autocomplete_client' %}" />
   
            <div id="modal-projeto-cliente" class="modal fade">
-        <div class="modal-dialog" role="dialog">
+               <div class="modal-dialog" role="dialog">
+            </div>
         </div>
-    </div>
+        
+    <input id="autocomplete-service-project-url" type="hidden"
+            data-url="{% url 'projects:project_autocomplete_service' %}" />
 
+    <div class="modal fade" role="dialog" id="modal-add-service-to-project">
+            <div class="modal-dialog">
+               
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+                        <h4 class="modal-title">Adcionar Serviço</h4>
+                    </div>
+    
+                    <div class="modal-body">
+                        <div class="row" style="height:4em">
+                            <div class="col-md-8"> 
+                                <input  type="text" class="form-control autocomplete upper" 
+                                        placeholder="Add serviços para projeto.">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon">R$</span>
+                                    <input type="text" class="form-control 
+                                            js-porject-service-price text-center">
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            Adcionar
+                        </button>
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
 
 </div>
 

@@ -15,5 +15,8 @@ urlpatterns = [
 
     url(r'projects_autocomplete/client/$', views_prject.project_client_autocomplete,
         name='project_autocomplete_client'),
+    url(r'projects_autocomplete/service/$', views_prject.project_service_autocomplete,
+        name='project_autocomplete_service'),
+
 
 ]

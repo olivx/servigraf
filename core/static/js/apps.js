@@ -735,10 +735,10 @@ $(function(){
             success: function(data){
                 $('#modal-projeto-cliente .modal-dialog').html(data.html_form)
                 $('.autocomplete').autocomplete({
-                    appendTo: 'autocomplete_projeto_cliente',
+                    // appendTo: '',
                     minLength: 3,
-                    source: $('#autocomplete-url').attr('data-url'),
-                    select: function( event, ui ) {
+                    source: $('#autocomplete-cliente-project-url').attr('data-url'),
+                    select: function(event, ui) {
                         $('#modal-projeto-cliente #id_client').val(ui.item.id)
                     }
                 });
@@ -790,6 +790,19 @@ $(function(){
    $('.js-project-create-client').on('click' , ProjectClientLoad);
    $('#modal-projeto-cliente').on('submit', '.js-form-create-project-client', ProjectClientCreate);
 
+
+    $('#add-service-to-project').click(function(){
+        $('#modal-add-service-to-project').modal('show')
+        
+        $('.autocomplete').autocomplete({
+            // appendTo: '', 
+            minLength: 3,
+            source: $('#autocomplete-service-project-url').data('url'),
+            select: function(event, ui){
+                $('.js-porject-service-price').val(ui.item.price)
+            }
+        })
+    })
 
     $('.js-project-create-client').click(function(){
         $('#modal-projeto').modal('show')
