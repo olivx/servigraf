@@ -226,7 +226,7 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
 project_client_create = ProjectCreateClients.as_view()
 
 
-class ProcejectCreateService(LoginRequiredMixin, CreateView):
+class ProjectCreateService(LoginRequiredMixin, CreateView):
     template_name = 'project/project_service_form.html'
     model = ProjectServices
     form_class = ProjectCreateServiceForm
@@ -243,7 +243,37 @@ class ProcejectCreateService(LoginRequiredMixin, CreateView):
 
 
     def post(self, request, *args, **kwargs):
-        data  = {'reposne': 'this is a post!'}
+        data  = {}
+    
+        form =  ProjectCreateServiceForm(request.POST)
+        if form.is_valid():
+            _project = form.cleaned_data['project']
+            _service = form.cleaned_data['service']
+            _price = form.cleaned_data['valor']
+
+            project = get_object_or_404(Projects, pk=_project)
+            service = get_object_or_404(Produto, pk=_service)
+
+            ProjectServices.objects.create(
+                projec=project, service=service, valor=_price)
+
+            list_service = ProjectServices.objects.filter(project= project)
+            context = {'project_service_list': list_service }
+            
+            data['list_service'] = render_to_string('project/_list_service_project.html', 
+                context=context, request=request)
+            
+            data['is_form_valid'] = True 
+        
+        else:
+            _project = form.cleaned_data['project']
+            project = get_object_or_404(Projects, pk=_project)
+            data['is_form_valid'] = False 
+            context = {'project': project, 'form': form}
+            data['html_form'] = render_to_string(self.template_name,
+                                                 context=context, request=self.request)
+            
+
 
         return JsonResponse(data)
-procject_create_service = ProcejectCreateService.as_view()
+procject_create_service = ProjectCreateService.as_view()

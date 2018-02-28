@@ -13,12 +13,14 @@
             <div class="row" style="height:4em">
                 <div class="col-md-8"> 
                     {% render_field form.project value=project.id  %}
-                    {% render_field  form.service  required=True class="form-control autocomplete upper" placeholder="Add serviços para projeto." %}
+                    {% render_field  form.service class="js-porject-service-id" %}
+                    <input class="form-control autocomplete upper" required 
+                            placeholder="Add serviços para projeto." />
                 </div>
                 <div class="col-md-4">
                     <div class="input-group">
                         <span class="input-group-addon">R$</span>
-                        {% render_field form.price required=True class="form-control js-porject-service-price text-center" %}
+                        {% render_field form.valor required=True class="form-control js-porject-service-price text-center" %}
                     </div>
                 </div>
 

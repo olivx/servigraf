@@ -811,6 +811,7 @@ $(function(){
                     source: $('#autocomplete-service-project-url').data('url'),
                     select: function(event, ui){
                         $('.js-porject-service-price').val(ui.item.price)
+                        $('.js-porject-service-id').val(ui.item.id)
                     }
                 })
 
