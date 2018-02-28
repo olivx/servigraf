@@ -1,0 +1,35 @@
+{% load widget_tweaks %}
+<form action="{% url 'projects:procject_create_service' project.id %}" 
+    method="post" class="js-form-create-prject-service">
+    
+    {% csrf_token %}
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" data-dismiss="modal" type="button">&times;</button>
+            <h4 class="modal-title">Adcionar Serviço</h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="row" style="height:4em">
+                <div class="col-md-8"> 
+                    {% render_field form.project value=project.id  %}
+                    {% render_field  form.service  required=True class="form-control autocomplete upper" placeholder="Add serviços para projeto." %}
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">R$</span>
+                        {% render_field form.price required=True class="form-control js-porject-service-price text-center" %}
+                    </div>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Adcionar
+            </button>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        </div>
+    </div>
+</form>

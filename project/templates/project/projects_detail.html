@@ -24,7 +24,8 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-btn">
-                            <button id="add-service-to-project" 
+                            <button id="add-service-to-project"
+                                    data-url="{% url 'projects:procject_create_service' view.project_name.id %}" 
                                     class="btn  btn-primary" title="ADD">
                                 <i class="glyphicon glyphicon-plus"></i>
                             </button>
@@ -118,40 +119,10 @@
             data-url="{% url 'projects:project_autocomplete_service' %}" />
 
     <div class="modal fade" role="dialog" id="modal-add-service-to-project">
-            <div class="modal-dialog">
-               
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button class="close" data-dismiss="modal" type="button">&times;</button>
-                        <h4 class="modal-title">Adcionar Serviço</h4>
-                    </div>
-    
-                    <div class="modal-body">
-                        <div class="row" style="height:4em">
-                            <div class="col-md-8"> 
-                                <input  type="text" class="form-control autocomplete upper" 
-                                        placeholder="Add serviços para projeto.">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <span class="input-group-addon">R$</span>
-                                    <input type="text" class="form-control 
-                                            js-porject-service-price text-center">
-                                </div>
-                            </div>
-
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            Adcionar
-                        </button>
-                    </div>
-    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                    </div>
-                </div>
-            </div>
+        <div class="modal-dialog">     
+        
         </div>
+       </div>
     
 
 </div>

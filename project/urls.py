@@ -10,8 +10,11 @@ urlpatterns = [
     url(r'projects_detail/(?P<pk>\d+)/$', views_prject.project_detail, name='project_detail'),
     url(r'projects_deactivate/(?P<pk>\d+)/$', views_prject.project_deactivate, name='project_deactivate'),
     url(r'project_create/', views_prject.project_create, name="project_create"),
+    
     url(r'projects_create/(?P<pk>\d+)/cliente/$', views_prject.project_client_create,
         name='project_create_client'),
+    url(r'projects_create/(?P<pk>\d+)/service/$', views_prject.procject_create_service,
+        name='procject_create_service'),
 
     url(r'projects_autocomplete/client/$', views_prject.project_client_autocomplete,
         name='project_autocomplete_client'),

@@ -791,18 +791,36 @@ $(function(){
    $('#modal-projeto-cliente').on('submit', '.js-form-create-project-client', ProjectClientCreate);
 
 
-    $('#add-service-to-project').click(function(){
-        $('#modal-add-service-to-project').modal('show')
-        
-        $('.autocomplete').autocomplete({
-            // appendTo: '', 
-            minLength: 3,
-            source: $('#autocomplete-service-project-url').data('url'),
-            select: function(event, ui){
-                $('.js-porject-service-price').val(ui.item.price)
+    function ProjectServiceCreate(){
+        var btn = $(this)
+
+        $.ajax({
+            url: btn.data('url'),
+            dataType: 'json',
+
+            beforeSend: function(){
+                $('#modal-add-service-to-project').modal('show')
+                
+            },
+            success: function(data){
+                
+                $('#modal-add-service-to-project .modal-dialog').html(data.html_form)
+                $('.autocomplete').autocomplete({
+                    // appendTo: '', 
+                    minLength: 3,
+                    source: $('#autocomplete-service-project-url').data('url'),
+                    select: function(event, ui){
+                        $('.js-porject-service-price').val(ui.item.price)
+                    }
+                })
+
             }
+
         })
-    })
+
+    }
+    $('#add-service-to-project').on('click', ProjectServiceCreate)     
+       
 
     $('.js-project-create-client').click(function(){
         $('#modal-projeto').modal('show')

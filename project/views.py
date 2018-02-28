@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView, ListView, CreateView
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url as r
 
-from project.forms import ProjectCreateClientForm
+from project.forms import ProjectCreateClientForm, ProjectCreateServiceForm
 from project.models import Projects, ProjectServices, ProjectClient
 
 from core.models import Cliente
@@ -174,7 +174,6 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
     def get(self, request, *args, **kwargs):
         data = {}
 
-
         project = get_object_or_404(Projects, pk=kwargs['pk'])
         form_class = self.get_form_class()
         form = self.get_form(form_class)
@@ -227,3 +226,24 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
 project_client_create = ProjectCreateClients.as_view()
 
 
+class ProcejectCreateService(LoginRequiredMixin, CreateView):
+    template_name = 'project/project_service_form.html'
+    model = ProjectServices
+    form_class = ProjectCreateServiceForm
+
+    def get(self, request, *args, **kwargs):
+        data  = {}
+        project = get_object_or_404(Projects, pk=kwargs['pk'])
+        form_class =  self.get_form_class()
+        form = self.get_form(form_class)
+        context = {'project': project, 'form': form }
+        data['html_form'] = render_to_string(self.template_name, 
+                                context=context, request=self.request)
+        return JsonResponse(data)       
+
+
+    def post(self, request, *args, **kwargs):
+        data  = {'reposne': 'this is a post!'}
+
+        return JsonResponse(data)
+procject_create_service = ProcejectCreateService.as_view()

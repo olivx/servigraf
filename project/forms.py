@@ -24,3 +24,10 @@ class ProjectCreateClientForm(forms.Form):
             return self.cleaned_data
 
         return self.cleaned_data
+
+class ProjectCreateServiceForm(forms.Form):
+    service = forms.CharField(label='Servico', max_length='255')
+    price = forms.DecimalField(label='Preço', max_digits=6,decimal_places=2,required=True)
+    project = forms.CharField(label='Projeto', max_length='255', required=True,  widget=forms.HiddenInput())
+
+
