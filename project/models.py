@@ -11,8 +11,14 @@ import uuid
 class Projects(models.Model):
     name = models.CharField('Projeto', max_length=200)
     desc = models.TextField('Desccrição')
+    
+    services = models.ManyToManyField(
+        'catalogo.Produto', through='project.ProjectServices'
+        )
     clients = models.ManyToManyField(
-        'core.Cliente', through='project.ProjectClient')
+        'core.Cliente', through='project.ProjectClient'
+        )
+
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     user = models.ForeignKey('auth.User', null=True)
     created =  models.DateTimeField(default=timezone.now)

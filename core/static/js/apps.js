@@ -1,5 +1,11 @@
 $(function(){
 
+    setInterval(function(){ 
+        $('#alert-message').fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove()
+        });
+    }, 5000);
+
 
     $(".modal").modal({
 		backdrop: 'static',
@@ -791,7 +797,7 @@ $(function(){
    $('#modal-projeto-cliente').on('submit', '.js-form-create-project-client', ProjectClientCreate);
 
 
-    function ProjectServiceCreate(){
+    function ProjectServiceLoad(){
         var btn = $(this)
 
         $.ajax({
@@ -820,7 +826,43 @@ $(function(){
         })
 
     }
-    $('#add-service-to-project').on('click', ProjectServiceCreate)     
+
+    function ProjectServiceCreate(e){
+        var form = $(this)
+
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            data: form.serialize(),
+            dataType: 'json', 
+
+            success: function(data){
+                if (data.is_form_valid == true){
+                    $('.message').html(data.message)
+                    $('.js-list-service-project').html(data.service_list)
+                    $('#modal-add-service-to-project').modal('hide')
+                
+                }else{
+                    $('#modal-add-service-to-project .modal-dialog').html(data.html_form)
+                    $('#modal-add-service-to-project .modal-dialog .form-html').addClass('has-error')
+                    $('.message_modal').html(data.message)
+
+                    $('.autocomplete').autocomplete({
+                        minLength: 3,
+                        source: $('#autocomplete-service-project-url').data('url'),
+                        select: function(event, ui){
+                            $('.js-porject-service-price').val(ui.item.price)
+                            $('.js-porject-service-id').val(ui.item.id)
+                        }
+                    })
+
+                }
+            }
+        });
+        return false
+    }
+    $('#add-service-to-project').on('click', ProjectServiceLoad)  
+    $('#modal-add-service-to-project').on('submit', '.js-form-create-prject-service', ProjectServiceCreate)   
        
 
     $('.js-project-create-client').click(function(){
@@ -834,6 +876,14 @@ $(function(){
         $('#modal-deactivate-project input[type=hidden]').val(client_id)
 
     });
+
+    $('.js-deactive-service-project').click(function(){
+        $('#modal-service-deactivate-project').modal('show');
+        var service_id  =  $(this).attr('id')
+        $('#modal-service-deactivate-project input[type=hidden]').val(service_id)
+
+    });
+
 
     $('.btn-project-deactive').click(function(event) {
         /* Act on the event */

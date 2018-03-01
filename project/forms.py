@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from core.models import Cliente
+from catalogo.models import Produto
 from project.models import Projects, ProjectServices
 
 
@@ -28,15 +29,15 @@ class ProjectCreateServiceForm(forms.Form):
     
     service = forms.IntegerField(label='Servico', required=True,  widget=forms.HiddenInput())
     project = forms.IntegerField(label='Projeto', required=True,  widget=forms.HiddenInput())
-
-    valor = forms.DecimalField(label='Preço', decimal_places=2, max_digits=1, required=True)
-
-
-
+    valor = forms.DecimalField(label='Preço', decimal_places=2, max_digits=10, required=True)
 
     def clean(self):
         project =  self.cleaned_data.get('project')
         service =  self.cleaned_data.get('service')
+
+        if not Produto.objects.filter(pk=service).exists():
+           self.add_error('service', ValidationError('Produto não encontrado no catalogo.'))
+           return self.cleaned_data
 
         if ProjectServices.objects.filter(service__pk=service, project__pk=project).exists():
             self.add_error('service', ValidationError('Servico já existe no projeto'))
