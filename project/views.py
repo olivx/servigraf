@@ -118,8 +118,9 @@ class ProjectDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(ProjectDetail, self).get_context_data(*args, **kwargs)
         context['project'] = self.object
-        context['project_client_list'] = self.object.clients.all()
-        context['project_services_list'] = ProjectServices.objects.all()
+        
+        context['project_client_list'] = self.object.clients.all().order_by('nome_fantasia')
+        context['project_services_list'] = ProjectServices.objects.filter(project= self.object).order_by('service__nome')
 
         return context
 project_detail = ProjectDetail.as_view()
@@ -241,10 +242,11 @@ class ProjectCreateService(LoginRequiredMixin, CreateView):
                                 context=context, request=self.request)
         return JsonResponse(data)       
 
-
     def post(self, request, *args, **kwargs):
         data  = {}
     
+        # import ipdb; ipdb.set_trace()
+
         form =  ProjectCreateServiceForm(request.POST)
         if form.is_valid():
             _project = form.cleaned_data['project']
@@ -255,14 +257,15 @@ class ProjectCreateService(LoginRequiredMixin, CreateView):
             service = get_object_or_404(Produto, pk=_service)
 
             ProjectServices.objects.create(
-                projec=project, service=service, valor=_price)
+                project=project, service=service, valor=_price)
 
             list_service = ProjectServices.objects.filter(project= project)
-            context = {'project_service_list': list_service }
+            context = {'project_services_list': list_service }
             
-            data['list_service'] = render_to_string('project/_list_service_project.html', 
+            data['service_list'] = render_to_string('project/_list_service_project.html', 
                 context=context, request=request)
-            
+
+            messages.success(request, 'Servico adiconado com sucesso!')    
             data['is_form_valid'] = True 
         
         else:
@@ -272,8 +275,29 @@ class ProjectCreateService(LoginRequiredMixin, CreateView):
             context = {'project': project, 'form': form}
             data['html_form'] = render_to_string(self.template_name,
                                                  context=context, request=self.request)
-            
 
+            for key, value in form.errors.items():
+                messages.error(request, value)
 
+        data['message'] = render_to_string('messages.html', {}, request=request)
         return JsonResponse(data)
 procject_create_service = ProjectCreateService.as_view()
+
+
+class ProjectDeleteService(LoginRequiredMixin, DetailView):
+    model = ProjectServices
+
+    def post(self, request, *args, **kwargs):
+        project_id = request.POST.get('project')
+        service_id = request.POST.get('service')
+        project_service = ProjectServices.objects.get(project__pk=project_id, service__pk=service_id)
+
+        # logica para deletar somente se não houver venda lançada.
+        # implementar
+
+        project_service.delete()
+        messages.success(request, 'Serviço removido com sucesso.')
+
+        return redirect('projects:project_detail', pk=project_service.project.pk)
+project_delete_service = ProjectDeleteService.as_view()
+
