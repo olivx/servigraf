@@ -1,9 +1,12 @@
-{% for service in project_service_list %}
+{% for project_service in project_services_list %}
     <li class="list-group-item upper">
-        {{ service |truncatechars:40 }}
-
-        <a  id="{{ client.id }}" style="padding: 0px 10px;" 
-            class="pull-right js-deactive-client-project" href="#">
+        <a href="#" data-service="{{ project_service.service.pk }}">
+            <span>{{ project_service |truncatechars:60 }}</span>
+        </a>
+        <a  id="{{ project_service.service.pk }}" style="padding: 0px 10px;" 
+            data-url="{% url 'projects:project_delete_service' project_service.service.pk %}" 
+            data-text='{{ project_service.service }}'
+            class="pull-right js-deactive-service-project" href="#">
             
             <i class="glyphicon glyphicon-trash text-danger"
                title="desativar cliente">
@@ -19,25 +22,33 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Desativar Serviço</h4>
+            <h4 class="modal-title">Deletar Serviço</h4>
       </div>
 
         <div class="modal-body">
-        <p class="text-warning">Tem certeza que deseja desativar esse cliente ?</p>
-            <form method="post">
+            <p class="text-danger">Tem certeza que deseja remover esse serviço ?</p>
+        <p class="text-info">Serviço só pode se removido se não houver lançamento  relacionado.</p>
+            <form class='js-project-delete-service' method="post" action=''>
+                {% csrf_token %}
+                <div style="max-width:400px">
+                    <div class="js-project-service-to-delete" 
+                        style="border: 1px dashed black;padding:1em;background-color:#ffffcc;">
+                        <p> </p>
+                    </div>
+                </div>
 
-                <input type="hidden">
-                <button type="submit" class="btn btn-info"
-                        data-dismiss="modal">
-                    Confirmar Desativação
+                <div style="margin-top:1em">
+                    <input type="hidden" name="service"  value="" />
+                    <input type="hidden" name="project"  value="{{ project.pk }}" />
+                    <button type="submit" class="btn btn-info">
+                    Confirmar ação.
                 </button>
+            </div>
             </form>
-
       </div>
-
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-      </div>
+        </div>
     </div>
 
   </div>

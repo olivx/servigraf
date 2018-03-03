@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'projects_deactivate/(?P<pk>\d+)/$', views_prject.project_deactivate, name='project_deactivate'),
     url(r'project_create/', views_prject.project_create, name="project_create"),
     
-    url(r'projects_create/(?P<pk>\d+)/cliente/$', views_prject.project_client_create,
+    url(r'projects_create/(?P<pk>\d+)/client/$', views_prject.project_client_create,
         name='project_create_client'),
     url(r'projects_create/(?P<pk>\d+)/service/$', views_prject.procject_create_service,
         name='procject_create_service'),
@@ -20,6 +20,9 @@ urlpatterns = [
         name='project_autocomplete_client'),
     url(r'projects_autocomplete/service/$', views_prject.project_service_autocomplete,
         name='project_autocomplete_service'),
+
+    url(r'projects_delete/(?P<pk>\d+)/service/', views_prject.project_delete_service, 
+        name='project_delete_service'),
 
 
 ]

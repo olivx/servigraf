@@ -880,7 +880,11 @@ $(function(){
     $('.js-deactive-service-project').click(function(){
         $('#modal-service-deactivate-project').modal('show');
         var service_id  =  $(this).attr('id')
-        $('#modal-service-deactivate-project input[type=hidden]').val(service_id)
+        data_url = $(this).data('url')
+        text = $(this).data('text')
+        $('#modal-service-deactivate-project .js-project-service-to-delete p').text(text)
+        $('#modal-service-deactivate-project .js-project-delete-service').attr('action', data_url)
+        $('#modal-service-deactivate-project input[name=service]').val(service_id)
 
     });
 
