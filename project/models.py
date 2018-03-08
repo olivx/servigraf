@@ -25,6 +25,8 @@ class Projects(models.Model):
     updated =  models.DateTimeField(auto_now=True, null=True)
     active = models.NullBooleanField('Ativo', default=True)
 
+    objects =  models.Manager()
+
     class Meta:
         verbose_name = 'Projeto'
         verbose_name_plural = 'Projetos'
@@ -43,18 +45,19 @@ class ProjectClient(models.Model):
     active = models.NullBooleanField('Ativo', default=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
 
+    objects =  models.Manager()
     
     class Meta:
         verbose_name = 'Projeto Cliente'
         verbose_name_plural = 'Projetos Clientes'
-
-
 
 class ProjectServices(models.Model):
     project = models.ForeignKey('project.Projects')
     service = models.ForeignKey('catalogo.Produto', related_name='services')
     valor = models.DecimalField('Valor', decimal_places=2, max_digits=10)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    objects =  models.Manager()
 
     class Meta:
         verbose_name = 'Projeto Serviço'
@@ -79,3 +82,6 @@ class ProjetoSales(models.Model):
     entrega = models.TimeField('Horario de Entrega')
     obs = models.TextField('Observação', null=True, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    objects =  models.Manager()
+    

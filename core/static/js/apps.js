@@ -914,5 +914,11 @@ $(function(){
     });
 
 
+    $('.project-update-service').click(function(){
+        $('#modal-project-update-service').modal('show')
+
+        $('#modal-project-update-service input[name=service]').val($(this).data('desc-service'))
+        $('#modal-project-update-service input[name=price]').val($(this).data('price'))
+    })
 
 });

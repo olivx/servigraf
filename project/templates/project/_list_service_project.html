@@ -1,6 +1,9 @@
 {% for project_service in project_services_list %}
     <li class="list-group-item upper">
-        <a href="#" data-service="{{ project_service.service.pk }}">
+        <a  class="project-update-service" href="#" 
+            data-price='{{ project_service.service.valor }}'
+            data-desc-service='{{ project_service.service }}'
+            data-service="{{ project_service.service.pk }}" />
             <span>{{ project_service |truncatechars:60 }}</span>
         </a>
         <a  id="{{ project_service.service.pk }}" style="padding: 0px 10px;" 
@@ -50,7 +53,55 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
         </div>
     </div>
-
   </div>
 </div>
+
+
+<!-- Modal -->
+<div id="modal-project-update-service" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <form class='js-project-delete-service' method="post" action='.'>
+            {% csrf_token %}
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Alterar o valor do Serviço</h4>
+                </div>
+        
+                <div class="modal-body">
+                    
+                    <div style="margin-top:1em">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <input type="text" name="service" class="form-control" disabled value="" />
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">R$</span>
+                                        <input type="text" class="form-control" name="price" step="0.01">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" name="service"  value="" />
+                            <input type="hidden" name="project"  value="{{ project.pk }}" />
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        Confirmar ação.
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
 {% endfor %}
