@@ -1,6 +1,6 @@
 $(function(){
 
-    setInterval(function(){ 
+    setInterval(function(){
         $('#alert-message').fadeTo(500, 0).slideUp(500, function(){
             $(this).remove()
         });
@@ -54,7 +54,7 @@ $(function(){
         });
     };
 
-    function saveClientForm(){  
+    function saveClientForm(){
         var form =  $(this);
             $.ajax({
                 url:  form.attr('action'),
@@ -806,13 +806,13 @@ $(function(){
 
             beforeSend: function(){
                 $('#modal-add-service-to-project').modal('show')
-                
+
             },
             success: function(data){
-                
+
                 $('#modal-add-service-to-project .modal-dialog').html(data.html_form)
                 $('.autocomplete').autocomplete({
-                    // appendTo: '', 
+                    // appendTo: '',
                     minLength: 3,
                     source: $('#autocomplete-service-project-url').data('url'),
                     select: function(event, ui){
@@ -834,14 +834,14 @@ $(function(){
             url: form.attr('action'),
             type: form.attr('method'),
             data: form.serialize(),
-            dataType: 'json', 
+            dataType: 'json',
 
             success: function(data){
                 if (data.is_form_valid == true){
                     $('.message').html(data.message)
                     $('.js-list-service-project').html(data.service_list)
                     $('#modal-add-service-to-project').modal('hide')
-                
+
                 }else{
                     $('#modal-add-service-to-project .modal-dialog').html(data.html_form)
                     $('#modal-add-service-to-project .modal-dialog .form-html').addClass('has-error')
@@ -861,9 +861,9 @@ $(function(){
         });
         return false
     }
-    $('#add-service-to-project').on('click', ProjectServiceLoad)  
-    $('#modal-add-service-to-project').on('submit', '.js-form-create-prject-service', ProjectServiceCreate)   
-       
+    $('#add-service-to-project').on('click', ProjectServiceLoad)
+    $('#modal-add-service-to-project').on('submit', '.js-form-create-prject-service', ProjectServiceCreate)
+
 
     $('.js-project-create-client').click(function(){
         $('#modal-projeto').modal('show')
@@ -917,8 +917,11 @@ $(function(){
     $('.project-update-service').click(function(){
         $('#modal-project-update-service').modal('show')
 
-        $('#modal-project-update-service input[name=service]').val($(this).data('desc-service'))
+        $('#modal-project-update-service .js-projectP-update-service').attr('action', $(this).data('url'))
+        $('#modal-project-update-service input[name=service-desc]').val($(this).data('desc-service'))
+        $('#modal-project-update-service input[name=service]').val($(this).data('service'))
         $('#modal-project-update-service input[name=price]').val($(this).data('price'))
+
     })
 
 });
