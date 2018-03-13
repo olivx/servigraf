@@ -22,10 +22,10 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
 
-        
+
         title = request.POST.get('title')
         desc = request.POST.get('descricao')
-        
+
         if title:
             _project = Projects.objects.filter(name__iexact=title)
             if _project.first():
@@ -37,9 +37,9 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
                 else:
                     messages.warning(request, ' Projeto: {}, já existe na lista de projetos.'
                             .format(title.upper()))
-                    
+
                 return redirect('projects:project_list')
-                
+
             Projects.objects.create(name=title, desc=desc, user=request.user)
             messages.success(request, ' Projeto: {}, criado com sucesso.'.format(title))
             return redirect('projects:project_list')
@@ -54,7 +54,7 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         pass
-        
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         title = request.POST.get('title')
@@ -69,25 +69,25 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
                         já existe na lista de projetos, mas se encontra com o estatus inativo.\
                         para ativa-lo é necessario fazer login na administrativa.'
                             .format(title.upper()))
-                
+
                 else:
                     messages.warning(request, ' Projeto: {}, já existe na lista de projetos.'
                             .format(title.upper()))
-                    
+
                 return redirect('projects:project_list')
-                
+
             project = Projects.objects.get(id=project)
             project.name = title
             project.desc = desc
             project.user = request.user
             project.save()
-            
+
             messages.success(request, ' Projeto: {}, ALterado com sucesso.'.format(title))
         else:
             messages.warning(request, 'Título e Descrição são campo obrigatórios.')
-       
+
         return redirect('projects:project_list')
-project_update  = ProjectUpdate.as_view()        
+project_update  = ProjectUpdate.as_view()
 
 
 class ProjectDeactivate(LoginRequiredMixin, UpdateView):
@@ -104,7 +104,7 @@ class ProjectDeactivate(LoginRequiredMixin, UpdateView):
 
         messages.warning(request, 'Projecto: {}, foi desativardo. para reativa-lo use área administrativa.'
                                     .format(self.object.name))
-        
+
         return redirect('projects:project_list')
 project_deactivate =  ProjectDeactivate.as_view()
 
@@ -118,7 +118,7 @@ class ProjectDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(ProjectDetail, self).get_context_data(*args, **kwargs)
         context['project'] = self.object
-        
+
         context['project_client_list'] = self.object.clients.all().order_by('nome_fantasia')
         context['project_services_list'] = ProjectServices.objects.filter(project= self.object).order_by('service__nome')
 
@@ -134,10 +134,10 @@ class ProjectAutocompleteService(LoginRequiredMixin, ListView):
         _list = []
         if term:
             service_list = Produto.objects.filter(tipo=2, nome__icontains=term)[:10]
-            _list =  [dict(id=service.id, value=service.nome.upper(), 
-                                label=service.nome.upper(), price=service.valor) 
+            _list =  [dict(id=service.id, value=service.nome.upper(),
+                                label=service.nome.upper(), price=service.valor)
                                     for service in service_list]
-        
+
         return JsonResponse(_list, safe=False)
 project_service_autocomplete = ProjectAutocompleteService.as_view()
 
@@ -204,15 +204,15 @@ class ProjectCreateClients(LoginRequiredMixin, CreateView):
 
                 data['is_form_valid'] = True
                 data['list_client'] = render_to_string('project/_list_client_project.html',
-                                                   {'project_client_list': project.clients.all()}, 
+                                                   {'project_client_list': project.clients.all()},
                                                    request=request)
 
                 context = {'project': project, 'form': form}
                 data['html_form'] = render_to_string('project/project_form_create.html',
                                                    context=context, request=request)
             else:
-                messages.warning(request, 'Cliente não encontrado.')                
-            
+                messages.warning(request, 'Cliente não encontrado.')
+
             data['message'] = render_to_string('messages.html', {}, request=request)
         else:
             data['is_form_valid'] = False
@@ -238,13 +238,13 @@ class ProjectCreateService(LoginRequiredMixin, CreateView):
         form_class =  self.get_form_class()
         form = self.get_form(form_class)
         context = {'project': project, 'form': form }
-        data['html_form'] = render_to_string(self.template_name, 
+        data['html_form'] = render_to_string(self.template_name,
                                 context=context, request=self.request)
-        return JsonResponse(data)       
+        return JsonResponse(data)
 
     def post(self, request, *args, **kwargs):
         data  = {}
-    
+
         # import ipdb; ipdb.set_trace()
 
         form =  ProjectCreateServiceForm(request.POST)
@@ -261,17 +261,17 @@ class ProjectCreateService(LoginRequiredMixin, CreateView):
 
             list_service = ProjectServices.objects.filter(project= project)
             context = {'project_services_list': list_service }
-            
-            data['service_list'] = render_to_string('project/_list_service_project.html', 
+
+            data['service_list'] = render_to_string('project/_list_service_project.html',
                 context=context, request=request)
 
-            messages.success(request, 'Servico adiconado com sucesso!')    
-            data['is_form_valid'] = True 
-        
+            messages.success(request, 'Servico adiconado com sucesso!')
+            data['is_form_valid'] = True
+
         else:
             _project = form.cleaned_data['project']
             project = get_object_or_404(Projects, pk=_project)
-            data['is_form_valid'] = False 
+            data['is_form_valid'] = False
             context = {'project': project, 'form': form}
             data['html_form'] = render_to_string(self.template_name,
                                                  context=context, request=self.request)
@@ -301,3 +301,24 @@ class ProjectDeleteService(LoginRequiredMixin, DetailView):
         return redirect('projects:project_detail', pk=project_service.project.pk)
 project_delete_service = ProjectDeleteService.as_view()
 
+class ProjectServiceUpdate(LoginRequiredMixin, UpdateView):
+    model = ProjectServices
+    def post(self, request, *args, **kwargs):
+        data = {}
+        service_pk = request.POST.get('service')
+        project_pk = request.POST.get('project')
+        price = request.POST.get('price')
+
+        project_service = ProjectServices.objects.filter(project__pk=project_pk, service__pk=service_pk)
+        if project_service:
+            message = 'Preço do produto: %s  alterado para %s com sucesso.' % (project_service.first().service , price)
+            messages.success(request, message)
+            price = float(price.replace(',', '.'))
+            project_service.update(valor=price)
+
+
+        return redirect('projects:project_detail' , pk=project_pk)
+
+
+
+project_service_update =  ProjectServiceUpdate.as_view()
