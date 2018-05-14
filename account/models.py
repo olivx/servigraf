@@ -14,6 +14,7 @@ def path_avatar(instance, filename):
 class Profile(models.Model):
 
     CLIENT_USER = 1
+    ESCOLA_DA_VILLA_USER = 1
     NORMAL_USER = 2
     ADMIN_USER = 3
     KINDS =[

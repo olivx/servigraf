@@ -85,3 +85,26 @@ def change_password(request):
         'form': form
     }
     return render(request, 'password_change_form.html', context)
+
+
+def login(request, template_name='registration/login.html', authentication_form=AuthenticationForm):
+
+    if request.is_authenticadated():
+        return HttResponseRedirect(reverse('core:home'))
+
+    form = AuthenticationForm(requestt.POST or None)
+    if request.method ==  'POST':
+        if form.is_valid():
+            usernmane =  form.cleaned_data['username']
+            password =  form.cleaned_data['password']
+
+            user  = authenticate(usernmane, password)
+            if user is not None and user.is_active:
+                login(request, user')
+
+                if user.profile.type ==  Profile.ESCOLA_DA_VILLA_USER:
+                    return render(request, template_name='villa/home.html')
+            else:
+                messages.error(request, ('Usuário está desativado entre em contato com com a servigraf.'))
+
+                return render(request, template_name=template_name, {'form': form })
