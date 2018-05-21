@@ -1,14 +1,18 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login as _login
 from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.template.loader import render_to_string
-from account.forms import PasswordResetConfirm, PasswordResetForm, PasswordChange
+from account.models import Profile
+from account.forms import PasswordResetConfirm, PasswordResetForm, PasswordChange, EmailUsernameAuthenticationForm
 from account.tokens import account_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, force_bytes, force_text
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from django.contrib import messages
+
+from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
 from servigraf import settings
@@ -16,7 +20,6 @@ from servigraf import settings
 
 def password_reset_complete(request):
     return render(request, 'password_reset_complete.html')
-
 
 def reset_password(request):
     form = PasswordResetForm(request.POST or None)
@@ -42,7 +45,6 @@ def reset_password(request):
 
     return render(request, 'password_reset_form.html', {'form': form})
 
-
 def password_confirm(request, uidb64, token):
     user_id = urlsafe_base64_decode(force_text(uidb64))
     user = get_object_or_404(get_user_model(), pk=user_id)
@@ -66,7 +68,6 @@ def password_confirm(request, uidb64, token):
     }
     return render(request, 'password_reset_confirm.html', context)
 
-
 @login_required
 def change_password(request):
     form = PasswordChange(request.POST or None, user=request.user)
@@ -86,25 +87,33 @@ def change_password(request):
     }
     return render(request, 'password_change_form.html', context)
 
-
-def login(request, template_name='registration/login.html', authentication_form=AuthenticationForm):
-
-    if request.is_authenticadated():
+def login(request):
+    # import ipdb; ipdb.set_trace()
+    if request.user.is_authenticated():
         return HttResponseRedirect(reverse('core:home'))
 
-    form = AuthenticationForm(requestt.POST or None)
+    form = EmailUsernameAuthenticationForm(request.POST or None)
+    # form = AuthenticationForm(request.POST or None)
     if request.method ==  'POST':
         if form.is_valid():
-            usernmane =  form.cleaned_data['username']
-            password =  form.cleaned_data['password']
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
 
-            user  = authenticate(usernmane, password)
+            user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
-                login(request, user')
-
-                if user.profile.type ==  Profile.ESCOLA_DA_VILLA_USER:
-                    return render(request, template_name='villa/home.html')
+                _login(request, user)
+                messages.success(request,
+                                 'seja bem vindo, <strong>{}</strong>'.format(user.profile.full_name.title()))
+                if request.user.profile.type ==  Profile.ESCOLA_DA_VILLA_USER:
+                    # alterar para view , view provisoria para teste
+                    return redirect(resolve_url('servigraf:clientes'))
+                else:
+                    return redirect(resolve_url('home'))
             else:
-                messages.error(request, ('Usuário está desativado entre em contato com com a servigraf.'))
-
-                return render(request, template_name=template_name, {'form': form })
+                # messages.error(request, 'Não é possivel fazer o login')
+                error ='Por favor, entre com um usuário e senha corretos. \
+                                 Note que ambos os campos diferenciam maiúsculas e minúsculas.'
+                form.add_error(None, error)
+                form.add_error('username', 'verifique o usuário e tente novamente')
+                form.add_error('password', 'verifique o password e tente novamente')
+    return render(request,'login.html', {'form': form })
