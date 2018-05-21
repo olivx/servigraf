@@ -13,12 +13,13 @@ def path_avatar(instance, filename):
 
 class Profile(models.Model):
 
-    CLIENT_USER = 1
+    CLIENT_USER = 0
     ESCOLA_DA_VILLA_USER = 1
     NORMAL_USER = 2
     ADMIN_USER = 3
     KINDS =[
         (CLIENT_USER, 'Cliente'),
+        (ESCOLA_DA_VILLA_USER, 'Cliente Villa'),
         (NORMAL_USER, 'Comum'),
         (ADMIN_USER, 'Admin')
     ]
@@ -30,7 +31,7 @@ class Profile(models.Model):
     birdayth = models.DateField(null=True, blank=True)
 
 
-    def __str__(sefl):
+    def __str__(self):
         return self.full_name
 
     class Meta:
