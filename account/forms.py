@@ -68,7 +68,26 @@ class PasswordResetConfirm(forms.Form):
         return self.cleaned_data
 
 
-class EmailUsernameAuthenticationForm(AuthenticationForm):
+# class EmailUsernameAuthenticationForm(AuthenticationForm):
+#
+#     def clean_username(self):
+#         username = self.cleaned_data['username']
+#         if '@' in username:
+#             try:
+#                 username = User.objects.get(email=username)
+#             except ObjectDoesNotExist:
+#                 raise ValidationError(
+#                     self.error_messages['invalid_login'],
+#                     code='invalid_login',
+#                     params={'username': self.username_field.verbose_name},
+#                 )
+#         return username
+
+class EmailUsernameAuthenticationForm(forms.Form):
+
+    username = forms.CharField(label='User Name', max_length=50)
+    password = forms.CharField(widget=forms.PasswordInput)
+
     def clean_username(self):
         username = self.cleaned_data['username']
         if '@' in username:
