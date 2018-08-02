@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^servigraf/', include('core.urls', namespace='servigraf')),
     url(r'^account/', include('account.urls', namespace='account')),
     url(r'catalogo/', include('catalogo.urls', namespace='catalogo')),
+    url(r'clientes/', include('client.urls', namespace='cliente')),
 
 
 

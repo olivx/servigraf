@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login as _login
+from django.contrib.auth import authenticate, login as _login, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.template.loader import render_to_string
@@ -89,31 +89,40 @@ def change_password(request):
 
 def login(request):
     # import ipdb; ipdb.set_trace()
-    if request.user.is_authenticated():
-        return HttResponseRedirect(reverse('core:home'))
-
     form = EmailUsernameAuthenticationForm(request.POST or None)
     # form = AuthenticationForm(request.POST or None)
-    if request.method ==  'POST':
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+    if not request.user.is_authenticated():
+        if request.method ==  'POST':
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
 
-            user = authenticate(username=username, password=password)
-            if user is not None and user.is_active:
-                _login(request, user)
-                messages.success(request,
-                                 'seja bem vindo, <strong>{}</strong>'.format(user.profile.full_name.title()))
-                if request.user.profile.type ==  Profile.ESCOLA_DA_VILLA_USER:
-                    # alterar para view , view provisoria para teste
-                    return redirect(resolve_url('servigraf:clientes'))
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    if user.is_active:
+                        _login(request, user)
+                        if (request.user.profile.type == Profile.CLIENT_USER):
+                            if request.user.profile.company is None:
+                                logout(request)
+                                messages.error(request, 'Usuário cliente não tem empresa associada.')
+                                return redirect(resolve_url('account:login'))
+
+                            # enviar para paginas de clientes
+                            messages.success(request,'seja bem vindo, <strong>{}</strong>'.format(user.profile.full_name.title()))
+                            return redirect(resolve_url('cliente:ticket_list'))
+                        else:
+                            # enviar para pgina de usario da servigraf
+                            messages.success(request,'seja bem vindo, <strong>{}</strong>'.format(user.profile.full_name.title()))
+                            return redirect(resolve_url('home'))
+                    else:
+                        error = 'O usuario {0}/{1} encontra-se desativado.'.format(user.username, user.email)
+                        form.add_error(None, error)
                 else:
-                    return redirect(resolve_url('home'))
-            else:
-                # messages.error(request, 'Não é possivel fazer o login')
-                error ='Por favor, entre com um usuário e senha corretos. \
-                                 Note que ambos os campos diferenciam maiúsculas e minúsculas.'
-                form.add_error(None, error)
-                form.add_error('username', 'verifique o usuário e tente novamente')
-                form.add_error('password', 'verifique o password e tente novamente')
+                    # messages.error(request, 'Não é possivel fazer o login')
+                    error ='Por favor, entre com um usuário e senha corretos. \
+                                     Note que ambos os campos diferenciam maiúsculas e minúsculas.'
+
+                    form.add_error(None, error)
+                    form.add_error('username', 'verifique o usuário e tente novamente')
+                    form.add_error('password', 'verifique o password e tente novamente')
     return render(request,'login.html', {'form': form })

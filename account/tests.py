@@ -1,10 +1,12 @@
-from django.test import TestCase
-from model_mommy import mommy
+from django.contrib.messages import get_messages
 from django.contrib.auth.models import User
-
 from django.shortcuts import resolve_url
-from account.views import login
+from django.test import TestCase
+from django.contrib import auth
+from model_mommy import mommy
 
+from core.models import Cliente
+from account.views import login
 from account.models import Profile
 # Create your tests here.
 class TestModelProfile(TestCase):
@@ -28,33 +30,32 @@ class TestModelProfile(TestCase):
         ''' test if date birdayth is None'''
         self.assertIsNone(self.user.profile.birdayth)
 
-
-
 class TestViewsLogin(TestCase):
     def setUp(self):
         self.user = mommy.make(User, is_active=True, username='olvx' ,email='oliveira@email.com')
         self.user.set_password(123)
 
-        self.user.profile.type = Profile.ESCOLA_DA_VILLA_USER
+        self.user.profile.type = Profile.CLIENT_USER
+        self.user.profile.company = mommy.make(Cliente)
         self.user.save()
         self.user.profile.save()
 
-    def test_if_profile_is_valla(self):
-        ''' test if profile is villa scholl'''
+    def test_if_profile_is_client(self):
+        ''' test if profile is cliente '''
         user =  User.objects.first()
-        self.assertEqual(Profile.ESCOLA_DA_VILLA_USER, user.profile.type)
+        self.assertEqual(Profile.CLIENT_USER, user.profile.type)
 
-    def test_login_by_username_villa_user(self):
-        ''' Test login by usernmae if is ESCOLA_DA_VILLA_USER'''
+    def test_login_by_username_cliente(self):
+        ''' Test login by usernmae if is CLIENT_USER'''
         data = {'username':'olvx', 'password':123}
-        resp = self.client.post(resolve_url('account:login'), data)
-        self.assertEqual(302, resp.status_code)
+        resp = self.client.post(resolve_url('account:login'), data, follow=True)
+        self.assertEqual(200, resp.status_code)
 
-    def test_login_by_email_villa_user(self):
-        ''' Test login by usernmae if is ESCOLA_DA_VILLA_USER'''
+    def test_login_by_email_cliente_user(self):
+        ''' Test login by usernmae if is CLIENT_USER'''
         data = {'username':'oliveira@email.com', 'password':123}
-        resp = self.client.post(resolve_url('account:login'), data)
-        self.assertEqual(302, resp.status_code)
+        resp = self.client.post(resolve_url('account:login'), data, follow=True)
+        self.assertEqual(200, resp.status_code)
 
     def test_login_by_username_normal_user(self):
         ''' Test login by usernmae if is NORMAL_USER'''
@@ -71,3 +72,32 @@ class TestViewsLogin(TestCase):
         data = {'username':'oliveira@email.com', 'password':123}
         resp = self.client.post(resolve_url('account:login'), data)
         self.assertEqual(302, resp.status_code)
+
+class TestClientHasCompnay(TestCase):
+    def setUp(self):
+        self.user = mommy.make(User, is_active=True, username='olvx' ,email='oliveira@email.com')
+        self.user.set_password(123)
+
+        self.user.profile.company = None
+        self.user.profile.type = Profile.CLIENT_USER
+        self.user.save()
+        self.user.profile.save()
+
+    def test_user_is_anonymous(self):
+        ''' Test user has company to login'''
+        self.user.profile.save()
+        data = {'username':'oliveira@email.com', 'password':123}
+        resp = self.client.post(resolve_url('account:login'), data)
+        user = auth.get_user(resp.client)
+        self.assertEqual(user.is_anonymous(),True)
+
+    def test_user_is_anonymous_error_message(self):
+        ''' Test user has company to login message error'''
+        self.user.profile.save()
+        data = {'username':'oliveira@email.com', 'password':123}
+        resp = self.client.post(resolve_url('account:login'), data, follow=True)
+        messages = resp.context['messages']
+        _messages = list(get_messages(resp.wsgi_request))
+
+        self.assertEqual(len(list(messages)), 1)
+        self.assertEqual(str(_messages[0]), 'Usuário cliente não tem empresa associada.')

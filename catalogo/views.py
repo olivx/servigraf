@@ -11,10 +11,12 @@ from catalogo.forms import ProductForm, GroupProductForm
 from pure_pagination.mixins import PaginationMixin
 from django.core import serializers
 from django.forms.models import model_to_dict
+from django.utils.decorators import method_decorator
+from account.decorator import client_user_denied
 
 
 # Create your views here.
-
+@method_decorator([client_user_denied], name='dispatch')
 class ProductList(PaginationMixin, LoginRequiredMixin, ListView):
     model = Produto
     paginate_by = 5
@@ -31,11 +33,9 @@ class ProductList(PaginationMixin, LoginRequiredMixin, ListView):
                 products = products.filter(Q(nome__contains=search) |
                                            Q(desc__contains=search)).order_by('nome')
         return products
-
-
 product_list = ProductList.as_view()
 
-
+@method_decorator([client_user_denied], name='dispatch')
 class ProductCreate(LoginRequiredMixin, CreateView):
     model = Produto
 
@@ -66,11 +66,9 @@ class ProductCreate(LoginRequiredMixin, CreateView):
             data['html_form'] = \
                 render_to_string('product/product_modal_save.html', {'form': form}, request=request)
         return JsonResponse(data)
-
-
 product_create = ProductCreate.as_view()
 
-
+@method_decorator([client_user_denied], name='dispatch')
 class ProductUpdate(LoginRequiredMixin, UpdateView):
     model = Produto
 
@@ -103,11 +101,9 @@ class ProductUpdate(LoginRequiredMixin, UpdateView):
             data['html_form'] = \
                 render_to_string('product/product_modal_update.html', {'form': form}, request=request)
         return JsonResponse(data)
-
-
 product_update = ProductUpdate.as_view()
 
-
+@method_decorator([client_user_denied], name='dispatch')
 class ProductDelete(LoginRequiredMixin, DeleteView):
     model = Produto
 
@@ -126,22 +122,19 @@ class ProductDelete(LoginRequiredMixin, DeleteView):
         message = 'Produto: {}, Deletado com suscesso!'.format(prod.nome.upper())
         messages.error(request, message)
         return HttpResponseRedirect(r('catalogo:product_list'))
-
-
 product_delete = ProductDelete.as_view()
 
-
+@method_decorator([client_user_denied], name='dispatch')
 class GroupProductList(LoginRequiredMixin, ListView):
     model = GroupProduct
 
     def get(self, request, *args, **kwargs):
         data = {'groups': serializers.serialize('json', GroupProduct.objects.all())}
         return JsonResponse(data, safe=False)
-
-
 group_list = GroupProductList.as_view()
 
 
+@method_decorator([client_user_denied], name='dispatch')
 class GroupProductCreate(LoginRequiredMixin, CreateView):
     model = GroupProduct
     template_name = 'group_modal_save.html'
@@ -179,11 +172,9 @@ class GroupProductCreate(LoginRequiredMixin, CreateView):
                 render_to_string('group/group_modal_save.html', {'group_form': form}, request=request)
 
         return JsonResponse(data)
-
-
 group_create = GroupProductCreate.as_view()
 
-
+@method_decorator([client_user_denied], name='dispatch')
 class GroupProductUpdate(LoginRequiredMixin, UpdateView):
     model = GroupProduct
     template_name = 'group_modal_save.html'
@@ -225,11 +216,9 @@ class GroupProductUpdate(LoginRequiredMixin, UpdateView):
                 render_to_string('group/group_modal_save.html', {'group_form': form}, request=request)
 
         return JsonResponse(data)
-
-
 group_update = GroupProductUpdate.as_view()
 
-
+@method_decorator([client_user_denied], name='dispatch')
 class GroupProductDelete(LoginRequiredMixin, DeleteView):
     model = GroupProduct
     template_name = 'group_modal_save.html'
@@ -271,6 +260,4 @@ class GroupProductDelete(LoginRequiredMixin, DeleteView):
                 render_to_string('group/group_modal_save.html', {'group_form': form}, request=request)
 
         return JsonResponse(data)
-
-
 group_delete = GroupProductDelete.as_view()

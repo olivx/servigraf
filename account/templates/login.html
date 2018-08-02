@@ -1,105 +1,103 @@
 {% extends  'base.html' %}
 {% load  widget_tweaks %}
 {% load i18n %}
-
 {% block content %}
-
 <div class="container">
-
     <div id="content-main">
-
-        <div class="col-md-offset-2 col-md-8">
-            {% if form.errors and not form.non_field_errors %}
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <p>
-                    {% if form.errors.items|length == 1 %}
-                    {% trans "Please correct the error below." %}
-                    {% else %}
-                    {% trans "Please correct the errors below." %}{% endif %}
-                </p>
-            </div>
-            {% endif %}
-
-            {% if form.non_field_errors %}
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {% for error in form.non_field_errors %}
-                <p class="text-center">
-                    {{ error }}
-                </p>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
-
-        {% if user.is_authenticated %}
-        <div class="alert alert-warning alert-dismissible" role="alert">
-            <button type="button" class="close" aria-label="Close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span>
+      {% for message in messages %}
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+         </button>
+         <p>
+            {{ message|safe }}
+         </p>
+      </div>
+      {% endfor %}
+      {% if form.errors and not form.non_field_errors %}
+      <div class="col-md-12">
+         <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
             </button>
-            {% blocktrans with username=request.user.username trimmed %}
-            You are authenticated as {{ username }}, but are not authorized to
-            access this page. Would you like to login to a different account?
-            {% endblocktrans %}
-        </div>
-        {% endif %}
-
-
-        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-
-            <div class="panel panel-default" >
-
-                <div class="panel-heading">
-                    <div class="panel-title">Login</div>
-                    <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="{% url 'account:reset_password' %}">Esqueceu a Senha ?</a></div>
-                </div>
-
-
-                <div style="padding-top:30px" class="panel-body" >
-
-
-                    <form  action="{% url 'account:login' %}" method="post" class="form-horizontal">
-                        {% csrf_token %}
-
-                        <!-- username input -->
-                        <div class="{% if form.username.errors %} has-error {% endif %}">
-                            <div style="margin-bottom: 25px" class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                {% render_field form.username class="form-control" placeholder="Usuario ou e-mail "%}
-                            </div>
-                            {% for error in form.username.errors %}
-                            <span class="help-block">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-
-                        <!-- password input  -->
-                        <div class="{% if form.password.errors %} has-error {% endif %}">
-                            <div style="margin-bottom: 25px" class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                {% render_field form.password class="form-control" placeholder="Senha"%}
-                            </div>
-                            {% for error in form.password.errors %}
-                            <span class="help-block">{{ error }}</span>
-                            {% endfor%}
-                        </div>
-
-                        <!-- actions -->
-                        <div style="margin-top:10px" class="form-group">
-                            <!-- Button -->
-                            <div class="col-sm-12 controls">
-                                <button id="btn-login" type="submit" class="btn btn-block btn-primary">Login  </button>
-                            </div>
-                        </div>
-                    </form> <!-- form -->
-
-                </div><!-- panel body-->
-            </div>
-
-        </div>
-    </div>
-    {% endblock %}
+            <p>
+               {% if form.errors.items|length == 1 %}
+               {% trans "Please correct the error below." %}
+               {% else %}
+               {% trans "Please correct the errors below." %}{% endif %}
+            </p>
+         </div>
+      </div>
+      {% endif %}
+      {% if form.non_field_errors %}
+      <div class="col-md-12">
+         <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            {% for error in form.non_field_errors %}
+            <p class="text-center">
+               {{ error }}
+            </p>
+            {% endfor %}
+         </div>
+      </div>
+      {% endif %}
+   </div>
+   {% if user.is_authenticated %}
+   <div class="col-md-12">
+      <div class="alert alert-warning alert-dismissible" role="alert">
+         <button type="button" class="close" aria-label="Close" data-dismiss="alert">
+         <span aria-hidden="true">&times;</span>
+         </button>
+         {% blocktrans with username=request.user.username trimmed %}
+         You are authenticated as {{ username }}, but are not authorized to
+         access this page. Would you like to login to a different account?
+         {% endblocktrans %}
+      </div>
+   </div>
+   {% endif %}
+   <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <div class="panel panel-default" >
+         <div class="panel-heading">
+            <div class="panel-title">Login</div>
+            <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="{% url 'account:reset_password' %}">Esqueceu a Senha ?</a></div>
+         </div>
+         <div style="padding-top:30px" class="panel-body" >
+            <form  action="{% url 'account:login' %}" method="post" class="form-horizontal">
+               {% csrf_token %}
+               <!-- username input -->
+               <div class="{% if form.username.errors %} has-error {% endif %}">
+                  <div style="margin-bottom: 25px" class="input-group">
+                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                     {% render_field form.username class="form-control" placeholder="Usuario ou e-mail "%}
+                  </div>
+                  {% for error in form.username.errors %}
+                  <span class="help-block">{{ error }}</span>
+                  {% endfor %}
+               </div>
+               <!-- password input  -->
+               <div class="{% if form.password.errors %} has-error {% endif %}">
+                  <div style="margin-bottom: 25px" class="input-group">
+                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                     {% render_field form.password class="form-control" placeholder="Senha"%}
+                  </div>
+                  {% for error in form.password.errors %}
+                  <span class="help-block">{{ error }}</span>
+                  {% endfor%}
+               </div>
+               <!-- actions -->
+               <div style="margin-top:10px" class="form-group">
+                  <!-- Button -->
+                  <div class="col-sm-12 controls">
+                     <button id="btn-login" type="submit" class="btn btn-block btn-primary">Login  </button>
+                  </div>
+               </div>
+            </form>
+            <!-- form -->
+         </div>
+         <!-- panel body-->
+      </div>
+   </div>
+</div>
+{% endblock %}

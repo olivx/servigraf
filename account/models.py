@@ -14,12 +14,10 @@ def path_avatar(instance, filename):
 class Profile(models.Model):
 
     CLIENT_USER = 0
-    ESCOLA_DA_VILLA_USER = 1
-    NORMAL_USER = 2
-    ADMIN_USER = 3
+    NORMAL_USER = 1
+    ADMIN_USER = 2
     KINDS =[
         (CLIENT_USER, 'Cliente'),
-        (ESCOLA_DA_VILLA_USER, 'Cliente Villa'),
         (NORMAL_USER, 'Comum'),
         (ADMIN_USER, 'Admin')
     ]
@@ -29,6 +27,7 @@ class Profile(models.Model):
     full_name =  models.CharField('Nome Completo', max_length=255,blank=True, null=True)
     avatar =  models.ImageField('Avatar', upload_to=path_avatar, blank=True, null=True)
     birdayth = models.DateField(null=True, blank=True)
+    company =  models.ForeignKey('core.Cliente', null=True, blank=True)
 
 
     def __str__(self):

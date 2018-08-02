@@ -1,22 +1,24 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import resolve_url as r
+from django.forms import inlineformset_factory
 from django.template.loader import render_to_string
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-from core.forms import ClientForm, ContactForm, EmailForm, TelefoneFrom, EnderecoForm
-from django.forms import inlineformset_factory
-from core.models import Cliente, Contato, Email, Telefone, Endereco
 from core.utils import paginator
-from django.shortcuts import resolve_url as r
+from account.decorator import client_user_denied
+from core.models import Cliente, Contato, Email, Telefone, Endereco
+from core.forms import ClientForm, ContactForm, EmailForm, TelefoneFrom, EnderecoForm
 
 @login_required
 def home(request):
     return render(request, 'index.html', {})
 
 @login_required
+@client_user_denied
 def clientes(request):
     template = 'clientes/client_list.html'
     search = request.GET.get('search')
@@ -32,6 +34,7 @@ def clientes(request):
     return render(request, template, {'client_list': clients})
 
 @login_required
+@client_user_denied
 def save_client(request):
     data = {}
     template = 'clientes/client_modal_save.html'
@@ -68,6 +71,7 @@ def save_client(request):
     return JsonResponse(data)
 
 @login_required
+@client_user_denied
 def update_client(request, pk):
     data = {}
     template = 'clientes/client_modal_update.html'
@@ -101,6 +105,7 @@ def update_client(request, pk):
     return JsonResponse(data)
 
 @login_required
+@client_user_denied
 def delete_client(request, pk):
     data = {}
     template = 'clientes/client_modal_delete.html'
@@ -127,6 +132,7 @@ def delete_client(request, pk):
     return JsonResponse(data)
 
 @login_required
+@client_user_denied
 def detail_client(request, pk):
     tempate_name = 'clientes/client_detail.html'
     client = get_object_or_404(Cliente, pk=pk)
@@ -141,6 +147,7 @@ def detail_client(request, pk):
     return render(request, tempate_name, context)
 
 @login_required
+@client_user_denied
 def contact_save(request, client_id):
     data = {}
     contact = Contato()
@@ -208,6 +215,7 @@ def contact_save(request, client_id):
     return JsonResponse(data)
 
 @login_required
+@client_user_denied
 def contact_update(request, client_id, contact_id):
     data = {}
     # get client end contact instances
@@ -277,6 +285,7 @@ def contact_update(request, client_id, contact_id):
     return JsonResponse(data)
 
 @login_required
+@client_user_denied
 def contact_delete(request, client_id, contact_id):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
@@ -325,6 +334,7 @@ def contact_delete(request, client_id, contact_id):
     return JsonResponse(data)
 
 @login_required
+@client_user_denied
 def end_service(request, client_id, end, template_success, message='', operation='save'):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
@@ -375,16 +385,19 @@ def end_service(request, client_id, end, template_success, message='', operation
     return JsonResponse(data)
 
 @login_required
+@client_user_denied
 def end_save(request, client_id):
     end = Endereco()
     return end_service(request, client_id, end, 'end/end_save.html', 'Endereço {}  Salvo com sucesso!')
 
 @login_required
+@client_user_denied
 def end_update(request, client_id, end_id):
     end = get_object_or_404(Endereco, pk=end_id)
     return end_service(request, client_id, end, 'end/end_update.html','Endereço {}  Alterado com sucesso!', 'update')
 
 @login_required
+@client_user_denied
 def end_delete(request, client_id, end_id):
     data = {}
     client = get_object_or_404(Cliente, pk=client_id)
