@@ -12,21 +12,21 @@ class ModelBase(models.Model):
     class Meta:
         abstract = True
 
-class CatalogoCliente(ModelBase):
+class CatalogoGrupo(ModelBase):
 
     grupo =  models.ForeignKey('client.GrupoCliente')
     produto = models.ForeignKey('catalogo.Produto')
     valor =  models.DecimalField('Valor', decimal_places=2, max_digits=10)
 
     def __str__(self):
-        return self.company.nome_fantasia
+        return self.grupo.title
 
 class GrupoCliente(ModelBase):
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title =  models.CharField(max_length=200)
     clientes =  models.ManyToManyField('core.Cliente', related_name='cgroups')
+    produtos = models.ManyToManyField('catalogo.Produto', through='client.CatalogoGrupo')
     users =  models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_groups')
 
     def __str__(self):
@@ -50,27 +50,29 @@ class StatusTrail(ModelBase):
         (TERMINADO , 'finalizado'),
     )
 
+    ticket = models.ForeignKey('client.Ticket', related_name='ticket_trails')
     status =  models.PositiveSmallIntegerField('Status', choices=choices_list, default=AGUARDANDO_LIEBRACAO)
-    ticket = models.ForeignKey('client.Ticket')
-
 
     def __str__(self):
-        self.get_status_display()
+        return self.get_status_display()
 
 class Ticket(ModelBase):
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-
-    title = models.CharField(max_length=255)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     cliente =  models.ForeignKey('core.Cliente')
     ativo =  models.BooleanField(default=True)
     data_entrega = models.DateTimeField()
 
     data_finalizado = models.DateTimeField(null=True, blank=True)
     data_saida =  models.DateField(null=True, blank=True)
-    who_init = models.ForeignKey(settings.AUTH_USER_MODEL)
-    who_finish = models.ForeignKey(settings.AUTH_USER_MODEL)
-
 
     def __str__(self):
-        return self.title
+        return str(self.pk)
+
+class TicketItem(models.Model):
+    ticket =  models.ForeignKey('client.Ticket', related_name='tickets')
+    produto =  models.ForeignKey('catalogo.Produto')
+    quantidate =  models.IntegerField()
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
+    desconto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
