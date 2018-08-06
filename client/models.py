@@ -72,7 +72,67 @@ class Ticket(ModelBase):
 class TicketItem(models.Model):
     ticket =  models.ForeignKey('client.Ticket', related_name='tickets')
     produto =  models.ForeignKey('catalogo.Produto')
+
     quantidate =  models.IntegerField()
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2)
     desconto = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    desc = models.TextField(null=True, blank=True)
+    obs = models.TextField(null=True, blank=True)
+    requisitante = models.CharField(max_length=255,null=True, blank=True)
+    setor =  models.CharField(max_length=255,null=True, blank=True)
+
+    departamento = models.ForeignKey('client.Departamento', null=True, blank=True)
+    classes = models.ManyToManyField('client.Classe')
+    InfoAdd = models.ManyToManyField('client.InfoAdd')
+    tipo = models.ManyToManyField('client.Tipo')
+
+
+    def __str__(self):
+        return self.desc
+
+class Classe(ModelBase):
+
+    group = models.ForeignKey('client.GrupoCliente')
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+
+class InfoAdd(ModelBase):
+
+    group = models.ForeignKey('client.GrupoCliente')
+    title = models.CharField(max_length=255)
+    texto = models.TextField()
+
+    def __str__(self):
+        return self.title
+
+class Departamento(ModelBase):
+
+    group = models.ForeignKey('client.GrupoCliente')
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+
+class Tipo(ModelBase):
+
+    title = models.CharField(max_length=255)
+    group = models.ForeignKey('client.GrupoCliente')
+
+    def __str__(self):
+        return self.title
+
+def upload_path(instance, filename):
+    return 'ticket_item_{0}/{1}'.format(instance.id, filename)
+
+class Aquivo(ModelBase):
+
+    ticket_item =  models.ForeignKey('client.TicketItem')
+    upload = models.FileField(upload_to=upload_path)
+    file_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.file_name
