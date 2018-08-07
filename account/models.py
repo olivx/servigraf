@@ -27,7 +27,7 @@ class Profile(models.Model):
     full_name =  models.CharField('Nome Completo', max_length=255,blank=True, null=True)
     avatar =  models.ImageField('Avatar', upload_to=path_avatar, blank=True, null=True)
     birdayth = models.DateField(null=True, blank=True)
-    company =  models.ForeignKey('core.Cliente', null=True, blank=True)
+    company_group =  models.ForeignKey('client.GrupoCliente', null=True, blank=True)
 
 
     def __str__(self):

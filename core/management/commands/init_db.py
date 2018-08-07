@@ -25,6 +25,7 @@ class Command(BaseCommand):
         parser.add_argument('--client', '-cli',
                             action='store_true',
                             help='iniciliza a tabela de clientes')
+
         parser.add_argument('--contact', '-cont',
                             action='store_true',
                             help='inicializa a tablça de  contatos')
@@ -189,4 +190,3 @@ class Command(BaseCommand):
         print('Ajustando o Bando de dados PostgreSQL')
         os.system('python manage.py sqlsequencereset core| python manage.py dbshell')
         os.system('python manage.py sqlsequencereset catalogo| python manage.py dbshell')
-
