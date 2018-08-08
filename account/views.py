@@ -102,7 +102,7 @@ def login(request):
                     if user.is_active:
                         _login(request, user)
                         if (request.user.profile.type == Profile.CLIENT_USER):
-                            if request.user.profile.company is None:
+                            if request.user.profile.company_group is None:
                                 logout(request)
                                 messages.error(request, 'Usuário cliente não tem empresa associada.')
                                 return redirect(resolve_url('account:login'))

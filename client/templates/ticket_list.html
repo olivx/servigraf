@@ -1,1 +1,127 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block custom_css %}
+  <link href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/datatables.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>Servigraf: <small>tickets</small></h1>
+</div>
+
+<div class="container">
+    <div class="col-md-12">
+        <button type="button" name="add_ticket" class="btn btn-primary">
+            Novo <i class="glyphicon glyphicon-plus"></i>
+        </button>
+    </div>
+
+    <!--  date picker -->
+    <div class="col-md-6"  style="margin-top:2em;">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <input type="date" id="min-date" class="form-control date-range-filter" placeholder="">
+                </div>
+            </div>
+
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <input type="date" id="max-date" class="form-control date-range-filter" placeholder="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end date picker -->
+    <!-- search input  -->
+    <div class="col-md-6" style="margin-top:2em;">
+            <div class="form-group">
+                <div class="input-group">
+                    <input id="table-filter" type="text" class="form-control"
+                    placeholder="Buscar por nome numero ">
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </span>
+                </div>
+            </div>
+    </div>
+    <!--  end search bar -->
+
+    <div class="col-md-12" style="margin-top:2em;">
+
+        <table id="data-table" class="table table-striped" style="width:100%">
+          <thead>
+            <tr>
+              <th width="10%">#</th>
+              <th width="50%">CLIENTE</th>
+              <th width="20%">STATUS</th>
+              <th width="20%">ENTREGA</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for object in object_list %}
+              <td>{{ object.pk }}</td>
+              <td>{{ object.cliente }}</td>
+              <td>{{ object.status }}</td>
+              <td>{{ object.data_entrega }}</td>
+
+              {% endfor %}
+          </tbody>
+        </table>
+    </div>
+
+</div>
+<!-- end container -->
+{% endblock %}
+
+{% block java_script_app %}
+<script src="{% static 'js/moment.min.js' %}" charset="utf-8"></script>
+<script src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/datatables.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+
+$('.input-daterange input').each(function() {
+  $(this).val('')
+})
+
+// Set up your table
+table = $('#data-table').DataTable({
+  "info": false,
+  "pageLength": 10,
+  "language": {
+    "infoEmpty": "Nenhum resultado foi encontrado.",
+    "zeroRecords": "Nenhum resultado foi encontrado.",
+    "emptyTable": "Nada para ser listado."
+  }
+});
+
+// Extend dataTables search
+$.fn.dataTable.ext.search.push(
+  function(settings, data, dataIndex) {
+    var min = $('#min-date').val();
+    var max = $('#max-date').val();
+    var createdAt = data[2] || 0; // Our date column in the table
+
+    if ( (min == "" || max == "") ||
+        (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))){
+      return true;
+    }
+    return false;
+  }
+);
+
+// Re-draw the table when the a date range filter changes
+$('.date-range-filter').change(function() {
+  table.draw();
+});
+
+$('#table-filter').keyup(function(){
+      table.search($(this).val()).draw() ;
+})
+
+// bar search  is hide now
+$('#data-table_filter').hide();
+$('#data-table_length').hide();
+</script>
+{% endblock %}

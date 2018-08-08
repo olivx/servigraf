@@ -109,7 +109,7 @@
 
                     <ul class="dropdown-menu">
                         {% if user.is_superuser %}
-                        <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                        <li><a href="{% url 'admin:index' %}" target="_blank">Admin</a></li>
                         {% endif %}
                         <li><a href="#">Perfil</a></li>
                         <li><a href="{% url 'account:change_password' %}">Alterar Senha</a></li>
