@@ -48,13 +48,11 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {% if request.user.profile.type == 0 %}
-                        <li>
-                            <a href="{% url 'cliente:ticket_list' %}">
-                                Tickets
-                            </a>
-                        </li>
-                    {% endif %}
+                    <li>
+                        <a href="{% url 'cliente:ticket_list' %}">
+                            Tickets
+                        </a>
+                    </li>
                 {% endif %}
 
                 <!--<li class="{% if request.resolver_match.url_name == 'clientes'  %} active {% endif %}">-->
