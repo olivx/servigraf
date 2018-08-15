@@ -23,13 +23,13 @@
         <div class="row">
             <div class="col-xs-6">
                 <div class="form-group">
-                    <input type="date" id="min-date" class="form-control date-range-filter" placeholder="">
+                    <input id="min-date" type="text" class="form-control date-range-filter" data-date-format="yyyy-mm-dd" placeholder="">
                 </div>
             </div>
 
             <div class="col-xs-6">
                 <div class="form-group">
-                    <input type="date" id="max-date" class="form-control date-range-filter" placeholder="">
+                    <input id="max-date" type="text" class="form-control date-range-filter" data-date-format="yyyy-mm-dd" placeholder="">
                 </div>
             </div>
         </div>
@@ -54,20 +54,37 @@
         <table id="data-table" class="table table-striped" style="width:100%">
           <thead>
             <tr>
-              <th width="10%">#</th>
-              <th width="50%">CLIENTE</th>
-              <th width="20%">STATUS</th>
-              <th width="20%">ENTREGA</th>
+              <th width="5%">#</th>
+              <th width="45%">CLIENTE</th>
+              {% if request.user.profile.type != 0 %}
+              <th width="10%"> Grupo </th>
+              {% endif %}
+              <th width="10%" class="text-center">STATUS</th>
+              <th width="10%" class="text-center">ENTREGA</th>
             </tr>
           </thead>
           <tbody>
-              {% for object in object_list %}
-              <td>{{ object.pk }}</td>
-              <td>{{ object.cliente }}</td>
-              <td>{{ object.status }}</td>
-              <td>{{ object.data_entrega }}</td>
-
-              {% endfor %}
+              {% with type_user=request.user.profile.type %}
+                  {% for object in object_list %}
+                    <tr>
+                      <td>{{ object.pk }}</td>
+                      <td>
+                        <a href="#">{{ object.cliente }}</a>
+                      </td>
+                      {% if type_user != 0 %}
+                      <th>
+                          {{ object.cliente.cgroups.all.first }}
+                      </th>
+                      {% endif %}
+                      <td class="text-center">
+                          {{ object.ticket_trails.last.get_status_display }}
+                      </td>
+                      <td class="text-center">
+                          {{ object.data_entrega|date:"Y-m-d" }}
+                      </td>
+                    </tr>
+                  {% endfor %}
+              {% endwith %}
           </tbody>
         </table>
     </div>
@@ -79,11 +96,25 @@
 {% block java_script_app %}
 <script src="{% static 'js/moment.min.js' %}" charset="utf-8"></script>
 <script src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/datatables.min.js" charset="utf-8"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 
-$('.input-daterange input').each(function() {
-  $(this).val('')
-})
+$('.date-range-filter').each(function() {
+  $(this).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1930:2099",
+      // dateFormat: 'yy-mm-dd',
+      dateFormat: 'yy-mm-dd',
+      dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+      dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+      dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+      monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+      monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      nextText: 'Próximo',
+      prevText: 'Anterior'
+  });
+});
 
 // Set up your table
 table = $('#data-table').DataTable({
@@ -101,10 +132,13 @@ $.fn.dataTable.ext.search.push(
   function(settings, data, dataIndex) {
     var min = $('#min-date').val();
     var max = $('#max-date').val();
-    var createdAt = data[2] || 0; // Our date column in the table
+    var createdAt = data[3] || 0; // Our date column in the table
+
 
     if ( (min == "" || max == "") ||
         (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))){
+
+      console.log(moment(createdAt))
       return true;
     }
     return false;

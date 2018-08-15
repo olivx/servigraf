@@ -34,11 +34,19 @@ class CatalogoGrupoAdmin(admin.ModelAdmin):
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
 
-    list_display = ('pk','cliente', 'data_entrega', 'owner', 'criado_em','status','ativo',)
+    list_display = ('pk','get_group', 'cliente', 'data_entrega', 'owner', 'criado_em','status','ativo',)
     list_display_links = ('cliente',)
     search_fields = ('cliente__nome_fantasia', 'pk')
+    autocomplete_fields = ('cliente',)
     list_filter = ('ativo',)
 
+
+    def get_group(self, instance):
+        group = GrupoCliente.objects.filter(clientes=instance.cliente)
+        if group.first():
+            return group.first().title.upper()
+        return '----'
+    get_group.short_description = 'Grupo'
 
     def status(self, instance):
         return StatusTrail.objects.filter(ticket=instance.pk).last()

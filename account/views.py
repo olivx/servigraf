@@ -125,4 +125,5 @@ def login(request):
                     form.add_error(None, error)
                     form.add_error('username', 'verifique o usuário e tente novamente')
                     form.add_error('password', 'verifique o password e tente novamente')
+    
     return render(request,'login.html', {'form': form })

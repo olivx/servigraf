@@ -1,4 +1,5 @@
 import re
+from django.utils.translation import ugettext as _
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
@@ -88,6 +89,14 @@ class EmailUsernameAuthenticationForm(forms.Form):
     username = forms.CharField(label='User Name', max_length=50)
     password = forms.CharField(widget=forms.PasswordInput)
 
+    error_messages = {
+        'invalid_login': _(
+            "Please enter a correct %(username)s and password. Note that both "
+            "fields may be case-sensitive."
+        ),
+        'inactive': _("This account is inactive."),
+    }
+
     def clean_username(self):
         username = self.cleaned_data['username']
         if '@' in username:
@@ -97,6 +106,6 @@ class EmailUsernameAuthenticationForm(forms.Form):
                 raise ValidationError(
                     self.error_messages['invalid_login'],
                     code='invalid_login',
-                    params={'username': self.username_field.verbose_name},
+                    params={'username': username},
                 )
         return username
