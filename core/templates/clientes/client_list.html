@@ -45,13 +45,13 @@
 <table id="cliente-table" class="table table-striped table-hover table-condensed">
     <thead>
     <tr>
-        <th width="60">#</th>
-        <th width="600">Nome Fantazia (Nome se for tipo Fisico)</th>
-        <th width="30">TIPO</th>
-        <th width="30">DOCUMENTO</th>
-        <th width="30">MENSAL</th>
-        <th>EDIT</th>
-        <th>DELETE</th>
+        <th width="5%">#</th>
+        <th width="60%">Nome Fantazia</th>
+        <th width="5%">TIPO</th>
+        <th width="">DOCUMENTO</th>
+        <th width="">MENSAL</th>
+        <th width="5%">EDIT</th>
+        <th width="5%">DELETE</th>
     </tr>
     </thead>
 
@@ -66,9 +66,7 @@
 
     </tfoot>
 </table>
-
 {% include 'pagination.html' with object_list=client_list %}
-
 <div id="cliente-modal"   class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">

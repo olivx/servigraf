@@ -1,11 +1,9 @@
 import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from decouple import config, Csv
 from django.contrib import messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -17,7 +15,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv)
-
 
 # Application definition
 
@@ -40,7 +37,6 @@ INSTALLED_APPS = [
     'catalogo',
     'client',
 ]
-
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -85,15 +81,15 @@ WSGI_APPLICATION = 'servigraf.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'servigraf.db'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'servigraf.db'),
 
-        'ENGINE':   'django.db.backends.postgresql_psycopg2',
-        'NAME':     config('DB_NAME'),
-        'USER':     config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST':     config('DB_HOST'),
-        'PORT':     config('DB_PORT'),
+        # 'ENGINE':   'django.db.backends.postgresql_psycopg2',
+        # 'NAME':     config('DB_NAME'),
+        # 'USER':     config('DB_USER'),
+        # 'PASSWORD': config('DB_PASSWORD'),
+        # 'HOST':     config('DB_HOST'),
+        # 'PORT':     config('DB_PORT'),
     }
 }
 
@@ -156,12 +152,8 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
-
-
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/account/login/'
-
-
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -170,7 +162,6 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

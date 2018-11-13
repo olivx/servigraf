@@ -1,5 +1,32 @@
-<div class="row text-center">
-    <div id="pagination">
-        {{ object_list.render }}
-    </div>
+<!-- pagination -->
+<div class="row" align="center">
+  <div class="col-sm-12">
+    <ul class="pagination">
+
+      {% if object_list.has_previous %}
+        <li><a href="?page={{ object_list.previous_page_number }}&q={{ request.GET.q }}&job={{ request.GET.job }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">&laquo;</a></li>
+      {% endif %}
+
+      {% for pg in object_list.paginator.page_range %}
+
+          {% if object_list.number == pg %}
+            <li class="active">
+                <a href="#">{{ pg }}</a>
+            </li>
+          {% elif pg > object_list.number|add:'-4' and pg < object_list.number|add:'4' %}
+            <li><a href="?page={{ pg }}&q={{ request.GET.q }}&job={{ request.GET.job }}">{{ pg }}</a></li>
+          {% endif %}
+
+      {% endfor %}
+
+      {% if object_list.has_next %}
+        <li><a href="?page={{ object_list.next_page_number }}&q={{ request.GET.q }}&job={{ request.GET.job }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">&raquo;</a></li>
+      {% endif %}
+    </ul>
+  </div>
 </div>
+<!-- https://www.technovelty.org/web/skipping-pages-with-djangocorepaginator.html -->

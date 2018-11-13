@@ -6,8 +6,7 @@
     <th class="upper">{{ client.get_tipo_display }}</th>
     <th class="documento">{{ client.documento }}</th>
 
-    <th><input class="form-control"
-               type="checkbox" {% if client.mensalista %} checked {% endif %} disabled />
+    <th><input type="checkbox" {% if client.mensalista %} checked {% endif %} disabled />
     </th>
 
     <th>

@@ -30,7 +30,7 @@ def clientes(request):
     else:
         clients_list = Cliente.objects.filter(ativo=True)
 
-    clients = paginator(request, clients_list)
+    clients = paginator(request, clients_list, 10)
     return render(request, template, {'client_list': clients})
 
 @login_required
@@ -180,15 +180,14 @@ def contact_save(request, client_id):
             data['html_pagination'] = render_to_string('pagination.html',
                                                        {'object_list': _contact_list}, request=request)
 
-            data['html_table'] = render_to_string('contact/contact_table.html',
-                                                  {
-                                                      'form_client': form_client,
-                                                      'contact_list': _contact_list
-                                                  },
-                                                  request=request)
-            data['html_form'] = render_to_string('clientes/client_form.html',
-                                                 {'form_client': form_client},
-                                                 request=request)
+            data['html_table'] = render_to_string(
+                                    'contact/contact_table.html',{
+                                    'form_client':form_client,'contact_list': _contact_list
+                                                },request=request
+                                )
+
+            data['html_form'] = render_to_string('clientes/client_form.html',{
+                                    'form_client': form_client}, request=request)
         else:  # post not valid
             messages.error(request, 'Foram econtrados erros durante o processamento, '
                                     'corrija os campos a baixo e tente novamente')
@@ -206,7 +205,6 @@ def contact_save(request, client_id):
             'form_contact': contact_form,
             'formset_email': email_formset,
             'formset_telefone': telefone_formset
-
         }
         data['is_form_valid'] = True
         data['html_form'] = render_to_string('contact/contact_save.html', context, request=request)
