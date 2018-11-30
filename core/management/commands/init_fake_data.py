@@ -163,7 +163,7 @@ class Command(BaseCommand):
                     'last_name': self.fake.last_name(),
                     'username': self.fake.ascii_free_email(),
                     'email': self.fake.ascii_free_email(),
-                    'password':'hashedPasswordStringPastedHereFromStep1!',
+                    'password':'hashedPassword1!',
                     'is_active':True,
                 }
                 user_list.append(User(**data))

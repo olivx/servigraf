@@ -7,26 +7,22 @@
 [![Code Climate](https://codeclimate.com/github/olivx/servigraf/badges/gpa.svg)](https://codeclimate.com/github/olivx/servigraf)
 
 ## introdução
-WebGraf é um novo sistema feito em django que vai substituir o antigo sistema,
-*sysgraf* feito em java, o objetivo é arrumar os BUG que haviam no sistema antigo,
- desenvolver e novas funcinalidades, explorando todo o potencional do django e criando
- mais controle para que possa focar em seus serviços e não no controle da sua empresa.
-
+WebGraf é um projeto de CRUD basico para demotração.
 ### rodando o sistema em ambiente de desenvolvimento
 ```bash
+#!/bin/bash
 git clone git@github.com:olivx/servigraf.git servigraf
 cd servigraf
 python -m venv .servigraf
 source .servigraf/bin/activate
 pip install -r requirements.txt
-git clone git@github.com:olivx/django-pure-pagination.git
-python django-pure-pagiation/setup.py install
 python contrib/generate_.env.py
 python manage.py makemigrations
 python manage.py migrate
 python manage.py test
+python manage.py  createsuperuser
+python manage.py  init_fake_data
 python manage.py runserver
-
 ```
 
 
