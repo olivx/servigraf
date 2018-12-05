@@ -38,15 +38,15 @@ class Command(BaseCommand):
 
 
     def init_client(self):
-        '''create fake cientes to teste'''
-        print('creating fake clientes....')
+        '''create fake ciente to test'''
+        print('creating fake client ....')
         client_list = []
-        list_ramo = ['grafica', 'arquitetura', 'tecnologia', 'entretenimento', 'segurança', 'construção', 'restaurante','outros']
-        _tipo = random.randint(1,2),
-        _cpf_cnpj = self.fake.cnpj() if _tipo == 2 else self.fake.cpf()
-        _mensalista = True if random.randint(1,3000) % 4 == 0 else False
-        _user =  random.choice(User.objects.all())
         for _ in range(100):
+            list_ramo = ['grafica', 'arquitetura', 'tecnologia', 'entretenimento', 'segurança', 'construção', 'restaurante','outros']
+            _tipo = random.randint(1,2),
+            _cpf_cnpj = self.fake.cnpj() if _tipo == 2 else self.fake.cpf()
+            _mensalista = True if random.randint(1,3000) % 4 == 0 else False
+            _user =  random.choice(User.objects.all())
             data = {
                 'razao_social': f'{self.fake.catch_phrase_attribute()} {self.fake.company()} ',
                 'nome_fantasia': f'{self.fake.catch_phrase_attribute()} {self.fake.company()} ',
@@ -60,7 +60,7 @@ class Command(BaseCommand):
         Cliente.objects.bulk_create(client_list)
 
     def init_contato(self):
-        print('create fake cliente ....')
+        print('create fake contact ....')
         list_contatos = []
         list_emails = []
         list_phones = []
@@ -124,45 +124,68 @@ class Command(BaseCommand):
         Endereco.objects.bulk_create(list_end)
 
     def init_produtos(self):
-        print('create fake produtos...')
+        print('create fake group produtos...')
         list_prod = []
         list_group = []
 
+        list_names_groups = []
         for _  in range(20):
+            group_name = self.fake.text(max_nb_chars=45, ext_word_list=None)
+
+            while group_name in list_names_groups:
+                group_name =  self.fake.word(ext_word_list=None)
+                list_names_groups.append(group_name)
+            list_names_groups.append(group_name)
+
             data = {
-                'group': self.fake.sentence(nb_words=6, variable_nb_words=True, ext_word_list=None),
-                'desc': self.fake.sentence(nb_words=20, variable_nb_words=True, ext_word_list=None)
+                'group':  group_name,
+                'desc': self.fake.text(max_nb_chars=99, ext_word_list=None)
             }
             list_group.append(GroupProduct(**data))
 
+        GroupProduct.objects.bulk_create(list_group)
+        list_group_created = GroupProduct.objects.all()
+        print('create fake produtos...')
+        list_names_product = []
         for _ in range(600):
+            product_name = self.fake.text(max_nb_chars=99, ext_word_list=None)
+
+            while product_name in list_names_product:
+                product_name =  self.fake.word(ext_word_list=None)
+                list_names_product.append(product_name)
+            list_names_product.append(product_name)
+
             tipo = random.randint(1,2)
             quantidade = random.randint(1,200)
-            title = self.fake.sentence(nb_words=6, variable_nb_words=True, ext_word_list=None)
-            description = self.fake.sentence(nb_words=20, variable_nb_words=True, ext_word_list=None)
+            description = self.fake.sentences(nb=3, ext_word_list=None)
             val = round(random.uniform(0.5, 95.9),2)
             data = {
-                'nome': title,
+                'nome': product_name,
                 'desc': description,
                 'quantidade': quantidade,
                 'valor': val,
                 'tipo': tipo,
-                'group': random.choice(list_group),
+                'group': random.choice(list_group_created),
                 'data_create': self.fake.date_time_between_dates(datetime_start=None, datetime_end=None, tzinfo=None),
                 'data_update': self.fake.date_time_between_dates(datetime_start=None, datetime_end=None, tzinfo=None)
             }
             list_prod.append(Produto(**data))
+        Produto.objects.bulk_create(list_prod)
+
 
     def handle(self, *args, **options):
 
         if User.objects.count() < 30:
             user_list = []
             for _ in range(30):
+                username_email = self.fake.ascii_free_email()
+                while len(username_email) >= 30:
+                    username_email = self.fake.ascii_free_email()
                 data = {
                     'first_name': self.fake.first_name(),
                     'last_name': self.fake.last_name(),
-                    'username': self.fake.ascii_free_email(),
-                    'email': self.fake.ascii_free_email(),
+                    'username': username_email,
+                    'email': username_email,
                     'password':'hashedPassword1!',
                     'is_active':True,
                 }

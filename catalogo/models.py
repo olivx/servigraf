@@ -13,8 +13,7 @@ class Produto(models.Model):
     ]
 
     group = models.ForeignKey('catalogo.GroupProduct', null=True, blank=True, related_name='groups')
-
-    nome = models.CharField('Nome', max_length=100)
+    nome = models.CharField('Nome', max_length=100,  unique=True)
     desc = models.TextField('Descrição', blank=True, null=True)
     tipo = models.PositiveIntegerField('Tipo', default=PRODUTO , choices=TIPO_LIST)
     valor = models.DecimalField('Valor', max_digits=10, decimal_places=2)
@@ -44,4 +43,3 @@ class GroupProduct(models.Model):
 
     def __str__(self):
         return self.group
-
