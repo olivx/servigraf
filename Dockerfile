@@ -47,4 +47,5 @@ COPY . /app
 # RUN pip install -r requirements.txt
 
 # run entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"]
+# ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["gunicorn", "servigraf.wsgi:application", "--bind 0.0.0.0:8000"]
