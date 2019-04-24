@@ -164,3 +164,51 @@ MESSAGE_TAGS = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+LOG_LEVEL = config("LOG_LEVEL", default="INFO")
+LOG_BASE_DIR = config('LOG_BASE', default=BASE_DIR)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json": {
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "fmt": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        }
+    },
+    "handlers": {
+        "stream": {
+            "level": LOG_LEVEL,
+            "formatter": "json",
+            "class": "logging.StreamHandler",
+        },
+        "gunicorn-file-stream": {
+            "level": LOG_LEVEL,
+            "formatter": "json",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR,"log", "gunicorn.log"),
+            "maxBytes": 10_000_000,
+            "backupCount": 3,
+        },
+        "app-file-stream": {
+            "level": LOG_LEVEL,
+            "formatter": "json",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR,"log","app.log"),
+            "maxBytes": 10_000_000,
+            "backupCount": 3,
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["stream", "app-file-stream"], "level": LOG_LEVEL},
+        "gunicorn": {
+            "handlers": ["stream", "gunicorn-file-stream"],
+            "level": LOG_LEVEL,
+        },
+        "servigraf": {"handlers": ["stream", "app-file-stream"], "level": LOG_LEVEL},
+    },
+}
+

@@ -10,3 +10,4 @@ htmlcov/*.*
 .coverage
 .env
 .venv/
+log/
