@@ -14,7 +14,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 # Application definition
 
@@ -166,9 +166,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-
 LOG_LEVEL = config("LOG_LEVEL", default="INFO")
-LOG_BASE_DIR = config('LOG_BASE', default=BASE_DIR)
+LOG_BASE_DIR = config('LOG_BASE', default=str(BASE_DIR))
+
+
 
 LOGGING = {
     "version": 1,
