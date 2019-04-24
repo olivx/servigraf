@@ -190,7 +190,7 @@ LOGGING = {
             "formatter": "json",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR,"log", "gunicorn.log"),
-            "maxBytes": 10_000_000,
+            "maxBytes": 1024 * 1024 * 100,  # 100MB
             "backupCount": 3,
         },
         "app-file-stream": {
@@ -198,7 +198,7 @@ LOGGING = {
             "formatter": "json",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR,"log","app.log"),
-            "maxBytes": 10_000_000,
+            "maxBytes": 1024 * 1024 * 100,  # 100MB,
             "backupCount": 3,
         },
     },
