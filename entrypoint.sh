@@ -15,5 +15,5 @@ python manage.py flush --no-input
 python manage.py makemigrations
 python manage.py migrate
 python manage.py init_fake_data --all
-echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin22')" | python manage.py shell
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin42')" | python manage.py shell
 exec "$@"

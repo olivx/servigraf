@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # install  pillow dependencies
+
 RUN apk --no-cache add python \
                        build-base \
                        python-dev \
@@ -29,15 +30,21 @@ RUN apk --no-cache add python \
                        harfbuzz-dev \
                        fribidi-dev
 
+RUN pip install --upgrade pip
+RUN pip install pipenv
+
 RUN apk update \
     && apk add --no-cache --virtual build-deps gcc python3-dev musl-dev \
     && apk add postgresql-dev \
-    && pip install psycopg2 \
     && apk del build-deps
 
-RUN pip install --upgrade pip
+
+COPY Pipfile* ./
+RUN pipenv install --system --deploy
+
 COPY . /app
-RUN pip install -r requirements.txt
+
+# RUN pip install -r requirements.txt
 
 # run entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]
