@@ -1,0 +1,3 @@
+{"asctime": "2019-04-24 19:35:10,144", "name": "django.request", "levelname": "WARNING", "message": "Not Found: /robots.txt", "status_code": 404, "request": "<WSGIRequest: GET '/robots.txt'>"}
+{"asctime": "2019-04-24 19:35:16,203", "name": "django.request", "levelname": "WARNING", "message": "Not Found: /favicon.ico", "status_code": 404, "request": "<WSGIRequest: GET '/favicon.ico'>"}
+{"asctime": "2019-04-24 19:36:46,997", "name": "django.request", "levelname": "WARNING", "message": "Not Found: /admin", "status_code": 404, "request": "<WSGIRequest: GET '/admin'>"}
